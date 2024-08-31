@@ -3,7 +3,7 @@ name: default team Issue Template
 about: Describe this issue template's purpose here.
 title: "[domain] A 기능 추가"
 labels: enhancement
-assignees: SeongGwangJu
+assignees: ''
 
 ---
 
@@ -17,3 +17,5 @@ assignees: SeongGwangJu
 
  ### 예상 작업 시간
  ex) 3h
+
+cf) 브랜치 네이밍 : feature/도메인/기능/#이슈번호
