@@ -4,19 +4,21 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
+@Table(name = "review_media")
 @Getter
 public class ReviewMedia {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "review_media_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id")
+    @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
-    private Long media_id;
+    @Column(name = "media_id")
+    private Long mediaId;
 
-    private int media_order;
+    @Column(name = "media_order")
+    private int mediaOrder;
 }

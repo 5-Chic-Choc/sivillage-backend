@@ -6,21 +6,24 @@ import lombok.Getter;
 import java.util.Date;
 
 @Entity
+@Table(name = "review")
 @Getter
 public class Review {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "review_id")
     private Long id;
 
-    private Long user_id;
+    @Column(name = "user_id")
+    private Long userId;
 
-    private Long product_id;
+    @Column(name = "product_id")
+    private Long productId;
 
     private String size;
 
-    private String option;
+    @Column(name = "review_option")
+    private String reviewOption;
 
     private String info;
 
@@ -28,7 +31,11 @@ public class Review {
 
     private String content;
 
-    private Date created_at;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at")
+    private Date createdAt;
 
-    private Date updated_at;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }

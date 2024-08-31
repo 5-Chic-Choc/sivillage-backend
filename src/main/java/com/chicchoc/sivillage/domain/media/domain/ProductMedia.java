@@ -16,7 +16,6 @@ public class ProductMedia {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_order_option_id")
-    @Column(nullable = false)
     private ProductOrderOption productOrderOption;
 
     @Comment("제품 이미지 순서")
