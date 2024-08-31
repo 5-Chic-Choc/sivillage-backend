@@ -16,6 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create resources directory
+        run: mkdir -p ./src/main/resources
+
       - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
       - run: cat ./src/main/resources/application.yml
 
