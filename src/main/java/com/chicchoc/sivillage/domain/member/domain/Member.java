@@ -36,7 +36,7 @@ public class Member {
 
     @Comment("회원 우편번호")
     @Column(nullable = false, length = 10)
-    private String postal_code;
+    private String postalCode;
 
     @Comment("회원 주소")
     @Column(nullable = true, length = 255)
@@ -44,7 +44,7 @@ public class Member {
 
     @Comment("회원 가입일")
     @Column(nullable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @Comment("회원 생년월일")
     @Column(nullable = true)
@@ -57,5 +57,5 @@ public class Member {
 
     @Comment("회원 자동 로그인 여부")
     @Column(nullable = false)
-    private boolean is_auto_signin;
+    private boolean isAutoSignin;
 }

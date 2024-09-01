@@ -23,12 +23,12 @@ public class ProductOrderOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "etc_option_id")
-    private EtcOption etc_option;
+    private EtcOption etcOption;
 
     @Comment("판매 상태")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private SaleStatus sale_status;
+    private SaleStatus saleStatus;
 
     @Comment("가격")
     @Column(nullable = false)
@@ -36,13 +36,13 @@ public class ProductOrderOption {
 
     @Comment("할인율")
     @Column(nullable = true)
-    private int discount_rate;
+    private int discountRate;
 
     @Comment("할인가격")
     @Column(nullable = true)
-    private int discount_price;
+    private int discountPrice;
 
     @Comment("상품옵션코드")
     @Column(nullable = false, length = 20)
-    private String product_option_code;
+    private String productOptionCode;
 }

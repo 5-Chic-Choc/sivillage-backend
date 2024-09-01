@@ -15,11 +15,11 @@ public class Media {
 
     @Comment("미디어 URL")
     @Column(nullable = false, length = 2000)
-    private String media_url;
+    private String mediaUrl;
 
     @Comment("미디어 종류")
     @Column(nullable = false, length = 20)
-    private String media_type;
+    private String mediaType;
 
     @Comment("미디어 설명")
     @Column(nullable = true, length = 255)

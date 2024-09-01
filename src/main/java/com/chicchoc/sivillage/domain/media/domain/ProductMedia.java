@@ -20,7 +20,8 @@ public class ProductMedia {
 
     @Comment("제품 이미지 순서")
     @Column(nullable = false)
-    private int media_order;
+    private int mediaOrder;
 
-    private Long media_id;
+    @Comment("미디어 ID")
+    private Long mediaId;
 }

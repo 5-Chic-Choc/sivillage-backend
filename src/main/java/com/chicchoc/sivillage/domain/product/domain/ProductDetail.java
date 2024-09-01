@@ -18,7 +18,7 @@ public class ProductDetail {
 
     @Comment("색상 ID")
     @Column(nullable = false)
-    private Long color_id;
+    private Long colorId;
 
     @Comment("상품 내용")
     @Column(nullable = false, length = 10000)
