@@ -1,6 +1,5 @@
 package com.chicchoc.sivillage.domain.member.domain;
 
-import com.chicchoc.sivillage.domain.category.domain.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
@@ -35,8 +34,8 @@ public class Agreement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Category parent;
+    private Agreement parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> child = new ArrayList<>();
+    private List<Agreement> child = new ArrayList<>();
 }
