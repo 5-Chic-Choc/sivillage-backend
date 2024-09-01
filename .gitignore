@@ -164,3 +164,6 @@ dist
 package-lock.json
 
 ### node moudule 관련 끝 ###
+
+#Mac OS Trash files
+.DS_Store
