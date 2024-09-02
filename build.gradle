@@ -40,9 +40,9 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     // Spring Security
-    // implementation 'org.springframework.boot:spring-boot-starter-security'
-    // implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    // testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     //  oauth
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
