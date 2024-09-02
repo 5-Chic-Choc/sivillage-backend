@@ -26,9 +26,7 @@ public class ReviewController {
         .rate(reviewRequestVo.getRate())
         .content(reviewRequestVo.getContent())
         .build();
-
     // TODO CommonResponseEntity 필요
-
     reviewService.addReview(reviewRequestDto);
   }
 }
