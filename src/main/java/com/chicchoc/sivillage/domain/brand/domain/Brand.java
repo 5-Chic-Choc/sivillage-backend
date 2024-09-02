@@ -14,10 +14,10 @@ public class Brand {
     private Long id;
 
     @Comment("브랜드 이름")
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 255, unique = true)
     private String name;
 
     @Comment("브랜드 로고 URL")
-    @Column(nullable = true, length = 2000)
-    private String logo_url;
+    @Column(nullable = false, length = 2000)
+    private String logoUrl;
 }
