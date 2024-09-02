@@ -18,6 +18,6 @@ public class BrandBranch {
     private Brand brand;
 
     @Comment("브랜드 지사 이름")
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 255, unique = true)
     private String name;
 }

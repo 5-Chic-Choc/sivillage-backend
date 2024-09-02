@@ -16,7 +16,7 @@ public class Product {
 
     @Comment("상품 코드")
     @Column(nullable = false, length = 20)
-    private String product_code;
+    private String productCode;
 
     @Comment("상품 이름")
     @Column(nullable = false, length = 30)
@@ -24,9 +24,9 @@ public class Product {
 
     @Comment("상품 등록일")
     @Column(nullable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @Comment("상품 브랜드")
     @Column(nullable = true)
-    private Long brand_id;
+    private Long brandId;
 }
