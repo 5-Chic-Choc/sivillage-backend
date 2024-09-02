@@ -1,13 +1,19 @@
 package com.chicchoc.sivillage.domain.review.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Date;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "review")
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
