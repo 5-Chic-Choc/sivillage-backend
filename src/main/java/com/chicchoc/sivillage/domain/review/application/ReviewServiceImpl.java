@@ -14,8 +14,7 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   public void addReview(ReviewRequestDto reviewRequestDto) {
     // TODO UserID 받아오는 로직
-    System.out.println(reviewRequestDto);
-    Long userId = 132L;
+    Long userId = null;
     reviewRepository.save(reviewRequestDto.toEntity(userId));
   }
 }
