@@ -77,3 +77,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task copyPrivate(type: Copy) {
+    from './sivillage-be_secret'
+    include 'application.yml'
+    into ''
+}
