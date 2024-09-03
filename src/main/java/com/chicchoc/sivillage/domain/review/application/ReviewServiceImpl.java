@@ -34,8 +34,11 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   public ReviewResponseVo getReviewByUserId(Long userId) {
-    reviewRepository.findByUserId(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다"));
+    try{
+      reviewRepository.findByUserId(userId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("해당 사용자의 리뷰를 찾을 수 없음.");
+    }
     return null;
   }
 }
