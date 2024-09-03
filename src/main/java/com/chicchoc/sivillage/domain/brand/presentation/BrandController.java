@@ -27,11 +27,15 @@ public class BrandController {
     public CommonResponseEntity<BrandResponseVo> getBrands() {
         List<BrandResponseDto> brandResponseDtos = brandService.getBrands();
 
+        List<BrandResponseVo> brandResponseVos = brandResponseDtos.stream()
+                .map(BrandResponseDto::toResponseVo)
+                .toList();
+
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "브랜드 조회 성공",
                 BrandResponseVo.builder()
-                        .brands(brandResponseDtos)
+                        .brands(brandResponseVos)
                         .build()
         );
     }
