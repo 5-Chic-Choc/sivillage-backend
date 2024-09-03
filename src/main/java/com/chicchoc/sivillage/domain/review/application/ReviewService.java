@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ReviewService {
   void addReview(ReviewRequestDto reviewRequestDto);
-  ReviewResponseVo getReviewById(Long id);
+  ReviewResponseVo getReviewByProductId(Long productId);
   ReviewResponseVo getReviewByUserId(Long userId);
 }
