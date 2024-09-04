@@ -1,19 +1,21 @@
 package com.chicchoc.sivillage.domain.member.domain;
 
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
-import jakarta.persistence.*;
-import java.util.ArrayList;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
-
-import java.util.Date;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,7 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class Member extends BaseEntity implements UserDetails { //사용자 인증 정보 클래스
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -84,21 +86,25 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
 
     @Override
     public boolean isAccountNonExpired() {
+        // todo : 계정 만료 확인 로직
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+        // todo : 계정 잠금 확인 로직
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+        // todo : 계정 비밀번호 만료 확인 로직
         return true;
     }
 
     @Override
     public boolean isEnabled() {
+        // todo : 계정 사용 가능 여부 확인 로직
         return true;
     }
 }
