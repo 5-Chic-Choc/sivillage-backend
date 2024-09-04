@@ -1,10 +1,10 @@
 package com.chicchoc.sivillage.domain.member.application;
 
-import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
+import com.chicchoc.sivillage.domain.member.domain.Member;
 
 public interface MemberService {
 
-  //todo
-  void findMemberByUuid(String uuid);
-  void findMemberByEmail(String email);
+    Member findMemberByUuid(String uuid);
+
+    Member findMemberByEmail(String email);
 }
