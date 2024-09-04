@@ -44,7 +44,8 @@ public class ReviewController {
     }
 
     @GetMapping("/product/{productId}")
-    public CommonResponseEntity<List<ReviewResponseVo>> getReviewByProductId(@PathVariable("productId") Long productId) {
+    public CommonResponseEntity<List<ReviewResponseVo>> getReviewByProductId(
+            @PathVariable("productId") Long productId) {
         List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByProductId(productId);
 
         List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
@@ -59,12 +60,17 @@ public class ReviewController {
     }
 
     @GetMapping("/user/{userId}")
-    public CommonResponseEntity<Void> getReviewByUserId(@PathVariable("userId") Long userId) {
-        reviewService.getReviewByUserId(userId);
+    public CommonResponseEntity<List<ReviewResponseVo>> getReviewByUserId(@PathVariable("userId") Long userId) {
+        List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByUserId(userId);
+
+        List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
+                .map(ReviewResponseDto::toResponseVo)
+                .toList();
+
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "리뷰 불러오기 성공",
-                null
+                reviewResponseVoList
         );
     }
 

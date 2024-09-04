@@ -5,6 +5,7 @@ import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
+import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .productId(review.getProductId())
                         .size(review.getSize())
                         .info(review.getInfo())
-                        .info(review.getInfo())
+                        .content(review.getContent())
                         .rate(review.getRate())
                         .createAt(review.getCreatedAt())
                         .build())
@@ -45,14 +46,24 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResponseVo getReviewByUserId(Long userId) {
-        Optional<Review> reviewListByUserId;
+    public List<ReviewResponseDto> getReviewByUserId(Long userId) {
+        List<Review> reviewListByUserId;
         try {
             reviewListByUserId = reviewRepository.findByUserId(userId);
         } catch (Exception e) {
             throw new IllegalArgumentException("해당 사용자의 리뷰를 찾을 수 없음.");
         }
-        System.out.println(reviewListByUserId);
-        return null;
+
+        return reviewListByUserId.stream()
+                .map(review -> ReviewResponseDto.builder()
+                        .Id(review.getId())
+                        .productId(review.getProductId())
+                        .size(review.getSize())
+                        .info(review.getInfo())
+                        .rate(review.getRate())
+                        .content(review.getContent())
+                        .createAt(review.getCreatedAt())
+                        .build())
+                .toList();
     }
 }
