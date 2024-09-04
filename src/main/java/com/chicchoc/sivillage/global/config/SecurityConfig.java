@@ -26,7 +26,6 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAutenticationFilter jwtAutenticationFilter;
 
-
     @Bean
     public CorsFilter corsFilter() {
 
@@ -63,16 +62,12 @@ public class SecurityConfig {
                                 .permitAll()
                 )
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
-                .sessionManagement(
-                        sessionManagement -> sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
 
                 // 인증되지 않은 사용자가 접근할 경우 CustomAuthenticationEntryPoint로 이동
-                .exceptionHandling(
-                        exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
+                        new CustomAuthenticationEntryPoint()))
 
                 // 인증 처리를 위한 AuthenticationProvider 설정
                 .authenticationProvider(authenticationProvider)

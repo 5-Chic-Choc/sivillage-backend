@@ -12,13 +12,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @MappedSuperclass
 public class BaseEntity {
-  //Entity에 이 클래스를 상속해서 사용
+    //Entity에 이 클래스를 상속해서 사용
 
-  @CreatedDate
-  @Column(nullable = false, updatable = false)
-  private String createdAt;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private String createdAt;
 
-  @LastModifiedDate
-  private String updatedAt;
+    @LastModifiedDate
+    private String updatedAt;
 
 }

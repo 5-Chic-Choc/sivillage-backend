@@ -45,6 +45,7 @@ public class JwtTokenProvider {
                 .claim("uuid", member.getUuid())
                 .signWith((SecretKey) getSignKey()) //토큰 서명
                 .compact();
+
     }
 
     //토큰 유효성 검사

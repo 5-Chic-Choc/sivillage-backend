@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @Configuration
 public class ApplicationConfig {
+  
     // 사용자 정보, 비밀번호 인코더, 인증 처리를 위한 빈을 생성하는 클래스(App 전반)
-
     private final UserDetailService userDetailService;
 
     @Bean
@@ -24,6 +24,7 @@ public class ApplicationConfig {
         // AuthenticationProvider 인터페이스를 구현한 DaoAuthenticationProvider 객체 생성
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailService);
+
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

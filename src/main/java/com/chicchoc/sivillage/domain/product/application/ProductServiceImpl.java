@@ -40,10 +40,12 @@ public class ProductServiceImpl implements ProductService {
                     .orElse("브랜드가 존재하지 않습니다.");
 
             // 현재는 price만 필요하지만 추후에 다른 정보도 필요할 수 있기에 객체를 가져옴
-            ProductOrderOption productOption = productOrderOptionRepository.findFirstByProductIdOrderByIdAsc(product.getId())
+            ProductOrderOption productOption = productOrderOptionRepository.findFirstByProductIdOrderByIdAsc(
+                            product.getId())
                     .orElseThrow(() -> new RuntimeException("일치하는 상품이 없습니다."));
 
-            ProductMedia productMedia = productMediaRepository.findFirstByProductOrderOptionIdOrderByMediaOrderAsc(productOption.getId())
+            ProductMedia productMedia = productMediaRepository.findFirstByProductOrderOptionIdOrderByMediaOrderAsc(
+                            productOption.getId())
                     .orElseThrow(() -> new RuntimeException("일치하는 미디어가 없습니다."));
 
             String mediaUrl = mediaRepository.findById(productMedia.getMediaId())
@@ -51,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
                     .orElse("일치하는 이미지가 없습니다.");
 
             return ProductResponseDto.builder()
-                    .productUUID(product.getProductUUID())
+                    .productUuid(product.getProductUuid())
                     .sourceUrl(mediaUrl)
                     .brandName(brandName)
                     .productName(product.getProductName())
