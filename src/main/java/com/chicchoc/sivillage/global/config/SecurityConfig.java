@@ -2,7 +2,9 @@ package com.chicchoc.sivillage.global.config;
 
 import com.chicchoc.sivillage.global.auth.exception.CustomAuthenticationEntryPoint;
 import com.chicchoc.sivillage.global.auth.jwt.JwtAutenticationFilter;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,36 +24,36 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final AuthenticationProvider authenticationProvider;
-  private final JwtAutenticationFilter jwtAutenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final JwtAutenticationFilter jwtAutenticationFilter;
+
+    @Bean
+    public CorsFilter corsFilter() { //CORS 설정
+
+        /* CORS 설정
+        - allowCredentials: 쿠키를 주고 받을 수 있도록 설정
+        - addAllowedOriginPattern: 모든 Origin 허용
+        - addAllowedHeader: 모든 Header 허용
+        - addAllowedMethod: 모든 Method 허용
+        - setExposedHeaders: Authorization 헤더를 노출
+        - registerCorsConfiguration: 모든 URL에 대해 CORS 설정 적용
+        - UrlBasedCorsConfigurationSource: URL 기반의 CORS 설정을 적용하기 위한 클래스
+        - source.registerCorsConfiguration("/**", config): 모든 URL에 대해 CORS 설정을 적용
+        - CorsFilter: CORS 설정을 적용하기 위한 필터
+        - return new CorsFilter(source): CORS 설정을 적용한 필터 반환
+         */
 
 
-  @Bean
-  public CorsFilter corsFilter() { //CORS 설정
-
-    /* CORS 설정
-    - allowCredentials: 쿠키를 주고 받을 수 있도록 설정
-    - addAllowedOriginPattern: 모든 Origin 허용
-    - addAllowedHeader: 모든 Header 허용
-    - addAllowedMethod: 모든 Method 허용
-    - setExposedHeaders: Authorization 헤더를 노출
-    - registerCorsConfiguration: 모든 URL에 대해 CORS 설정 적용
-    - UrlBasedCorsConfigurationSource: URL 기반의 CORS 설정을 적용하기 위한 클래스
-    - source.registerCorsConfiguration("/**", config): 모든 URL에 대해 CORS 설정을 적용
-    - CorsFilter: CORS 설정을 적용하기 위한 필터
-    - return new CorsFilter(source): CORS 설정을 적용한 필터 반환
-     */
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true);
-    config.addAllowedOriginPattern("*");
-    config.addAllowedHeader("*");
-    config.addAllowedMethod("*");
-    config.setExposedHeaders(List.of("Authorization"));
-    source.registerCorsConfiguration("/**", config);
-    return new CorsFilter(source);
-  }
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.setExposedHeaders(List.of("Authorization"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -72,27 +74,22 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated()
         )
+                // 세션을 사용하지 않기 때문에 STATELESS로 설정
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
 
-        // 세션을 사용하지 않기 때문에 STATELESS로 설정
-        .sessionManagement(
-            sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
+                // 인증되지 않은 사용자가 접근할 경우 CustomAuthenticationEntryPoint로 이동
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
+                        new CustomAuthenticationEntryPoint()))
 
-        // 인증되지 않은 사용자가 접근할 경우 CustomAuthenticationEntryPoint로 이동
-        .exceptionHandling(
-            exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-        )
+                // 인증 처리를 위한 AuthenticationProvider 설정
+                .authenticationProvider(authenticationProvider)
 
-        // 인증 처리를 위한 AuthenticationProvider 설정
-        .authenticationProvider(authenticationProvider)
+                // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
+                .addFilterBefore(jwtAutenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-        // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
-        .addFilterBefore(jwtAutenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-        // CORS 설정 추가
-        .addFilter(corsFilter());
-    return http.build();
-  }
+                // CORS 설정 추가
+                .addFilter(corsFilter());
+        return http.build();
+    }
 }

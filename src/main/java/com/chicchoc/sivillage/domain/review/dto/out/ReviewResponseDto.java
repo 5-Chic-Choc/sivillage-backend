@@ -3,6 +3,7 @@ package com.chicchoc.sivillage.domain.review.dto.out;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import java.util.Date;
 import lombok.Builder;
+import java.util.Date;
 
 public class ReviewResponseDto {
 
@@ -38,4 +39,5 @@ public class ReviewResponseDto {
         this.createAt = createAt;
     }
 
+  }
 }

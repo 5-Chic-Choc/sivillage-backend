@@ -21,7 +21,7 @@ public class Favorite {
 
     @Comment("추가일")
     @Column(nullable = false)
-    private Date added_at;
+    private Date addedAt;
 
     @Comment("좋아요 타입")
     @Column(nullable = false, length = 30)
@@ -29,5 +29,5 @@ public class Favorite {
 
     @Comment("고유 ID")
     @Column(nullable = false, length = 50, name = "favorite_uuid")
-    private String favoriteUUID;
+    private String favoriteUuid;
 }

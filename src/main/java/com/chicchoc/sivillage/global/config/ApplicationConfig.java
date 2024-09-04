@@ -16,37 +16,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class ApplicationConfig { // 실제 인증처리하는 설정파일
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @Bean
-  // UserDetailsService는 스프링 시큐리티에서 사용자의 정보를 담는 인터페이스
-  public UserDetailsService userDetailsService() {
+    @Bean
+    // UserDetailsService는 스프링 시큐리티에서 사용자의 정보를 담는 인터페이스
+    public UserDetailsService userDetailsService() {
 
-    return email -> {
-      return memberRepository.findByEmail(email).orElseThrow(
-          () -> new IllegalArgumentException("가입되지 않은 이메일입니다.")
-      );
-    };
-  }
+        return email -> {
+            return memberRepository.findByEmail(email).orElseThrow(
+                    () -> new IllegalArgumentException("가입되지 않은 이메일입니다.")
+            );
+        };
+    }
 
-  @Bean
-  public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-    daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-    return daoAuthenticationProvider;
-  }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration)
-      throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
 
-  }
+    }
 }

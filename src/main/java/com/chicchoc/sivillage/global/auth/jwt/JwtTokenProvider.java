@@ -14,23 +14,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtTokenProvider { //JWT 토큰 생성 및 유효성 검증
 
-  private final Environment env;
+    private final Environment env;
 
-  public String generateAccessToken(Authentication authentication) {
-    Claims claims = Jwts.claims().subject(authentication.getName()).build();
-    Date now = new Date();
-    Date expiration = new Date(now.getTime() + env.getProperty("jwt.access-expire-time", Long.class).longValue());
+    public String generateAccessToken(Authentication authentication) {
+        Claims claims = Jwts.claims().subject(authentication.getName()).build();
+        Date now = new Date();
+        Date expiration = new Date(
+                now.getTime() + env.getProperty("jwt.access-expire-time", Long.class).longValue());
 
-    return Jwts.builder()
-        //todo : claim 뭐 넣을지
-        .signWith(getSignKey())
-        .claim("email", claims.getSubject())
-        .issuedAt(expiration)
-        .compact();
-  }
+        return Jwts.builder()
+                //todo : claim 뭐 넣을지
+                .signWith(getSignKey())
+                .claim("email", claims.getSubject())
+                .issuedAt(expiration)
+                .compact();
+    }
 
-  public Key getSignKey() {
-    return Keys.hmacShaKeyFor( env.getProperty("jwt.secret-key").getBytes() );
-  }
+    public Key getSignKey() {
+        return Keys.hmacShaKeyFor(env.getProperty("jwt.secret-key").getBytes());
+    }
 
 }

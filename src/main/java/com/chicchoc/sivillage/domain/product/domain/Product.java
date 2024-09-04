@@ -9,18 +9,19 @@ import java.util.Date;
 @Entity
 @Getter
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "product_id")
     private Long id;
 
-    @Comment("상품 코드")
-    @Column(nullable = false, length = 20)
-    private String productCode;
+    @Comment("상품 uuid")
+    @Column(nullable = false, length = 20, name = "product_uuid")
+    private String productUuid;
 
     @Comment("상품 이름")
     @Column(nullable = false, length = 30)
-    private String name;
+    private String productName;
 
     @Comment("상품 등록일")
     @Column(nullable = false)

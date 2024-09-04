@@ -4,5 +4,5 @@ import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
 
 public interface AuthService {
 
-  void signUp(SignUpRequestDto signUpRequestDto);
+    void signUp(SignUpRequestDto signUpRequestDto);
 }

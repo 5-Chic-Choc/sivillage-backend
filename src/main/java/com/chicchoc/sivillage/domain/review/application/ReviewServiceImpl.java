@@ -23,7 +23,6 @@ public class ReviewServiceImpl implements ReviewService {
         Long userId = null;
         reviewRepository.save(reviewRequestDto.toEntity(userId));
     }
-
     @Override
     public List<ReviewResponseDto> getReviewByProductId(Long productId) {
         List<Review> reviewListByProductId;
