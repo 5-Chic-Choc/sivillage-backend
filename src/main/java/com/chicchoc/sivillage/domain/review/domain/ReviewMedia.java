@@ -7,6 +7,7 @@ import lombok.Getter;
 @Table(name = "review_media")
 @Getter
 public class ReviewMedia {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "review_media_id")

@@ -7,7 +7,10 @@ import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import java.util.List;
 
 public interface ReviewService {
-  void addReview(ReviewRequestDto reviewRequestDto);
-  List<ReviewResponseDto> getReviewByProductId(Long productId);
-  List<ReviewResponseDto> getReviewByUserId(Long userId);
+
+    void addReview(ReviewRequestDto reviewRequestDto);
+
+    List<ReviewResponseDto> getReviewByProductId(Long productId);
+
+    List<ReviewResponseDto> getReviewByUserId(Long userId);
 }
