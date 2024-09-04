@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ProductResponseVo {
-    private String productUUID;
+    private String productUuid;
     private String sourceUrl;
     private String brandName;
     private String productName;

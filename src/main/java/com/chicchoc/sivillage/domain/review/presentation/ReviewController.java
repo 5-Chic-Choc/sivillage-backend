@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/review")
 public class ReviewController {
 
-  private final ReviewService reviewService;
+    private final ReviewService reviewService;
 
-  @PostMapping
-  public void createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
-    ReviewRequestDto reviewRequestDto = ReviewRequestDto.builder()
-        .productId(reviewRequestVo.getProductId())
-        .size(reviewRequestVo.getSize())
-        .reviewOption(reviewRequestVo.getReviewOption())
-        .info(reviewRequestVo.getInfo())
-        .rate(reviewRequestVo.getRate())
-        .content(reviewRequestVo.getContent())
-        .build();
+    @PostMapping
+    public void createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
+        ReviewRequestDto reviewRequestDto = ReviewRequestDto.builder()
+                .productId(reviewRequestVo.getProductId())
+                .size(reviewRequestVo.getSize())
+                .reviewOption(reviewRequestVo.getReviewOption())
+                .info(reviewRequestVo.getInfo())
+                .rate(reviewRequestVo.getRate())
+                .content(reviewRequestVo.getContent())
+                .build();
 
-    // TODO CommonResponseEntity 필요
+        // TODO CommonResponseEntity 필요
 
-    reviewService.addReview(reviewRequestDto);
-  }
+        reviewService.addReview(reviewRequestDto);
+    }
 }

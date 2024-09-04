@@ -4,7 +4,8 @@ import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
 
 public interface MemberService {
 
-  //todo
-  void findMemberByUuid(String uuid);
-  void findMemberByEmail(String email);
+    //todo
+    void findMemberByUuid(String uuid);
+
+    void findMemberByEmail(String email);
 }

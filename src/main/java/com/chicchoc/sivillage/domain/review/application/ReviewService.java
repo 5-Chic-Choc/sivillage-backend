@@ -4,5 +4,6 @@ import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 
 public interface ReviewService {
-  void addReview(ReviewRequestDto reviewRequestDto);
+
+    void addReview(ReviewRequestDto reviewRequestDto);
 }

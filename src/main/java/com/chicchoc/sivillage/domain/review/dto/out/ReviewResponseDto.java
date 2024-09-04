@@ -3,6 +3,7 @@ package com.chicchoc.sivillage.domain.review.dto.out;
 import java.util.Date;
 
 public class ReviewResponseDto {
+
     private Long id;
     private Long productId;
     private String size;

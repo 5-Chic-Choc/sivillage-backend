@@ -24,5 +24,5 @@ public class HashtagList {
 
     @Comment("해시태그 UUID")
     @Column(nullable = false, length = 50, name = "hashtag_uuid")
-    private String hashtagUUID;
+    private String hashtagUuid;
 }

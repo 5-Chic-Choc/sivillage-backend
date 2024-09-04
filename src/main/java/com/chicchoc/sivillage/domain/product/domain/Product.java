@@ -9,6 +9,7 @@ import java.util.Date;
 @Entity
 @Getter
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "product_id")
@@ -16,7 +17,7 @@ public class Product {
 
     @Comment("상품 uuid")
     @Column(nullable = false, length = 20, name = "product_uuid")
-    private String productUUID;
+    private String productUuid;
 
     @Comment("상품 이름")
     @Column(nullable = false, length = 30)

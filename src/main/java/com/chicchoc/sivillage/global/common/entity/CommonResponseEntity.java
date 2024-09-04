@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 @ToString
 public class CommonResponseEntity<T> {
 
-  private HttpStatus status;
-  private String message;
-  private T data;
+    private HttpStatus status;
+    private String message;
+    private T data;
 }
