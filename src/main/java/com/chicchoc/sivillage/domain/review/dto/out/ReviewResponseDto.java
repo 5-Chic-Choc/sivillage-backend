@@ -38,6 +38,4 @@ public class ReviewResponseDto {
         this.content = content;
         this.createAt = createAt;
     }
-
-  }
 }
