@@ -16,28 +16,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  private final AuthRepository authRepository;
-  private final PasswordEncoder passwordEncoder;
+    private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
 
-  @Transactional(rollbackFor = Exception.class)
-  @Override
-  public void signUp(SignUpRequestDto signUpRequestDto) {
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void signUp(SignUpRequestDto signUpRequestDto) {
 
+        String uuid = UUID.randomUUID().toString();
+        String password = passwordEncoder.encode(signUpRequestDto.getPassword());
+        Member member = signUpRequestDto.toEntity(uuid, password);
 
-    String uuid = UUID.randomUUID().toString();
-    String password = passwordEncoder.encode(signUpRequestDto.getPassword());
-    Member member = signUpRequestDto.toEntity(uuid, password);
-
-    // 중복검사
-    if(authRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
-      throw new IllegalArgumentException("이미 가입된 회원입니다.");
+        // 중복검사
+        if (authRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 가입된 회원입니다.");
+        }
+        try {
+            authRepository.save(member);
+        } catch (Exception e) {
+            log.error("Exception: {}", e);
+            throw new IllegalArgumentException("회원가입에 실패하였습니다.");
+        }
     }
-    try {
-      authRepository.save(member);
-    } catch(Exception e) {
-      log.error("Exception: {}", e);
-      throw new IllegalArgumentException("회원가입에 실패하였습니다.");
-    }
-  }
 
 }

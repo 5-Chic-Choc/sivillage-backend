@@ -17,7 +17,7 @@ public class UnsignedMember {
 
     @Comment("회원 이름")
     @Column(nullable = false, length = 255, name = "unsigned_user_uuid")
-    private String unsignedUserUUID;
+    private String unsignedUserUuid;
 
     @Comment("마지막 접속")
     @Column(nullable = true)

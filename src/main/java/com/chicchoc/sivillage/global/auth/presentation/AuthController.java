@@ -24,20 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-  private final AuthService authService;
+    private final AuthService authService;
 
-  @ValidAop
-  @Operation(summary = "SignUp API", description = "회원가입", tags = {"Auth"})
-  @PostMapping("/sign-up")
-  public CommonResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto,
-      BindingResult bindingResult) {
+    @ValidAop
+    @Operation(summary = "SignUp API", description = "회원가입", tags = {"Auth"})
+    @PostMapping("/sign-up")
+    public CommonResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto,
+            BindingResult bindingResult) {
 
-    authService.signUp(signUpRequestDto);
+        authService.signUp(signUpRequestDto);
 
-
-    return new CommonResponseEntity<>(
-        HttpStatus.CREATED,
-        "회원가입이 완료되었습니다.",
-        null);
-  }
+        return new CommonResponseEntity<>(
+                HttpStatus.CREATED,
+                "회원가입이 완료되었습니다.",
+                null);
+    }
 }

@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  //todo : implement member service
+    //todo : implement member service
 
-  @Override
-  public void findMemberByUuid(String uuid) {
-  }
+    @Override
+    public void findMemberByUuid(String uuid) {
+    }
 
-  @Override
-  public void findMemberByEmail(String email) {
-  }
+    @Override
+    public void findMemberByEmail(String email) {
+    }
 
 }

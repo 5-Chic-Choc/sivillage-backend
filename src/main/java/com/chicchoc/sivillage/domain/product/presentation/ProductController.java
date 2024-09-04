@@ -21,9 +21,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
+
     private final ProductService productService;
 
-    @Operation(summary = "getProductByBrand API", description = "브랜드 별 상품 조회", tags = {"Product"})
+    @Operation(summary = "getProductByBrand API", description = "브랜드 별 상품 조회",
+            tags = {"Product"})
     @GetMapping("/{brandId}")
     public CommonResponseEntity<List<ProductResponseDto>> getProductsByBrandId(@PathVariable Long brandId) {
         log.info("brandId : {}", brandId);

@@ -19,7 +19,7 @@ public class Cart {
 
     @Comment("사용자 고유 코드")
     @Column(name = "user_uuid", nullable = false, length = 50)
-    private String userUUID;
+    private String userUuid;
 
     @Comment("장바구니 이름")
     @Column(nullable = true, length = 30)
