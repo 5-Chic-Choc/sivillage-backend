@@ -55,18 +55,25 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // CSRF 설정 비활성화
-                .csrf(AbstractHttpConfigurer::disable)
-                // 인증되지 않은 사용자가 접근할 수 있는 URL 설정
-                .authorizeHttpRequests(
-                        authorizeRequests -> authorizeRequests.requestMatchers("/api/v1/auth/**",
-                                        "/api/v1/main/**", "/api/v1/products/**", "/swagger-ui/**",
-                                        "/v3/api-docs/**", "/error").permitAll().anyRequest()
-                                .authenticated())
-
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        // CSRF 설정 비활성화
+        .csrf(AbstractHttpConfigurer::disable)
+        // 인증되지 않은 사용자가 접근할 수 있는 URL 설정
+        .authorizeHttpRequests(
+            authorizeRequests -> authorizeRequests
+                .requestMatchers(
+                    "/api/v1/review/**",
+                    "/api/v1/auth/**",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/error"
+                )
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+        )
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
