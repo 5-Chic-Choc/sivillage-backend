@@ -51,19 +51,19 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   // 주어진 AuthenticationException에 따라 적절한 오류 메시지를 반환함
   private String getErrorMessage(AuthenticationException authException) {
     if (authException.getClass() == BadCredentialsException.class) {
-      return "BadCredentialsException 잘못된 사용자 정보입니다. 다시 확인하세요.";
+      return "BadCredentialsException 잘못된 비밀번호입니다. 다시 확인하세요.";
     } else if (authException.getClass() == UsernameNotFoundException.class) {
-      return "UsernameNotFoundException 잘못된 사용자 정보입니다. 다시 확인하세요.";
+      return "UsernameNotFoundException 가입되지 않은 이메일입니다. 다시 확인하세요.";
     } else if (authException.getClass() == AccountExpiredException.class) {
-      return "AccountExpiredException 만료된 사용자 정보입니다. 다시 확인하세요.";
+      return "AccountExpiredException 계정이 만료되었습니다. 관리자에게 문의하세요.";
     } else if (authException.getClass() == CredentialsExpiredException.class) {
       return "CredentialsExpiredException 인증서가 만료되었습니다. 관리자에게 문의하세요.";
     } else if (authException.getClass() == DisabledException.class) {
-      return "DisabledException 비활성화된 사용자 정보입니다. 관리자에게 문의하세요.";
+      return "DisabledException 비활성화된 계정입니다. 관리자에게 문의하세요.";
     } else if (authException.getClass() == LockedException.class) {
-      return "LockedException 암호 오류 5회 이상. 관리자에게 문의하세요.";
+      return "LockedException 계정이 잠겼습니다. 관리자에게 문의하세요.";
     } else {
-      return "사용자 정보 오류.";
+      return "인증에 실패했습니다. 다시 시도하세요.";
     }
   }
 
