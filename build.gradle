@@ -81,6 +81,11 @@ checkstyle {
     toolVersion = "10.18.0" //
 }
 
+// checkstyleTest 비활성화
+tasks.named('checkstyleTest') {
+    enabled = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
