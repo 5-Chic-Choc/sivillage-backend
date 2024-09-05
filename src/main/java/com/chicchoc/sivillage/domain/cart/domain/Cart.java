@@ -35,4 +35,5 @@ public class Cart {
     @Comment("장바구니 이름")
     @Column(nullable = true, length = 30)
     private String cartName;
+
 }

@@ -11,6 +11,6 @@ public interface CartService {
     void createCart(CartRequestDto cartRequestDto);
 
     // 장바구니 조회
-    Optional<List<CartResponseDto>> getCart(String userUuid);
+    List<CartResponseDto> getCartUuidList(String userUuid);
 
 }

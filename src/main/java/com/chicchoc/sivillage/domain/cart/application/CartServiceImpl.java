@@ -7,6 +7,7 @@ import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +31,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Optional<List<CartResponseDto>> getCart(String userUuid) {
-        // TODO
-        Optional<List<Cart>> carts = cartRepository.findByUserUuid(userUuid);
-        if (carts.isEmpty()) {
-            return ;
-        }
-        else {
-            return
-        }
+    public List<CartResponseDto> getCartUuidList(String userUuid) {
+        List<Cart> cartList = cartRepository.findByUserUuid(userUuid);
 
+        return cartList.stream()
+                .map(cart -> CartResponseDto.builder()
+                        .cartUuid(cart.getCartUuid())
+                        .build())
+                .toList();
     }
 }
