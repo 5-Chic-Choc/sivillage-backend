@@ -2,8 +2,14 @@ package com.chicchoc.sivillage.domain.product.presentation;
 
 
 import com.chicchoc.sivillage.domain.product.application.ProductService;
+import com.chicchoc.sivillage.domain.product.dto.in.ProductPerBrandRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
+import com.chicchoc.sivillage.domain.product.vo.in.ProductPerBrandRequestVo;
+import com.chicchoc.sivillage.domain.product.vo.in.ProductRequestVo;
+import com.chicchoc.sivillage.domain.product.vo.out.ProductPerBrandResponseVo;
+import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -12,31 +18,48 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
 
     @Operation(summary = "getProductByBrand API", description = "브랜드 별 상품 조회", tags = {"Product"})
     @GetMapping("/{brandId}")
-    public CommonResponseEntity<List<ProductPerBrandResponseDto>> getProductsByBrandId(@PathVariable Long brandId) {
-        log.info("brandId : {}", brandId);
+    public CommonResponseEntity<List<ProductPerBrandResponseVo>> getProductsByBrandId(
+            @PathVariable Long brandId) {
 
-        List<ProductPerBrandResponseDto> productPerBrandResponseDtos = productService.findAllByBrandId(brandId);
+        ProductPerBrandRequestVo productPerBrandRequestVo = ProductPerBrandRequestVo.builder()
+                .brandId(brandId)
+                .build();
+        log.info("brandId : {}", productPerBrandRequestVo.getBrandId());
+
+        // VO를 DTO로 변환
+        ProductPerBrandRequestDto productPerBrandRequestDto = productPerBrandRequestVo.toRequestDto();
+
+        // 서비스 호출
+        List<ProductPerBrandResponseDto> productPerBrandResponseDtos = productService.findAllByBrandId(
+                productPerBrandRequestDto.getBrandId());
+
+        // DTO를 VO로 변환
+        List<ProductPerBrandResponseVo> productPerBrandResponseVos = productPerBrandResponseDtos.stream()
+                .map(ProductPerBrandResponseDto::toResponseVo)
+                .collect(Collectors.toList());
+
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "상품 조회 성공",
-                productPerBrandResponseDtos
+                productPerBrandResponseVos
         );
     }
 
     @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"Product"})
-    @GetMapping("/products")
-    public CommonResponseEntity<List<ProductResponseDto>> getFilteredProductList(
+    @GetMapping()
+    public CommonResponseEntity<List<ProductResponseVo>> getFilteredProductList(
             @RequestParam(required = false) List<String> category,
             @RequestParam(required = false) List<String> size,
             @RequestParam(required = false) List<String> color,
@@ -48,22 +71,66 @@ public class ProductController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "true") boolean isAscending) {
 
+        // VO를 DTO로 변환
+        ProductRequestVo productRequestVo = ProductRequestVo.builder()
+                .categories(category)
+                .sizes(size)
+                .colors(color)
+                .brands(brand)
+                .minimumPrice(minimumPrice)
+                .maximumPrice(maximumPrice)
+                .page(page)
+                .perPage(perPage)
+                .sortBy(sortBy)
+                .isAscending(isAscending)
+                .build();
+
+        ProductRequestDto productRequestDto = productRequestVo.toRequestDto();
+
+        // Service 호출
         List<ProductResponseDto> productResponseDtos = productService.getFilteredProducts(
-                category,
-                size,
-                color,
-                brand,
-                minimumPrice,
-                maximumPrice,
-                page,
-                perPage,
-                sortBy,
-                isAscending
+                productRequestDto
         );
+
+        // DTO를 VO로 변환하여 리턴
+        List<ProductResponseVo> productResponseVos = productResponseDtos.stream()
+                .map(ProductResponseDto::toResponseVo)
+                .collect(Collectors.toList());
+
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "상품 조회 성공",
-                productResponseDtos
+                productResponseVos
         );
     }
+
+
+    //    @Operation(summary = "getProductDetail API", description = "상품 상세 조회", tags = {"Product"})
+    //    @GetMapping("/detail/{productUuid}")
+    //    public CommonResponseEntity<ProductDetailResponseVo> getProductDetail
+    //            (@PathVariable ProductDetailRequestVo productDetailRequestVo) {
+    //
+    //        ProductDetailRequestDto productDetailRequestDto = ProductDetailRequestDto.builder()
+    //                .productUuid(productDetailRequestVo.getProductUuid())
+    //                .build();
+    //
+    //        ProductDetailResponseDto productDetailResponseDto = productService
+    //        .getProductDetail(productDetailRequestVo);
+    //
+    //        //        ProductDetailResponseVo productDetailResponseVo = ProductDetailResponseVo.builder()
+    //        //                .productUuid(productDetailResponseDto.getProductUuid())
+    //        //                .productName(productDetailResponseDto.getProductName())
+    //        //                .productDescription(productDetailResponseDto.getProductDescription())
+    //        //                .price(productDetailResponseDto.getPrice())
+    //        //                .productDetailContent(productDetailResponseDto.getProductDetailContent())
+    //        //                .productCode(productDetailResponseDto.getProductCode())
+    //        //                .build();
+    //
+    //        return new CommonResponseEntity<>(
+    //                HttpStatus.OK,
+    //                "상품 상세 조회 성공",
+    //                //                productDetailResponseVo
+    //                null
+    //        );
+    //    }
 }

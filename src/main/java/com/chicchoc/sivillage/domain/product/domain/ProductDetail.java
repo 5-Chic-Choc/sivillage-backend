@@ -20,7 +20,7 @@ public class ProductDetail {
     @Column(nullable = false)
     private Long colorId;
 
-    @Comment("상품 내용")
-    @Column(nullable = false, length = 10000)
-    private String content;
+    @Comment("상품 상세 URL")
+    @Column(nullable = false, length = 2000)
+    private String productDetailUrl;
 }

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ProductRequestDto {
+public class ProductPerBrandRequestDto {
     private Long brandId;
 }

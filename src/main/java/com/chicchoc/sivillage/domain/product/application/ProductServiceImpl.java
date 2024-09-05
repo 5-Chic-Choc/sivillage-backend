@@ -4,14 +4,14 @@ import com.chicchoc.sivillage.domain.brand.domain.Brand;
 import com.chicchoc.sivillage.domain.brand.infrastructure.BrandRepository;
 import com.chicchoc.sivillage.domain.category.domain.Category;
 import com.chicchoc.sivillage.domain.category.infrastructure.CategoryRepository;
-import com.chicchoc.sivillage.domain.media.domain.Media;
-import com.chicchoc.sivillage.domain.media.domain.ProductMedia;
 import com.chicchoc.sivillage.domain.media.infrastructure.MediaRepository;
 import com.chicchoc.sivillage.domain.media.infrastructure.ProductMediaRepository;
 import com.chicchoc.sivillage.domain.product.domain.Color;
 import com.chicchoc.sivillage.domain.product.domain.Product;
 import com.chicchoc.sivillage.domain.product.domain.ProductOrderOption;
 import com.chicchoc.sivillage.domain.product.domain.Size;
+import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductDetailResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
 import com.chicchoc.sivillage.domain.product.infrastructure.ColorRepository;
@@ -62,53 +62,54 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getFilteredProducts(
-            List<String> categories,
-            List<String> sizes,
-            List<String> colors,
-            List<String> brands,
-            Integer minPrice,
-            Integer maxPrice,
-            int page,
-            int perPage,
-            String sortBy,
-            boolean isAscending) {
+    public List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto) {
 
-        List<Long> brandIds = brands != null ? brandRepository.findByNameIn(brands)
+        // 각 리스트의 이름을 ID 리스트로 변환
+        List<Long> brandIds = productRequestDto.getBrands() != null ? brandRepository
+                .findByNameIn(productRequestDto.getBrands())
                 .stream().map(Brand::getId).toList() : null;
-        List<Long> colorIds = colors != null ? colorRepository.findByNameIn(colors)
+        List<Long> colorIds = productRequestDto.getColors() != null ? colorRepository
+                .findByNameIn(productRequestDto.getColors())
                 .stream().map(Color::getId).toList() : null;
-        List<Long> sizeIds = sizes != null ? sizeRepository.findByNameIn(sizes)
+        List<Long> sizeIds = productRequestDto.getSizes() != null ? sizeRepository
+                .findByNameIn(productRequestDto.getSizes())
                 .stream().map(Size::getId).toList() : null;
-        List<Long> categoryIds = categories != null ? categoryRepository.findByNameIn(categories)
+        List<Long> categoryIds = productRequestDto.getCategories() != null ? categoryRepository
+                .findByNameIn(productRequestDto.getCategories())
                 .stream().map(Category::getId).toList() : null;
 
+        // 필터링된 상품 목록 조회
         List<Product> products = productRepository.findFilteredProducts(
                 categoryIds,
                 sizeIds,
                 colorIds,
                 brandIds,
-                minPrice,
-                maxPrice,
-                sortBy,
-                isAscending,
-                page,
-                perPage
+                productRequestDto.getMinimumPrice(),
+                productRequestDto.getMaximumPrice(),
+                productRequestDto.getSortBy(),
+                productRequestDto.isAscending(),
+                productRequestDto.getPage(),
+                productRequestDto.getPerPage()
         );
 
-        return products.stream().map(product -> {
-            return ProductResponseDto.builder()
-                    .productUuid(product.getProductUuid())
-                    .productName(product.getProductName())
-                    .price(product.getProductOrderOptions().get(0).getPrice())
-                    .discountRate(product.getProductOrderOptions().get(0).getDiscountRate())
-                    .discountPrice(product.getProductOrderOptions().get(0).getDiscountPrice())
-                    .originalPrice(product.getProductOrderOptions().get(0).getPrice())
-                    .createdAt(product.getCreatedAt())
-                    .brandId(product.getBrandId())
-                    .build();
-        }).collect(Collectors.toList());
+        // DTO 변환
+        return products.stream().map(product -> ProductResponseDto.builder()
+                .productUuid(product.getProductUuid())
+                .productName(product.getProductName())
+                .price(product.getProductOrderOptions().get(0).getPrice())
+                .discountRate(product.getProductOrderOptions().get(0).getDiscountRate())
+                .discountPrice(product.getProductOrderOptions().get(0).getDiscountPrice())
+                .originalPrice(product.getProductOrderOptions().get(0).getPrice())
+                .createdAt(product.getCreatedAt())
+                .brandId(product.getBrandId())
+                .build()).collect(Collectors.toList());
     }
+
+
+    //    @Override
+    //    public ProductDetailResponseDto getProductDetail(ProductDetailResponseDto productDetailResponseDto) {
+    //        return null;
+    //    }
 
 
 }

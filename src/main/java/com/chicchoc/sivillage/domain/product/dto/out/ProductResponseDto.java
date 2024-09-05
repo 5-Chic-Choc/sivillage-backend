@@ -1,15 +1,13 @@
 package com.chicchoc.sivillage.domain.product.dto.out;
 
-import lombok.AllArgsConstructor;
+import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@NoArgsConstructor
 public class ProductResponseDto {
     private String productUuid;
     private String productName;
@@ -20,16 +18,17 @@ public class ProductResponseDto {
     private LocalDateTime createdAt;
     private Long brandId;
 
-    public ProductResponseDto(String productUuid, String productName, int price, int discountRate, int discountPrice,
-                              int originalPrice, LocalDateTime createdAt, Long brandId) {
-        this.productUuid = productUuid;
-        this.productName = productName;
-        this.price = price;
-        this.discountRate = discountRate;
-        this.discountPrice = discountPrice;
-        this.originalPrice = originalPrice;
-        this.createdAt = createdAt;
-        this.brandId = brandId;
+    // VO로 변환하는 메소드
+    public ProductResponseVo toResponseVo() {
+        return ProductResponseVo.builder()
+                .productUuid(productUuid)
+                .productName(productName)
+                .price(price)
+                .discountRate(discountRate)
+                .discountPrice(discountPrice)
+                .originalPrice(originalPrice)
+                .createdAt(createdAt)
+                .brandId(brandId)
+                .build();
     }
-
 }
