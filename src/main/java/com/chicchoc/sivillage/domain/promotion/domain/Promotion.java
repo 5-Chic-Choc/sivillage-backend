@@ -15,7 +15,7 @@ import org.hibernate.annotations.Comment;
 public class Promotion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "promotion_id")
     private Long id;
 

@@ -11,7 +11,7 @@ import org.hibernate.annotations.Comment;
 public class StockPerBranch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_per_branch_id")
     private Long id;
 

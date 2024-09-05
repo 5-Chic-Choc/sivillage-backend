@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class HashtagList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_list_id")
     private Long id;
 

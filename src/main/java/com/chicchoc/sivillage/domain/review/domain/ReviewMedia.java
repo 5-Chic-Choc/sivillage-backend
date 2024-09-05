@@ -9,7 +9,7 @@ import lombok.Getter;
 public class ReviewMedia {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_media_id")
     private Long id;
 

@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class BrandBranch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_branch_id")
     private Long id;
 

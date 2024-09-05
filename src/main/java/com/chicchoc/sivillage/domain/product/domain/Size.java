@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class Size {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "size_id")
     private Long id;
 

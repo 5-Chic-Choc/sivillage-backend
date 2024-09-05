@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class Media {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "media_id")
     private Long id;
 

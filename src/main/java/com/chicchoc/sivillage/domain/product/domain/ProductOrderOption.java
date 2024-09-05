@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class ProductOrderOption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_order_option_id")
     private Long id;
 

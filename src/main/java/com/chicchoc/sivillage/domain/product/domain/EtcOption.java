@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class EtcOption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "etc_option_id")
     private Long id;
 
