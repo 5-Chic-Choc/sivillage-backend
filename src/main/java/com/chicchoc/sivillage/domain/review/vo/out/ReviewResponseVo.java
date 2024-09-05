@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.review.vo.out;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,5 @@ public class ReviewResponseVo {
     private String info;
     private int rate;
     private String content;
-    private Date createAt;
+    private LocalDateTime createAt;
 }

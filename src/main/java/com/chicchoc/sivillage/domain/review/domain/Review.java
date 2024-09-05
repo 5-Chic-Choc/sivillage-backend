@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.review.domain;
 
+import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,12 +38,5 @@ public class Review {
     private int rate;
 
     private String content;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    
 }
