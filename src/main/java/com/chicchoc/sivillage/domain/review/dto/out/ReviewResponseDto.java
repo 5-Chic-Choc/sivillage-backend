@@ -24,14 +24,14 @@ public class ReviewResponseDto {
                 .info(info)
                 .rate(rate)
                 .content(content)
-                .createAt(createAt).
-                build();
+                .createAt(createAt)
+                .build();
     }
 
     @Builder
-    public ReviewResponseDto(Long Id, Long productId, String size, String info, int rate, String content,
+    public ReviewResponseDto(Long id, Long productId, String size, String info, int rate, String content,
             LocalDateTime createAt) {
-        this.id = Id;
+        this.id = id;
         this.productId = productId;
         this.size = size;
         this.info = info;

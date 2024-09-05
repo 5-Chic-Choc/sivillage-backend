@@ -19,8 +19,8 @@ public class TokenController {
     private final TokenService tokenService;
 
     @PostMapping("/refresh")
-    public CommonResponseEntity<CreateAccessTokenResponseDto> createNewAccessToken
-            (@RequestBody CreateAccessTokenRequestDto requestDto) {
+    public CommonResponseEntity<CreateAccessTokenResponseDto> createNewAccessToken(
+            @RequestBody CreateAccessTokenRequestDto requestDto) {
 
         String newAccessToken = tokenService.createNewAccessToken(requestDto.getRefreshToken());
 
