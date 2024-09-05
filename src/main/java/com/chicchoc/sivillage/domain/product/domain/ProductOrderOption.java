@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
@@ -20,6 +22,10 @@ public class ProductOrderOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "size_id")
     private Size size;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id")
+    private Color color;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "etc_option_id")

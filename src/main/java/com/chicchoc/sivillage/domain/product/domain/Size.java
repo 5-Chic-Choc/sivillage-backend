@@ -15,5 +15,5 @@ public class Size {
 
     @Comment("사이즈 값")
     @Column(nullable = false, length = 10)
-    private String value;
+    private String name;
 }

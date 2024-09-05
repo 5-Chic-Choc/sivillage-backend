@@ -24,7 +24,7 @@ public class BrandController {
 
     @Operation(summary = "getBrand API", description = "브랜드 조회", tags = {"Brand"})
     @GetMapping("/main/brand")
-    public CommonResponseEntity<BrandResponseVo> getBrands() {
+    public CommonResponseEntity<List<BrandResponseVo>> getBrands() {
         List<BrandResponseDto> brandResponseDtos = brandService.getBrands();
 
         List<BrandResponseVo> brandResponseVos = brandResponseDtos.stream()
@@ -34,9 +34,7 @@ public class BrandController {
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "브랜드 조회 성공",
-                BrandResponseVo.builder()
-                        .brands(brandResponseVos)
-                        .build()
+                brandResponseVos
         );
     }
 }

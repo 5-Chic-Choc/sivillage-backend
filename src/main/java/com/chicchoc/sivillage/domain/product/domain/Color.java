@@ -13,11 +13,11 @@ public class Color {
     @Column(name = "color_id")
     private Long id;
 
-    @Comment("색상 필터링 값")
+    @Comment("색상 필터링 이름")
     @Column(nullable = false, length = 10)
-    private String value;
-
-    @Comment("색상 이름")
-    @Column(nullable = false, length = 30)
     private String name;
+
+    @Comment("색상 상세 값")
+    @Column(nullable = false, length = 30)
+    private String value;
 }
