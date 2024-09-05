@@ -24,7 +24,7 @@ public class PromotionController {
 
     @Operation(summary = "getPromotion API", description = "프로모션 조회", tags = {"Promotion"})
     @GetMapping("/main/promotion")
-    public CommonResponseEntity<PromotionResponseVo> getPromotions() {
+    public CommonResponseEntity<List<PromotionResponseVo>> getPromotions() {
         List<PromotionResponseDto> promotionResponseDtos = promotionService.getPromotions();
 
         List<PromotionResponseVo> promotionResponseVos = promotionResponseDtos.stream()
@@ -34,9 +34,7 @@ public class PromotionController {
         return new CommonResponseEntity<>(
                 HttpStatus.OK,
                 "프로모션 조회 성공",
-                PromotionResponseVo.builder()
-                        .promotions(promotionResponseVos)
-                        .build()
+                promotionResponseVos
         );
     }
 

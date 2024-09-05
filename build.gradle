@@ -91,7 +91,7 @@ tasks.named('test') {
 }
 
 tasks.register('copyPrivate', Copy) {
-    from'./sivillage-be_secret/'
+    from './sivillage-be_secret/'
     include 'application.yml'
     into 'src/main/resources/'
 }

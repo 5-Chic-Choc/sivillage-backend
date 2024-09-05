@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,9 +27,13 @@ public class Product {
 
     @Comment("상품 등록일")
     @Column(nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Comment("상품 브랜드")
     @Column(nullable = true)
     private Long brandId;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductOrderOption> productOrderOptions;
+
 }
