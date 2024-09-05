@@ -20,7 +20,8 @@ public class ProductResponseDto {
     private LocalDateTime createdAt;
     private Long brandId;
 
-    public ProductResponseDto(String productUuid, String productName, int price, int discountRate, int discountPrice, int originalPrice, LocalDateTime createdAt, Long brandId) {
+    public ProductResponseDto(String productUuid, String productName, int price, int discountRate, int discountPrice,
+                              int originalPrice, LocalDateTime createdAt, Long brandId) {
         this.productUuid = productUuid;
         this.productName = productName;
         this.price = price;
