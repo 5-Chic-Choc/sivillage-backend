@@ -11,7 +11,6 @@ import com.chicchoc.sivillage.domain.product.domain.Product;
 import com.chicchoc.sivillage.domain.product.domain.ProductOrderOption;
 import com.chicchoc.sivillage.domain.product.domain.Size;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
-import com.chicchoc.sivillage.domain.product.dto.out.ProductDetailResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
 import com.chicchoc.sivillage.domain.product.infrastructure.ColorRepository;
@@ -57,6 +56,11 @@ public class ProductServiceImpl implements ProductService {
                     .brandName(brandName)
                     .productName(product.getProductName())
                     .price(productOption.getPrice())
+                    .discountPrice(productOption.getDiscountPrice())
+                    .discountRate(productOption.getDiscountRate())
+                    .originalPrice(productOption.getPrice())
+                    .createdAt(product.getCreatedAt())
+                    .brandId(product.getBrandId())
                     .build();
         }).collect(Collectors.toList());
     }

@@ -2,12 +2,9 @@ package com.chicchoc.sivillage.domain.product.presentation;
 
 
 import com.chicchoc.sivillage.domain.product.application.ProductService;
-import com.chicchoc.sivillage.domain.product.dto.in.ProductPerBrandRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
-import com.chicchoc.sivillage.domain.product.vo.in.ProductPerBrandRequestVo;
-import com.chicchoc.sivillage.domain.product.vo.in.ProductRequestVo;
 import com.chicchoc.sivillage.domain.product.vo.out.ProductPerBrandResponseVo;
 import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
@@ -15,7 +12,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,20 +30,10 @@ public class ProductController {
 
     @Operation(summary = "getProductByBrand API", description = "브랜드 별 상품 조회", tags = {"Product"})
     @GetMapping("/{brandId}")
-    public CommonResponseEntity<List<ProductPerBrandResponseVo>> getProductsByBrandId(
-            @PathVariable Long brandId) {
-
-        ProductPerBrandRequestVo productPerBrandRequestVo = ProductPerBrandRequestVo.builder()
-                .brandId(brandId)
-                .build();
-        log.info("brandId : {}", productPerBrandRequestVo.getBrandId());
-
-        // VO를 DTO로 변환
-        ProductPerBrandRequestDto productPerBrandRequestDto = productPerBrandRequestVo.toRequestDto();
+    public CommonResponseEntity<List<ProductPerBrandResponseVo>> getProductsByBrandId(Long brandId) {
 
         // 서비스 호출
-        List<ProductPerBrandResponseDto> productPerBrandResponseDtos = productService.findAllByBrandId(
-                productPerBrandRequestDto.getBrandId());
+        List<ProductPerBrandResponseDto> productPerBrandResponseDtos = productService.findAllByBrandId(brandId);
 
         // DTO를 VO로 변환
         List<ProductPerBrandResponseVo> productPerBrandResponseVos = productPerBrandResponseDtos.stream()
@@ -71,8 +61,7 @@ public class ProductController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "true") boolean isAscending) {
 
-        // VO를 DTO로 변환
-        ProductRequestVo productRequestVo = ProductRequestVo.builder()
+        ProductRequestDto productRequestDto = ProductRequestDto.builder()
                 .categories(category)
                 .sizes(size)
                 .colors(color)
@@ -84,8 +73,6 @@ public class ProductController {
                 .sortBy(sortBy)
                 .isAscending(isAscending)
                 .build();
-
-        ProductRequestDto productRequestDto = productRequestVo.toRequestDto();
 
         // Service 호출
         List<ProductResponseDto> productResponseDtos = productService.getFilteredProducts(

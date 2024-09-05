@@ -1,7 +1,6 @@
 package com.chicchoc.sivillage.domain.product.application;
 
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
-import com.chicchoc.sivillage.domain.product.dto.out.ProductDetailResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
 
