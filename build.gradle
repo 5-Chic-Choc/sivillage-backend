@@ -73,6 +73,8 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'org.glassfish:jakarta.el:4.0.2'
 
+    // nano id
+    implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
 }
 
 checkstyle {
