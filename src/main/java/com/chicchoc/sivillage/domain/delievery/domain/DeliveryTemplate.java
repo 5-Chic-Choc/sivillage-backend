@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 public class DeliveryTemplate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "delivery_template_id")
     private Long id;
 

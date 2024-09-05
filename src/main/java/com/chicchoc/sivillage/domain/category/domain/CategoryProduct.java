@@ -9,7 +9,7 @@ import lombok.Getter;
 public class CategoryProduct {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_product_id")
     private Long id;
 

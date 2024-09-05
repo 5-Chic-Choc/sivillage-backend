@@ -11,7 +11,7 @@ import java.util.Date;
 public class UnsignedMember {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "unsigned_member_id")
     private Long id;
 
