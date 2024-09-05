@@ -37,11 +37,11 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
     private String uuid;
 
     @Comment("회원 이메일")
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Comment("회원 비밀번호")
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
     @Comment("회원 이름")
