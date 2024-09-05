@@ -34,7 +34,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         QProduct product = QProduct.product;
         QProductOrderOption productOrderOption = QProductOrderOption.productOrderOption;
-        QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -51,6 +50,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (maxPrice != null) {
             builder.and(productOrderOption.price.loe(maxPrice));
         }
+
+        QCategoryProduct categoryProduct = QCategoryProduct.categoryProduct;
 
         // 카테고리 필터링
         if (!CollectionUtils.isEmpty(categoryIds)) {
