@@ -22,6 +22,7 @@ public class ReviewRequestDto {
                 .size(size)
                 .reviewOption(reviewOption)
                 .info(info)
+                .rate(rate)
                 .content(content)
                 .build();
     }

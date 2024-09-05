@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.review.dto.out;
 
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Builder;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class ReviewResponseDto {
     private String info;
     private int rate;
     private String content;
-    private Date createAt;
+    private LocalDateTime createAt;
 
     public ReviewResponseVo toResponseVo() {
         return ReviewResponseVo.builder()
@@ -23,14 +24,14 @@ public class ReviewResponseDto {
                 .info(info)
                 .rate(rate)
                 .content(content)
-                .createAt(createAt).
-                build();
+                .createAt(createAt)
+                .build();
     }
 
     @Builder
-    public ReviewResponseDto(Long Id, Long productId, String size, String info, int rate, String content,
-            Date createAt) {
-        this.id = Id;
+    public ReviewResponseDto(Long id, Long productId, String size, String info, int rate, String content,
+            LocalDateTime createAt) {
+        this.id = id;
         this.productId = productId;
         this.size = size;
         this.info = info;

@@ -23,6 +23,7 @@ public class ReviewServiceImpl implements ReviewService {
         Long userId = null;
         reviewRepository.save(reviewRequestDto.toEntity(userId));
     }
+
     @Override
     public List<ReviewResponseDto> getReviewByProductId(Long productId) {
         List<Review> reviewListByProductId;
@@ -33,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return reviewListByProductId.stream()
                 .map(review -> ReviewResponseDto.builder()
-                        .Id(review.getId())
+                        .id(review.getId())
                         .productId(review.getProductId())
                         .size(review.getSize())
                         .info(review.getInfo())
@@ -55,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewListByUserId.stream()
                 .map(review -> ReviewResponseDto.builder()
-                        .Id(review.getId())
+                        .id(review.getId())
                         .productId(review.getProductId())
                         .size(review.getSize())
                         .info(review.getInfo())
