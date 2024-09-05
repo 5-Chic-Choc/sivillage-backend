@@ -2,7 +2,6 @@ package com.chicchoc.sivillage.global.auth.jwt;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -24,7 +23,7 @@ public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
 
-    //토큰 생성 메서드 : Duration을 받아 토큰 생성
+    //토큰 발급 메서드 : Duration을 받아 토큰 생성
     public String generateToken(Member member, Duration expiredAt) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expiredAt.toMillis());
@@ -36,7 +35,6 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         return Jwts.builder()
-                //                .header().type(Header.TYPE).add("typ", "JWT").and()
                 .header().type("typ").add("typ", "JWT").and()
                 .issuer(jwtProperties.getIssuer()) //토큰 발급자
                 .issuedAt(now) //토큰 발급 시간

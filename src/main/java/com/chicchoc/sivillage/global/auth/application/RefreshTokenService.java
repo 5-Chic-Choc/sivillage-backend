@@ -3,8 +3,11 @@ package com.chicchoc.sivillage.global.auth.application;
 import com.chicchoc.sivillage.global.auth.domain.RefreshToken;
 import com.chicchoc.sivillage.global.auth.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RefreshTokenService {
@@ -14,6 +17,21 @@ public class RefreshTokenService {
     public RefreshToken findByRefreshToken(String refreshToken) {
 
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리프레시 토큰을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰이 없습니다."));
+    }
+
+    @Transactional
+    public void saveOrUpdateRefreshToken(String uuid, String newRefreshToken) {
+        RefreshToken existingToken = refreshTokenRepository.findByUuid(uuid)
+                .orElse(null);
+
+        if (existingToken != null) {
+            // 토큰이 존재하면 수정
+            existingToken.setRefreshToken(newRefreshToken);
+        } else {
+            // 없으면 새로 저장
+            RefreshToken newToken = new RefreshToken(uuid, newRefreshToken);
+            refreshTokenRepository.save(newToken);
+        }
     }
 }
