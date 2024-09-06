@@ -92,11 +92,11 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-//tasks.register('copyPrivate', Copy) {
-//    from './sivillage-be_secret/'
-//    include 'application.yml'
-//    into 'src/main/resources/'
-//}
-//
-//processResources.dependsOn copyPrivate
+tasks.register('copyPrivate', Copy) {
+    from './sivillage-be_secret/'
+    include 'application.yml'
+    into 'src/main/resources/'
+}
+
+processResources.dependsOn copyPrivate
 
