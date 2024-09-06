@@ -4,10 +4,7 @@ import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
-import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
-import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
