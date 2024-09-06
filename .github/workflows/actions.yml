@@ -57,8 +57,9 @@ jobs:
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin <<EOF
             ${{ secrets.DOCKERHUB_PASSWORD }}
             EOF
+            docker image tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:previous
             docker stop ${{ secrets.PROJECT_NAME }} || true
             docker rm ${{ secrets.PROJECT_NAME }} || true
-            docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }} || true
+            docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
             docker run -d -p 8080:8080 --name ${{ secrets.PROJECT_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
