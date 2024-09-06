@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class ProductResponseVo {
+public class ProductDetailResponseVo {
+
     private String productUuid;
     private String productName;
-    private int price;
-    private int discountRate;
-    private int discountPrice;
-    private LocalDateTime createdAt;
     private Long brandId;
+    private LocalDateTime createdAt;
+    private Long sizeId;
+    private Long colorId;
+    private int price;
+    private int discountPrice;
+    private int discountRate;
 }

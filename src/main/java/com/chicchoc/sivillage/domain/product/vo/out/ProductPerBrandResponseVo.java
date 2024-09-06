@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class ProductResponseVo {
+public class ProductPerBrandResponseVo {
     private String productUuid;
+    private String brandName;
     private String productName;
     private int price;
     private int discountRate;

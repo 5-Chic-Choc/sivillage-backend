@@ -3,8 +3,20 @@ package com.chicchoc.sivillage.domain.product.dto.in;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
+import java.util.List;
+
 @Getter
+@Builder
 public class ProductRequestDto {
-    private Long brandId;
+    private List<String> categories;
+    private List<String> sizes;
+    private List<String> colors;
+    private List<String> brands;  // 필드를 복수형으로 수정
+    private Integer minimumPrice;
+    private Integer maximumPrice;
+    private int page;
+    private int perPage;
+    private String sortBy;
+    private boolean isAscending;
 }
+
