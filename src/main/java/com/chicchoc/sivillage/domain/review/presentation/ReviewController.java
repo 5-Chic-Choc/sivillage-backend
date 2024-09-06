@@ -8,8 +8,10 @@ import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +63,9 @@ public class ReviewController {
 
     @GetMapping("/user/{userId}")
     public CommonResponseEntity<List<ReviewResponseVo>> getReviewByUserId(@PathVariable("userId") Long userId) {
+        // Authentication authentication
+        // log.info("test" + authentication);
+
         List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByUserId(userId);
 
         List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
