@@ -1,6 +1,5 @@
 package com.chicchoc.sivillage.domain.cart.vo.out;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartResponseVo {
+public class CartProductResponseVo {
 
-    private String cartUuid;
+    private Long cartProductUuid;
+    private Long productOrderOptionId;
+    private int amount;
 }

@@ -22,7 +22,7 @@ public class CartController {
     @GetMapping("/list")
     public CommonResponseEntity<List<CartResponseVo>> getCartList(){
         // jwt로 userUuid 가져오기
-        String userUuid = "2";
+        String userUuid = "1";
         List<CartResponseDto> cartResponseDto = cartService.getCartUuidList(userUuid);
         List<CartResponseVo> cartResponseVoList = cartResponseDto.stream()
                 .map(CartResponseDto::toCartResponseVo)
@@ -33,6 +33,11 @@ public class CartController {
                 "장바구니 불러오기 성공",
                 cartResponseVoList
         );
+    }
+
+    @GetMapping("/productList")
+    public CommonResponseEntity<List<CartResponseVo>> getProductList(){
+
     }
 
 }
