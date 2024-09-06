@@ -90,34 +90,4 @@ public class ProductController {
                 productResponseVos
         );
     }
-
-
-    //    @Operation(summary = "getProductDetail API", description = "상품 상세 조회", tags = {"Product"})
-    //    @GetMapping("/detail/{productUuid}")
-    //    public CommonResponseEntity<ProductDetailResponseVo> getProductDetail
-    //            (@PathVariable ProductDetailRequestVo productDetailRequestVo) {
-    //
-    //        ProductDetailRequestDto productDetailRequestDto = ProductDetailRequestDto.builder()
-    //                .productUuid(productDetailRequestVo.getProductUuid())
-    //                .build();
-    //
-    //        ProductDetailResponseDto productDetailResponseDto = productService
-    //        .getProductDetail(productDetailRequestVo);
-    //
-    //        //        ProductDetailResponseVo productDetailResponseVo = ProductDetailResponseVo.builder()
-    //        //                .productUuid(productDetailResponseDto.getProductUuid())
-    //        //                .productName(productDetailResponseDto.getProductName())
-    //        //                .productDescription(productDetailResponseDto.getProductDescription())
-    //        //                .price(productDetailResponseDto.getPrice())
-    //        //                .productDetailContent(productDetailResponseDto.getProductDetailContent())
-    //        //                .productCode(productDetailResponseDto.getProductCode())
-    //        //                .build();
-    //
-    //        return new CommonResponseEntity<>(
-    //                HttpStatus.OK,
-    //                "상품 상세 조회 성공",
-    //                //                productDetailResponseVo
-    //                null
-    //        );
-    //    }
 }

@@ -33,7 +33,6 @@ public class ProductDetailResponseDto {
                 .price(price)
                 .discountPrice(discountPrice)
                 .discountRate(discountRate)
-                .productDetailUrl(productDetailUrl)
                 .build();
     }
 

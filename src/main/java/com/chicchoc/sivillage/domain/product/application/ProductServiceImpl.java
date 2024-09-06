@@ -11,6 +11,7 @@ import com.chicchoc.sivillage.domain.product.domain.Product;
 import com.chicchoc.sivillage.domain.product.domain.ProductOrderOption;
 import com.chicchoc.sivillage.domain.product.domain.Size;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductDetailResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
 import com.chicchoc.sivillage.domain.product.infrastructure.ColorRepository;
@@ -31,9 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
-    private final MediaRepository mediaRepository;
     private final ProductOrderOptionRepository productOrderOptionRepository;
-    private final ProductMediaRepository productMediaRepository;
     private final ColorRepository colorRepository;
     private final SizeRepository sizeRepository;
     private final CategoryRepository categoryRepository;
@@ -58,7 +57,6 @@ public class ProductServiceImpl implements ProductService {
                     .price(productOption.getPrice())
                     .discountPrice(productOption.getDiscountPrice())
                     .discountRate(productOption.getDiscountRate())
-                    .originalPrice(productOption.getPrice())
                     .createdAt(product.getCreatedAt())
                     .brandId(product.getBrandId())
                     .build();
@@ -103,17 +101,8 @@ public class ProductServiceImpl implements ProductService {
                 .price(product.getProductOrderOptions().get(0).getPrice())
                 .discountRate(product.getProductOrderOptions().get(0).getDiscountRate())
                 .discountPrice(product.getProductOrderOptions().get(0).getDiscountPrice())
-                .originalPrice(product.getProductOrderOptions().get(0).getPrice())
                 .createdAt(product.getCreatedAt())
                 .brandId(product.getBrandId())
                 .build()).collect(Collectors.toList());
     }
-
-
-    //    @Override
-    //    public ProductDetailResponseDto getProductDetail(ProductDetailResponseDto productDetailResponseDto) {
-    //        return null;
-    //    }
-
-
 }

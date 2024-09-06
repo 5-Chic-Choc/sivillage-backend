@@ -18,5 +18,4 @@ public class ProductDetailResponseVo {
     private int price;
     private int discountPrice;
     private int discountRate;
-    private String productDetailUrl;
 }

@@ -10,6 +10,4 @@ public interface ProductService {
     List<ProductPerBrandResponseDto> findAllByBrandId(Long brandId);
 
     List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto);
-
-    //    ProductDetailResponseDto getProductDetail(String productUuid);
 }

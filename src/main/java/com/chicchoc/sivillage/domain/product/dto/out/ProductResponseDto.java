@@ -14,7 +14,6 @@ public class ProductResponseDto {
     private int price;
     private int discountRate;
     private int discountPrice;
-    private int originalPrice;
     private LocalDateTime createdAt;
     private Long brandId;
 
@@ -26,7 +25,6 @@ public class ProductResponseDto {
                 .price(price)
                 .discountRate(discountRate)
                 .discountPrice(discountPrice)
-                .originalPrice(originalPrice)
                 .createdAt(createdAt)
                 .brandId(brandId)
                 .build();

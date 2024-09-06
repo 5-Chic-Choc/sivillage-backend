@@ -14,7 +14,6 @@ public class ProductPerBrandResponseVo {
     private int price;
     private int discountRate;
     private int discountPrice;
-    private int originalPrice;
     private LocalDateTime createdAt;
     private Long brandId;
 }
