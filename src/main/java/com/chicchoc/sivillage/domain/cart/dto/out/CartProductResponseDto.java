@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartProductResponseDto {
 
-    private Long cartProductUuid;
+    private String cartProductUuid;
     private Long productOrderOptionId;
     private int amount;
 }

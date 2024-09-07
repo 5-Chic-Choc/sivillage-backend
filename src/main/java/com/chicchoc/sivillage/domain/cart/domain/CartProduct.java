@@ -21,11 +21,11 @@ public class CartProduct {
 
     @Comment("장바구니 제품 uuid")
     @Column(name = "cart_product_uuid")
-    private Long cartProductUuid;
+    private String cartProductUuid;
 
     @Comment("장바구니 uuid")
     @Column(name = "cart_uuid")
-    private Long cartUuid;
+    private String cartUuid;
 
     @Comment("상품 주문 옵션 ID")
     @Column(name = "product_order_option_id")
