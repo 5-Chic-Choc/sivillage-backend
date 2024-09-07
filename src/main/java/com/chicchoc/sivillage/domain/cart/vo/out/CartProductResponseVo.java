@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartProductResponseVo {
 
-    private Long cartProductUuid;
+    private String cartProductUuid;
     private Long productOrderOptionId;
     private int amount;
 }
