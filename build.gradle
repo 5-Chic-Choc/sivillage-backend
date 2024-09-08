@@ -98,5 +98,5 @@ tasks.register('copyPrivate', Copy) {
     into 'src/main/resources/'
 }
 
-//processResources.dependsOn copyPrivate
+processResources.dependsOn copyPrivate
 
