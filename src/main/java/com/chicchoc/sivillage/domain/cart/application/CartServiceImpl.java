@@ -6,8 +6,6 @@ import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +21,17 @@ public class CartServiceImpl implements CartService {
         // TODO 회원 비회원 확인 로직
         boolean isSigned = false;
         // TODO 회원, 비회원 userUuid 가져오는 로직
-        String userUuid = null;
+        String userUuid = "test1";
         // cartUuid 생성
-        String CartUuid = nanoIdGenerator.generateNanoId();
+        String cartUuid = nanoIdGenerator.generateNanoId();
 
-        cartRepository.save(cartRequestDto.toEntity(CartUuid, isSigned, userUuid));
+        cartRepository.save(cartRequestDto.toEntity(cartUuid, isSigned, userUuid));
     }
 
     @Override
     public List<CartResponseDto> getCartUuidList(String userUuid) {
         List<Cart> cartList = cartRepository.findByUserUuid(userUuid);
 
-        return cartList.stream()
-                .map(cart -> CartResponseDto.builder()
-                        .cartUuid(cart.getCartUuid())
-                        .build())
-                .toList();
+        return cartList.stream().map(cart -> CartResponseDto.builder().cartUuid(cart.getCartUuid()).build()).toList();
     }
 }
