@@ -35,7 +35,7 @@ public class BrandServiceImpl implements BrandService {
 
         return brands.stream()
                 .map(brand -> BrandResponseDto.builder()
-                        .id(brand.getId())
+                        .brandUuid(brand.getBrandUuid())
                         .name(brand.getName())
                         .logoUrl(brand.getLogoUrl())
                         .build())
