@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.global.error.exception;
 
+import com.chicchoc.sivillage.global.auth.dto.out.CheckEmailResponseDto;
+import com.chicchoc.sivillage.global.auth.exception.EmailAlreadyInUseException;
 import com.chicchoc.sivillage.global.auth.exception.ValidException;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import java.util.HashMap;
@@ -13,17 +15,34 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionControllerAdvice {
+public class GlobalExceptionHandler {
+
+    //todo : 예외 처리 관련 Team Rule 정리
+
+    // EmailAlreadyInUseException 예외 처리
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public CommonResponseEntity<?> handleEmailAlreadyInUseException(EmailAlreadyInUseException ex) {
+        log.error("EmailAlreadyInUseException 발생: {}", ex.getMessage());
+
+        return new CommonResponseEntity<>(
+                HttpStatus.CONFLICT, // 409 Conflict 상태 코드
+                ex.getMessage(), // 예외 메시지
+                new CheckEmailResponseDto() {{
+                    setAvailable(false);
+                    setMessage(ex.getMessage());
+                }}
+        );
+    }
 
     // IllegalArgumentException 예외 처리
     @ExceptionHandler(IllegalArgumentException.class)
     public CommonResponseEntity<?> handleIllegalArgumentException(
-            IllegalArgumentException illegalArgumentException) {
-        log.error("IllegalArgumentException 발생: {}", illegalArgumentException.getMessage());
+            IllegalArgumentException ex) {
+        log.error("IllegalArgumentException 발생: {}", ex.getMessage());
 
         return new CommonResponseEntity<>(
                 HttpStatus.BAD_REQUEST,  // 400 Bad Request 상태 코드
-                illegalArgumentException.getMessage(),  // 예외 메시지
+                ex.getMessage(),  // 예외 메시지
                 null  // 데이터 없음
         );
     }
