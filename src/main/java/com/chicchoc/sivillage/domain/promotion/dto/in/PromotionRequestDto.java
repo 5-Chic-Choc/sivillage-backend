@@ -7,11 +7,19 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PromotionRequestDto {
-    private Long id;
 
-    public Promotion toEntity() {
+    private String title;
+    private String description;
+    private String promotionDetailUrl;
+    private String thumbnailUrl;
+
+    public Promotion toEntity(String promotionUuid) {
         return Promotion.builder()
-                .id(id)
+                .promotionUuid(promotionUuid)
+                .title(title)
+                .description(description)
+                .promotionDetailUrl(promotionDetailUrl)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
     }
 }

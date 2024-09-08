@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Builder
 public class PromotionResponseVo {
-    private Long id;
+    private String promotionUuid;
     private String title;
     private String description;
     private String thumbnailUrl;

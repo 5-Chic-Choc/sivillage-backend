@@ -3,16 +3,19 @@ package com.chicchoc.sivillage.domain.promotion.dto.out;
 import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionResponseVo;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public class PromotionResponseDto {
-    private Long id;
+    private String promotionUuid;
     private String title;
     private String description;
     private String thumbnailUrl;
+    private List<String> hahtagContent;
 
     public PromotionResponseVo toResponseVo() {
         return PromotionResponseVo.builder()
-                .id(id)
+                .promotionUuid(promotionUuid)
                 .title(title)
                 .description(description)
                 .thumbnailUrl(thumbnailUrl)

@@ -18,6 +18,6 @@ public class PromotionHashtag {
     private String promotionUuid;
 
     @Comment("해시태그 내용")
-    @Column(name = "content", nullable = false, length = 30)
-    private String content;
+    @Column(name = "hashtag_content", nullable = false, length = 30)
+    private String hashtagContent;
 }

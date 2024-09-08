@@ -21,7 +21,7 @@ public class Promotion {
 
     @Comment("프로모션 UUID")
     @Column(nullable = false, length = 21)
-    private Long promotionUuid;
+    private String promotionUuid;
 
     @Comment("프로모션 제목")
     @Column(nullable = false, length = 100)
@@ -38,4 +38,11 @@ public class Promotion {
     @Comment("프로모션 썸네일 이미지 URL")
     @Column(nullable = false, length = 2000)
     private String thumbnailUrl;
+
+    public void updatePromotion(String title, String description, String promotionDetailUrl, String thumbnailUrl) {
+        this.title = title;
+        this.description = description;
+        this.promotionDetailUrl = promotionDetailUrl;
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }
