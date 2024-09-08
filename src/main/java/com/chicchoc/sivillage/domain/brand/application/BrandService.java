@@ -10,4 +10,6 @@ public interface BrandService {
     void addBrand(BrandRequestDto brandRequestDto);
 
     List<BrandResponseDto> findAllBrands();
+
+    void updateBrand(String brandUuid, BrandRequestDto brandRequestDto);
 }

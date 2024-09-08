@@ -41,4 +41,14 @@ public class BrandServiceImpl implements BrandService {
                         .build())
                 .toList();
     }
+
+    @Override
+    public void updateBrand(String brandUuid, BrandRequestDto brandRequestDto) {
+        Brand brand = brandRepository.findByBrandUuid(brandUuid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
+
+        brand.updateBrand(brandRequestDto.getName(), brandRequestDto.getLogoUrl());
+        
+        brandRepository.save(brand);
+    }
 }

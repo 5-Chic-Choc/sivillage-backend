@@ -50,4 +50,20 @@ public class BrandController {
                 brandResponseVos
         );
     }
+
+    @Operation(summary = "updateBrand API", description = "브랜드 수정", tags = {"Brand"})
+    @PutMapping("/{brandUuid}")
+    public CommonResponseEntity<Void> updateBrand(
+            @PathVariable String brandUuid,
+            @RequestBody BrandRequestVo brandRequestVo) {
+
+        BrandRequestDto brandRequestDto = brandRequestVo.toDto();
+        brandService.updateBrand(brandUuid, brandRequestDto);
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                "브랜드 수정 성공",
+                null
+        );
+    }
 }

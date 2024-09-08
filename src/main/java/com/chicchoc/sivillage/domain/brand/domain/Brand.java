@@ -30,4 +30,9 @@ public class Brand {
     @Comment("브랜드 로고 URL")
     @Column(nullable = false, length = 2000)
     private String logoUrl;
+
+    public void updateBrand(String name, String logoUrl) {
+        this.name = name;
+        this.logoUrl = logoUrl;
+    }
 }
