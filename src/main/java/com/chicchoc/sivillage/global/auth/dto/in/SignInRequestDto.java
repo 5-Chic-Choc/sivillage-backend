@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.dto;
+package com.chicchoc.sivillage.global.auth.dto.in;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

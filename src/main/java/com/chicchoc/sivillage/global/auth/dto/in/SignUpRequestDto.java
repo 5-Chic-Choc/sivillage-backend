@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.dto;
+package com.chicchoc.sivillage.global.auth.dto.in;
 
 import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.domain.member.domain.Member;
@@ -6,12 +6,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter

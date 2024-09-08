@@ -2,11 +2,12 @@ package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
-import com.chicchoc.sivillage.global.auth.dto.SignInRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.SignInResponseDto;
-import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
-import com.chicchoc.sivillage.global.auth.jwt.JwtTokenProvider;
+import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
+import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
+import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
+import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

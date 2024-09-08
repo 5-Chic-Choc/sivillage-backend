@@ -1,8 +1,8 @@
 package com.chicchoc.sivillage.global.config;
 
 import com.chicchoc.sivillage.global.auth.exception.CustomAuthenticationEntryPoint;
-import com.chicchoc.sivillage.global.auth.jwt.JwtAutenticationFilter;
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
+import com.chicchoc.sivillage.global.jwt.config.JwtAutenticationFilter;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
