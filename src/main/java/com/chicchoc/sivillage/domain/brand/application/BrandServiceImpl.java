@@ -17,7 +17,7 @@ public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
 
     @Override
-    public List<BrandResponseDto> getBrands() {
+    public List<BrandResponseDto> findAllBrands() {
         List<Brand> brands = brandRepository.findAll();
 
         return brands.stream()

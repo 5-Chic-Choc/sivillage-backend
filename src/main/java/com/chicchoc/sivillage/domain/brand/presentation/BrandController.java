@@ -17,15 +17,15 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/brand")
 public class BrandController {
 
     private final BrandService brandService;
 
-    @Operation(summary = "getBrand API", description = "브랜드 조회", tags = {"Brand"})
-    @GetMapping("/main/brand")
+    @Operation(summary = "getAllBrands API", description = "전체 브랜드 조회", tags = {"Brand"})
+    @GetMapping()
     public CommonResponseEntity<List<BrandResponseVo>> getBrands() {
-        List<BrandResponseDto> brandResponseDtos = brandService.getBrands();
+        List<BrandResponseDto> brandResponseDtos = brandService.findAllBrands();
 
         List<BrandResponseVo> brandResponseVos = brandResponseDtos.stream()
                 .map(BrandResponseDto::toResponseVo)

@@ -1,7 +1,6 @@
 package com.chicchoc.sivillage.domain.brand.domain;
 
 import jakarta.persistence.*;
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +18,14 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
     private Long id;
+
+    @Comment("브랜드 UUID")
+    @Column(nullable = false, length = 21, unique = true)
+    private String brandUuid;
+
+    @Comment("미디어 ID")
+    @Column(nullable = false)
+    private Long mediaId;
 
     @Comment("브랜드 이름")
     @Column(nullable = false, length = 255, unique = true)
