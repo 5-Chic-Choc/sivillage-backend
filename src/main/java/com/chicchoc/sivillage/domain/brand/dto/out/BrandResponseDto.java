@@ -5,13 +5,13 @@ import lombok.Builder;
 
 @Builder
 public class BrandResponseDto {
-    private Long id;
+    private String brandUuid;
     private String name;
     private String logoUrl;
 
     public BrandResponseVo toResponseVo() {
         return BrandResponseVo.builder()
-                .id(id)
+                .brandUuid(brandUuid)
                 .name(name)
                 .logoUrl(logoUrl)
                 .build();
