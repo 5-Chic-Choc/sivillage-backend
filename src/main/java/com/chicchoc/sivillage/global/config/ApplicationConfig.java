@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @Configuration
 public class ApplicationConfig {
-  
     // 사용자 정보, 비밀번호 인코더, 인증 처리를 위한 빈을 생성하는 클래스(App 전반)
+
     private final UserDetailService userDetailService;
 
     @Bean
@@ -41,6 +41,5 @@ public class ApplicationConfig {
     // 비밀번호 BCrypt 암호화를 위한 빈
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-
     }
 }

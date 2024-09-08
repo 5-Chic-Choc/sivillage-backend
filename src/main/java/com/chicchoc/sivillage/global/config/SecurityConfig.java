@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.config;
 
 import com.chicchoc.sivillage.global.auth.exception.CustomAuthenticationEntryPoint;
 import com.chicchoc.sivillage.global.auth.jwt.JwtAutenticationFilter;
+import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ public class SecurityConfig {
     // CORS 설정, 인증 처리, JWT 인증 필터 설정
     private final AuthenticationProvider authenticationProvider;
     private final JwtAutenticationFilter jwtAutenticationFilter;
+    private final JwtProperties jwtProperties;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -34,7 +36,7 @@ public class SecurityConfig {
         config.addAllowedOriginPattern("*"); //모든 Origin 허용
         config.addAllowedHeader("Content-Type"); // JSON 데이터만 헤더로 받음
         config.addAllowedMethod("*"); //모든 Method 허용
-        config.setExposedHeaders(List.of("Authorization")); //Authorization 헤더를 노출
+        config.setExposedHeaders(List.of(jwtProperties.getHeaderString())); //Authorization 헤더를 노출
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); //모든 URL에 대해 CORS 설정 적용
         return new CorsFilter(source);
@@ -44,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 설정 비활성화
-                .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 설정 비활성화
+                .formLogin(AbstractHttpConfigurer::disable) // Form 로그인 설정 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 설정 비활성화
                 .logout(AbstractHttpConfigurer::disable) // 로그아웃 설정 비활성화
                 // 인증되지 않은 사용자가 접근할 수 있는 URL 설정
@@ -79,4 +81,6 @@ public class SecurityConfig {
                 .addFilter(corsFilter());
         return http.build();
     }
+
+
 }
