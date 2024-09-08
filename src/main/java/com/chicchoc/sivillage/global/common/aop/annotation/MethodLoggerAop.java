@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD) //메소드에 다는 용도
-public @interface MethodLogger {
+public @interface MethodLoggerAop {
 }

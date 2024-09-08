@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class LoggingAop {
+public class MethodLoggingAspect {
 
     // Slf4j Logger 선언
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAop.class);
+    private static final Logger logger = LoggerFactory.getLogger(MethodLoggingAspect.class);
 
-    @Pointcut("@annotation(com.chicchoc.sivillage.global.common.aop.annotation.MethodLogger)")
+    @Pointcut("@annotation(com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop)")
     private void pointCut() {
     }
 

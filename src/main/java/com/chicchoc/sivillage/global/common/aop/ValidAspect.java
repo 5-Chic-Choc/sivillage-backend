@@ -14,7 +14,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 @Slf4j
 @Aspect
 @Component
-public class ValidAop {
+public class ValidAspect {
 
     //@ValidAop 어노테이션이 붙은 메소드를 대상으로 함을 정의
     @Pointcut("@annotation(com.chicchoc.sivillage.global.common.aop.annotation.ValidAop)")
