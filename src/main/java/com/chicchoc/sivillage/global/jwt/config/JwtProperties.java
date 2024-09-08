@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.jwt;
+package com.chicchoc.sivillage.global.jwt.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,10 +1,10 @@
 package com.chicchoc.sivillage.global.auth.presentation;
 
 import com.chicchoc.sivillage.global.auth.application.AuthService;
-import com.chicchoc.sivillage.global.auth.dto.SignInRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.SignInResponseDto;
-import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
+import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
+import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
 import com.chicchoc.sivillage.global.common.aop.annotation.ValidAop;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;

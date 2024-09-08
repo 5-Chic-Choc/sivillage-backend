@@ -1,5 +1,6 @@
-package com.chicchoc.sivillage.global.auth.jwt;
+package com.chicchoc.sivillage.global.jwt.application;
 
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

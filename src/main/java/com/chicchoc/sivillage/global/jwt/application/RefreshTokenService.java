@@ -1,7 +1,7 @@
-package com.chicchoc.sivillage.global.auth.application;
+package com.chicchoc.sivillage.global.jwt.application;
 
-import com.chicchoc.sivillage.global.auth.domain.RefreshToken;
-import com.chicchoc.sivillage.global.auth.infrastructure.RefreshTokenRepository;
+import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
+import com.chicchoc.sivillage.global.jwt.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

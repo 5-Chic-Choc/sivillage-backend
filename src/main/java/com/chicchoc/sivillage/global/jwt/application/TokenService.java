@@ -1,7 +1,6 @@
-package com.chicchoc.sivillage.global.auth.application;
+package com.chicchoc.sivillage.global.jwt.application;
 
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
-import com.chicchoc.sivillage.global.auth.jwt.JwtTokenProvider;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

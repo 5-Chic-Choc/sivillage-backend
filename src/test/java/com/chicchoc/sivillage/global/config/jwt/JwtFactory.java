@@ -2,7 +2,7 @@ package com.chicchoc.sivillage.global.config.jwt;
 
 import static java.util.Collections.emptyMap;
 
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.jwt;
+package com.chicchoc.sivillage.global.jwt.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

@@ -6,10 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
-import com.chicchoc.sivillage.global.auth.domain.RefreshToken;
-import com.chicchoc.sivillage.global.auth.dto.CreateAccessTokenRequestDto;
-import com.chicchoc.sivillage.global.auth.infrastructure.RefreshTokenRepository;
-import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
+import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
+import com.chicchoc.sivillage.global.jwt.dto.in.CreateAccessTokenRequestDto;
+import com.chicchoc.sivillage.global.jwt.infrastructure.RefreshTokenRepository;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import com.chicchoc.sivillage.global.config.jwt.JwtFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;

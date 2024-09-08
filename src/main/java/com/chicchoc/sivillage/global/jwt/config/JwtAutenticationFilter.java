@@ -1,5 +1,6 @@
-package com.chicchoc.sivillage.global.auth.jwt;
+package com.chicchoc.sivillage.global.jwt.config;
 
+import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +9,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAutenticationFilter extends OncePerRequestFilter {
 
     private final JwtProperties jwtProperties;
-    private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
 
