@@ -4,25 +4,19 @@ import com.chicchoc.sivillage.domain.brand.domain.Brand;
 import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class BrandRequestDto {
 
-    private Long id;
+    private String brandUuid;
     private String name;
     private String logoUrl;
 
-    public Brand toEntity() {
+    public Brand toEntity(String brandUuid) {
         return Brand.builder()
-                .id(id)
+                .brandUuid(brandUuid)
                 .name(name)
                 .logoUrl(logoUrl)
                 .build();
-    }
-
-    @Builder
-    public BrandRequestDto(Long id, String name, String logoUrl) {
-        this.id = id;
-        this.name = name;
-        this.logoUrl = logoUrl;
     }
 }

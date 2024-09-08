@@ -23,10 +23,6 @@ public class Brand {
     @Column(nullable = false, length = 21, unique = true)
     private String brandUuid;
 
-    @Comment("미디어 ID")
-    @Column(nullable = false)
-    private Long mediaId;
-
     @Comment("브랜드 이름")
     @Column(nullable = false, length = 255, unique = true)
     private String name;
