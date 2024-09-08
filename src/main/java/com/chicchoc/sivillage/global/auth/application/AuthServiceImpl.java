@@ -2,15 +2,17 @@ package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
+import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.out.CheckEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
-import com.chicchoc.sivillage.global.auth.exception.EmailAlreadyInUseException;
+import com.chicchoc.sivillage.global.common.aop.annotation.ExceptionHandleAop;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,15 +34,15 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
 
+    @ExceptionHandleAop // save 중 예외 발생 시
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
         String uuid = new NanoIdGenerator().generateNanoId();
 
-        // uuid 중복 검사
-        if (memberRepository.findByUuid(uuid).isPresent()) {
-            throw new IllegalArgumentException("문제가 발생했습니다. 다시 시도해주세요.");
+        if (memberRepository.existsByNameAndPhone(signUpRequestDto.getName(), signUpRequestDto.getPhone())) {
+            throw new IllegalArgumentException("이미 가입된 ID가 있습니다.");
         }
 
         String password = passwordEncoder.encode(signUpRequestDto.getPassword());
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
 
         try {
-            //로그인 시도
+            //인증 객체 생성
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             member.getUuid(),
@@ -66,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
                     )
             );
 
+            //토큰 생성
             String accessToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime());
             String refreshToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime());
             refreshTokenService.saveOrUpdateRefreshToken(member.getUuid(), refreshToken);
@@ -82,21 +85,41 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @ExceptionHandleAop
     @Transactional(readOnly = true)
     @Override
-    public CheckEmailResponseDto checkEmail(String email) {
+    public boolean isInUseEmail(CheckEmailRequestDto checkEmailRequestDto) {
 
-        CheckEmailResponseDto responseDto = new CheckEmailResponseDto();
-
-        if (memberRepository.findByEmail(email).isPresent()) {
-            responseDto.setAvailable(false);
-            throw new EmailAlreadyInUseException("이미 사용중인 이메일입니다.");
-        } else {
-            responseDto.setAvailable(true);
-            responseDto.setMessage("사용 가능한 이메일입니다.");
-        }
-
-        return responseDto;
+        return memberRepository.existsByEmail(checkEmailRequestDto.getEmail());
     }
 
+    @ExceptionHandleAop
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<String> findEmail(FindEmailRequestDto findEmailRequestDto) {
+
+        String name = findEmailRequestDto.getName();
+        String phone = findEmailRequestDto.getPhone();
+
+        // 이메일이 존재할 경우 마스킹하여 반환, 없는 경우는
+        return memberRepository.findEmailByNameAndPhoneNumber(name, phone)
+                .map(this::maskEmail);
+    }
+
+    private String maskEmail(String email) {
+        String[] splitEmail = email.split("@");
+        String local = splitEmail[0];
+        String domain = splitEmail[1];
+        int localLength = local.length();
+
+        // 로컬 길이에 따라 마스킹 처리
+        String maskedLocalPart;
+        if (localLength > 3) {
+            maskedLocalPart = local.substring(0, 3) + "*".repeat(localLength - 3);
+        } else {
+            maskedLocalPart = local.charAt(0) + "*".repeat(localLength - 1);
+        }
+
+        return maskedLocalPart + "@" + domain;
+    }
 }
