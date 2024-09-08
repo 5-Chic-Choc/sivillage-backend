@@ -11,7 +11,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CartProductServiceImpl implements CartProductService{
+public class CartProductServiceImpl implements CartProductService {
+
     private final CartProductRepository cartProductRepository;
 
     @Override

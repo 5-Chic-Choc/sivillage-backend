@@ -21,7 +21,7 @@ public class CartProductController {
     private final CartProductService cartProductService;
 
     @GetMapping("/list/{cartUuid}")
-    public CommonResponseEntity<List<CartProductResponseVo>> getProductList(@PathVariable("cartUuid") String cartUuid){
+    public CommonResponseEntity<List<CartProductResponseVo>> getProductList(@PathVariable("cartUuid") String cartUuid) {
         List<CartProductResponseDto> cartProductResponseDto = cartProductService.getCartProductList(cartUuid);
         List<CartProductResponseVo> cartProductResponseVo = cartProductResponseDto.stream()
                 .map(CartProductResponseDto::toCartProductResponseVo)

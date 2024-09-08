@@ -4,6 +4,7 @@ import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import lombok.Builder;
 
 public class CartResponseDto {
+
     private String cartUuid;
 
     public CartResponseVo toCartResponseVo() {
