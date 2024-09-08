@@ -7,17 +7,22 @@ import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
 import com.chicchoc.sivillage.global.auth.jwt.JwtTokenProvider;
+import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
 import javax.crypto.SecretKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +40,13 @@ class TokenProviderTest {
     @Autowired
     private JwtProperties jwtProperties;
 
+    private SecretKey secretKey;
+
+    @BeforeEach
+    void setUp() {
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+    }
+
     @DisplayName("generateToken(): 유저 정보와 만료 기간을 전달해 토큰을 만들 수 있다.")
     @Test
     void generateToken() {
@@ -44,24 +56,28 @@ class TokenProviderTest {
 
         Member testUser = memberRepository.save(Member.builder()
                 .email(uniqueEmail)
-                .password("test")
-                .uuid("12345")
-                .name("zz")
+                .password("testpassword")
+                .uuid(new NanoIdGenerator().generateNanoId())
+                .name("TestUser")
                 .phone("010-1234-5678")
                 .gender(Gender.GENDER_MALE)
                 .isAutoSignIn(true)
                 .build());
 
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                testUser.getUuid(), null, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+
         // when : 토큰 생성
-        String token = jwtTokenProvider.generateToken(testUser, Duration.ofDays(14));
+        String token = jwtTokenProvider.generateToken(authentication, Duration.ofDays(14).toMillis());
 
         // then : 토큰이 생성되었는지 확인
-        String userUuid = Jwts.parser()
-                .verifyWith((SecretKey) Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
+        Claims claims = Jwts.parser()
+                .verifyWith((SecretKey) secretKey)
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .get("uuid", String.class);
+                .getPayload();
+
+        String userUuid = claims.getSubject();
 
         // 토큰에 담긴 유저 정보가 일치하는지 확인
         assertThat(userUuid).isEqualTo(testUser.getUuid());
@@ -79,7 +95,7 @@ class TokenProviderTest {
                 .createToken(jwtProperties);
 
         // when : 토큰 유효성 검증
-        boolean result = jwtTokenProvider.validToken(token);
+        boolean result = jwtTokenProvider.isValidToken(token);
 
         // then : 유효성 검증 실패
         assertThat(result).isFalse();
@@ -95,7 +111,7 @@ class TokenProviderTest {
                 .createToken(jwtProperties);
 
         // when : 토큰 유효성 검증
-        boolean result = jwtTokenProvider.validToken(token);
+        boolean result = jwtTokenProvider.isValidToken(token);
 
         // then : 유효성 검증 성공
         assertThat(result).isTrue();
@@ -107,34 +123,34 @@ class TokenProviderTest {
     void getAuthentication() {
 
         // given : 토큰 생성
-        String userEmail = "user@email.com";
+        String userUuid = new NanoIdGenerator().generateNanoId();
         String token = JwtFactory.builder()
-                .subject(userEmail)
+                .subject(userUuid)
                 .build()
                 .createToken(jwtProperties);
 
         // when : 토큰 기반으로 인증정보 가져오기
-        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        Authentication authentication = jwtTokenProvider.createAuthentication(token);
 
         // then : 인증정보가 일치하는지 확인
-        assertThat(((UserDetails) authentication.getPrincipal()).getUsername()).isEqualTo(userEmail);
+        assertThat(((UserDetails) authentication.getPrincipal()).getUsername()).isEqualTo(userUuid);
     }
 
-    @DisplayName("getUserId(): 토큰으로 유저 ID를 가져올 수 있다.")
+    @DisplayName("getUserUuid(): 토큰으로 유저 UUID를 가져올 수 있다.")
     @Test
     void getUserUuId() {
 
         // given : 토큰 생성
-        String userUuid = "1234";
+        String userUuid = new NanoIdGenerator().generateNanoId();
         String token = JwtFactory.builder()
-                .claims(Map.of("uuid", userUuid))
+                .subject(userUuid)
                 .build()
                 .createToken(jwtProperties);
 
         // when : 토큰으로 유저 ID 가져오기
-        String userUuIdByToken = jwtTokenProvider.getUserUuid(token);
+        String uuid = jwtTokenProvider.getUserUuid(token);
 
         // then :  유저 ID가 일치하는지 확인
-        assertThat(userUuIdByToken).isEqualTo(userUuid);
+        assertThat(uuid).isEqualTo(userUuid);
     }
 }

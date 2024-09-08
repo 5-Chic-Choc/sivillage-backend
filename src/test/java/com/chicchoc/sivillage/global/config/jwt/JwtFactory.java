@@ -3,21 +3,25 @@ package com.chicchoc.sivillage.global.config.jwt;
 import static java.util.Collections.emptyMap;
 
 import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
-import io.jsonwebtoken.Header;
+import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
+import javax.crypto.SecretKey;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class JwtFactory { //토큰 생성 클래스
 
     // 기본 필드값 설정
-    private String subject = "test@email.com";
+    private SecretKey secretKey;
+
+    private String subject = new NanoIdGenerator().generateNanoId();
 
     private Date issuedAt = new Date();
 
@@ -42,16 +46,17 @@ public class JwtFactory { //토큰 생성 클래스
 
     // 토큰 생성 메서드
     public String createToken(JwtProperties jwtProperties) {
+
+        secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+
         return Jwts.builder()
-                .header().type(Header.TYPE).add("typ", "JWT").and()
+                .header().add("typ", "JWT").and()
                 .issuer(jwtProperties.getIssuer()) //토큰 발급자
                 .issuedAt(issuedAt) //토큰 발급 시간
                 .expiration(expiration) //토큰 만료 시간
-                .subject(subject) //토큰 제목
-                .claim("claims", claims)
-                .claim("uuid", claims.get("uuid"))
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()),
-                        SignatureAlgorithm.HS256) //토큰 서명
+                .subject(subject)
+                .claim("testClaims", claims.get("testClaims"))
+                .signWith(secretKey) //토큰 서명
                 .compact();
     }
 }

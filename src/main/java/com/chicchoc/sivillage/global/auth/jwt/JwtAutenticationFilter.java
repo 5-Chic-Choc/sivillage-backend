@@ -20,8 +20,6 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private String header;
-    private String prefix;
 
     @Override
     protected void doFilterInternal(
@@ -29,18 +27,15 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        header = jwtProperties.getHeaderString();
-        prefix = jwtProperties.getTokenPrefix();
+        String headerKey = jwtProperties.getHeaderString();
+        String token = getAccessToken(request.getHeader(headerKey));
 
-        //헤더에서 토큰을 가져옴
-        final String authHeader = request.getHeader(header);
+        boolean validToken = jwtTokenProvider.isValidToken(token);
+        boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null;
 
-        String token = getAccessToken(authHeader);
-
-        // todo : UserDetailsService 방법과 비교
-        // 유효하면 인증을 수행하고 SecurityContext에 저장
-        if (jwtTokenProvider.validToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        // 토큰이 유효하고 인증되어 있지 않다면, 토큰을 이용해 인증 객체 생성 => SecurityContext에 저장
+        if (validToken && !isAuthenticated) {
+            Authentication authentication = jwtTokenProvider.createAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
@@ -48,9 +43,12 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
     }
 
     // 헤더에서 토큰을 가져오는 메서드
-    private String getAccessToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith(prefix)) {
-            return authHeader.substring(prefix.length());
+    private String getAccessToken(String requestHeader) {
+
+        String prefix = jwtProperties.getTokenPrefix();
+
+        if (requestHeader != null && requestHeader.startsWith(prefix)) {
+            return requestHeader.substring(prefix.length());
         }
         return null;
     }

@@ -1,72 +1,58 @@
 package com.chicchoc.sivillage.global.auth.jwt;
 
-import com.chicchoc.sivillage.domain.member.domain.Member;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
-import java.time.Duration;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
+    private SecretKey secretKey;
 
-    //토큰 발급 메서드 : Duration을 받아 토큰 생성
-    public String generateToken(Member member, Duration expiredAt) {
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + expiredAt.toMillis());
-        return makeToken(expiration, member);
+    // jwtProperties가 초기화 된 후 secretKey를 생성
+    private SecretKey getSecretKey() {
+        if (secretKey == null) {
+            secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+        }
+        return secretKey;
     }
 
-    //토큰 생성 메서드 : 만료 시일을 받아 클레임 설정 후 토큰 생성
-    private String makeToken(Date expiry, Member member) {
+    //토큰 생성 메서드
+    public String generateToken(Authentication authentication, long expiredAt) {
         Date now = new Date();
+        Date expiry = new Date(now.getTime() + expiredAt);
+        Claims claims = Jwts.claims().subject(authentication.getName()).build();
 
         return Jwts.builder()
-                .header().type("typ").add("typ", "JWT").and()
+                .header().add("typ", "JWT").and()
                 .issuer(jwtProperties.getIssuer()) //토큰 발급자
                 .issuedAt(now) //토큰 발급 시간
                 .expiration(expiry) //토큰 만료 시간
-                .subject(member.getEmail()) //토큰 제목
-                .claim("uuid", member.getUuid())
-                .signWith((SecretKey) getSignKey()) //토큰 서명
+                .subject(claims.getSubject()) //토큰 제목(uuid)
+                .signWith(getSecretKey()) //토큰 서명
                 .compact();
-
     }
 
-    //토큰 유효성 검사
-    public boolean validToken(String token) {
-        // 검사 중 예외가 발생하면 유효하지 않음 => false 반환
-        try {
-            Jwts.parser()
-                    .verifyWith((SecretKey) getSignKey()) //토큰 서명 검증
-                    .build()
-                    .parseSignedClaims(token); //JWT 클레임 파싱
-            return true;
+    //토큰에서 Authentication 객체를 생성하는 메서드
+    public Authentication createAuthentication(String token) {
 
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    //토큰에서 Authentication 객체를 가져오는 메서드
-    public Authentication getAuthentication(String token) {
-
-        Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> authorities = Collections.singleton(
-                new SimpleGrantedAuthority("ROLE_USER")); //권한 설정
+        Claims claims = parseClaims(token);
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>(); //권한 필요시 추후 수정
 
         return new UsernamePasswordAuthenticationToken(
                 new User(
@@ -75,23 +61,40 @@ public class JwtTokenProvider {
                 token, authorities);
     }
 
+    //토큰 유효성 체크 메서드
+    public boolean isValidToken(String token) {
+        try {
+            parseClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean isExpired(String token) {
+
+        return parseClaims(token).getExpiration().before(new Date());
+    }
+
     //토큰에서 사용자의 uuid를 가져오는 메서드
     public String getUserUuid(String token) {
-        Claims claims = getClaims(token);
-        return claims.get("uuid", String.class);
+
+        return parseClaims(token).getSubject();
     }
 
-    //토큰에서 클레임을 가져오는 메서드
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith((SecretKey) getSignKey()) //복호화
-                .build()
-                .parseSignedClaims(token)//JWT 클레임 파싱
-                .getPayload();
-    }
-
-    //토큰 서명을 위한 SecretKey 생성
-    public Key getSignKey() {
-        return Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+    // 토큰에서 클레임 파싱하는 메서드
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSecretKey())       // 서명 검증
+                    .build()
+                    .parseSignedClaims(token)         // JWT 클레임 파싱
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            log.warn("만료된 토큰입니다.");
+            throw new IllegalArgumentException("다시 로그인 해주세요.");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
 }

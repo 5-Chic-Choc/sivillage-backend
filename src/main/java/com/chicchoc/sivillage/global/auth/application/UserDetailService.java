@@ -15,11 +15,12 @@ public class UserDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    // email로 사용자 정보를 가져오는 메서드
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email).orElseThrow(
+    // uuid로 사용자 정보를 가져오는 메서드
+    public UserDetails loadUserByUsername(String uuid) throws UsernameNotFoundException {
+        return memberRepository.findByUuid(uuid).orElseThrow(
                 () -> new UsernameNotFoundException("가입되지 않은 이메일입니다.")
         );
+
     }
 
 }

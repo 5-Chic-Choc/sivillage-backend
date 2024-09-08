@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,12 +77,12 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //권한 정책 수립 후 구현
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.uuid; // UUID를 사용자 이름으로 사용
     }
 
     @Override
