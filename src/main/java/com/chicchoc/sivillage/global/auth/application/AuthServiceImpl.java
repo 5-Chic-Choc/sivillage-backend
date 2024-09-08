@@ -1,16 +1,18 @@
 package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.auth.dto.SignInRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.SignUpRequestDto;
-import com.chicchoc.sivillage.global.auth.infrastructure.AuthRepository;
-import com.chicchoc.sivillage.global.auth.infrastructure.RefreshTokenRepository;
 import com.chicchoc.sivillage.global.auth.jwt.JwtProperties;
 import com.chicchoc.sivillage.global.auth.jwt.JwtTokenProvider;
-import java.time.Duration;
-import java.util.UUID;
+import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,51 +24,58 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
-    private final AuthRepository authRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final AuthenticationManager authenticationManager;
+    private final MemberRepository memberRepository;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
-        String uuid = UUID.randomUUID().toString();
+        String uuid = new NanoIdGenerator().generateNanoId();
+
+        // uuid 중복 검사
+        if (memberRepository.findByUuid(uuid).isPresent()) {
+            throw new IllegalArgumentException("문제가 발생했습니다. 다시 시도해주세요.");
+        }
+
         String password = passwordEncoder.encode(signUpRequestDto.getPassword());
         Member member = signUpRequestDto.toEntity(uuid, password);
 
-        // 중복검사
-        if (authRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 회원입니다.");
-        }
-        try {
-            authRepository.save(member);
-        } catch (Exception e) {
-            log.error("Exception: {}", e);
-            throw new IllegalArgumentException("회원가입에 실패하였습니다.");
-        }
+        memberRepository.save(member);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String signIn(SignInRequestDto signInRequestDto) {
+    public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
 
-        Member member = authRepository.findByEmail(signInRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.")); //이메일 없음
+        //아이디 검증
+        Member member = memberRepository.findByEmail(signInRequestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
 
-        // 비밀번호 매칭
-        if (!passwordEncoder.matches(signInRequestDto.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."); //비밀번호 틀림
+        try {
+            //로그인 시도
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            member.getUuid(),
+                            signInRequestDto.getPassword()
+                    )
+            );
+
+            String accessToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime());
+            String refreshToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime());
+            refreshTokenService.saveOrUpdateRefreshToken(member.getUuid(), refreshToken);
+
+            return SignInResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .uuid(member.getUuid())
+                    .build();
+
+        } catch (Exception e) {
+            log.warn("로그인 시도 실패 : {}", e.getMessage());
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
-
-        // 토큰 생성
-        String accessToken = jwtTokenProvider.generateToken(member,
-                Duration.ofMillis(jwtProperties.getAccessExpireTime()));
-        String refreshToken = jwtTokenProvider.generateToken(member,
-                Duration.ofMillis(jwtProperties.getRefreshExpireTime()));
-
-        refreshTokenService.saveOrUpdateRefreshToken(member.getUuid(), refreshToken);
-
-        return accessToken;
     }
 }
