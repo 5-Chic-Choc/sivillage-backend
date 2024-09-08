@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BrandResponseVo {
-    private Long id;
+    private String brandUuid;
     private String name;
     private String logoUrl;
 }
