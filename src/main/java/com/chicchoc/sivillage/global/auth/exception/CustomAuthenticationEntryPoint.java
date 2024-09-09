@@ -1,5 +1,8 @@
 package com.chicchoc.sivillage.global.auth.exception;
 
+import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,40 +33,39 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws ServletException, IOException {
 
-        log.error("CustomAuthenticationEntryPoint 예외 : " + authException.getMessage());
+        log.error("CustomAuthenticationEntryPoint 예외 : {}", authException.getMessage());
 
-        //응답코드 401, JSON형태로 응답
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        // 응답 타입 설정 (JSON 형태)
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
 
-        // 예외 메시지를 담을 맵 생성
-        Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", getErrorMessage(authException));
+        // 에러 상태 및 메시지 설정
+        BaseResponseStatus status = getErrorStatus(authException);
+        BaseResponse<Object> errorResponse = new BaseResponse<>(status);
 
-        //맵을 JSON으로 변환
-        JsonMapper jsonMapper = new JsonMapper();
-        String responseJson = jsonMapper.writeValueAsString(errorMap);
-
-        //응답
-        response.getWriter().println(responseJson);
+        // JSON 변환 후 응답
+        ObjectMapper objectMapper = new ObjectMapper();
+        String responseJson = objectMapper.writeValueAsString(errorResponse);
+        response.getWriter().write(responseJson);
+        response.setStatus(status.getHttpStatusCode().value());
     }
 
-    // 주어진 AuthenticationException에 따라 적절한 오류 메시지를 반환함
-    private String getErrorMessage(AuthenticationException authException) {
+    // 주어진 AuthenticationException에 따라 적절한 오류 상태를 반환
+    private BaseResponseStatus getErrorStatus(AuthenticationException authException) {
         if (authException.getClass() == BadCredentialsException.class) {
-            return "BadCredentialsException 잘못된 비밀번호입니다. 다시 확인하세요.";
+            return BaseResponseStatus.FAILED_TO_LOGIN;  // 잘못된 비밀번호
         } else if (authException.getClass() == UsernameNotFoundException.class) {
-            return "UsernameNotFoundException 가입되지 않은 이메일입니다. 다시 확인하세요.";
+            return BaseResponseStatus.NO_EXIST_USER;  // 존재하지 않는 사용자
         } else if (authException.getClass() == AccountExpiredException.class) {
-            return "AccountExpiredException 계정이 만료되었습니다. 관리자에게 문의하세요.";
+            return BaseResponseStatus.DISABLED_USER;  // 계정 만료
         } else if (authException.getClass() == CredentialsExpiredException.class) {
-            return "CredentialsExpiredException 인증서가 만료되었습니다. 관리자에게 문의하세요.";
+            return BaseResponseStatus.INTERNAL_SERVER_ERROR;  // 인증서 만료
         } else if (authException.getClass() == DisabledException.class) {
-            return "DisabledException 비활성화된 계정입니다. 관리자에게 문의하세요.";
+            return BaseResponseStatus.DISABLED_USER;  // 계정 비활성화
         } else if (authException.getClass() == LockedException.class) {
-            return "LockedException 계정이 잠겼습니다. 관리자에게 문의하세요.";
+            return BaseResponseStatus.NO_ACCESS_AUTHORITY;  // 계정 잠금
         } else {
-            return "인증에 실패했습니다. 다시 시도하세요.";
+            return BaseResponseStatus.NO_SIGN_IN;  // 일반적인 인증 실패
         }
     }
 }
