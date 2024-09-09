@@ -1,9 +1,11 @@
 package com.chicchoc.sivillage.domain.cart.dto.in;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class CartRequestDto {
 
     private String cartName;
