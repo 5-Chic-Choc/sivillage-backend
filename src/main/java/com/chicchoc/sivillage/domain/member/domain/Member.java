@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @ToString
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "phone"})})
 public class Member extends BaseEntity implements UserDetails { //사용자 인증 정보 클래스
 
     @Id
@@ -34,7 +37,7 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
     private Long id;
 
     @Comment("회원 UUID")
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String uuid;
 
     @Comment("회원 이메일")

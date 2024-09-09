@@ -12,6 +12,7 @@ import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -41,7 +42,7 @@ public class AuthController {
                 new SignInRequestDto(signUpRequestDto.getEmail(), signUpRequestDto.getPassword())
         );
 
-        return signInResponse(responseDto, response);
+        return signInResponse(responseDto, response, 0); // 0: 회원가입
     }
 
     @Operation(summary = "로그인 ", description = "로그인", tags = {"Auth"})
@@ -52,36 +53,48 @@ public class AuthController {
 
         SignInResponseDto responseDto = authService.signIn(signInRequestDto);
 
-        return signInResponse(responseDto, response);
+        return signInResponse(responseDto, response, 1); // 1 : 로그인
     }
 
     // 이메일 중복 검사
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사", tags = {"Auth"})
     @ValidAop
     @PostMapping("/check-email")
-    public CommonResponseEntity<CheckEmailResponseDto> checkEmail(
+    public CommonResponseEntity<Boolean> checkEmail(
             @Valid @RequestBody CheckEmailRequestDto checkEmailRequestDto,
             BindingResult bindingResult) {
 
-        CheckEmailResponseDto responseDto = authService.checkEmail(checkEmailRequestDto.getEmail());
+        boolean isInUse = authService.isInUseEmail(checkEmailRequestDto);
 
-        return new CommonResponseEntity<>(
-                HttpStatus.OK,
-                responseDto.getMessage(),
-                responseDto
-        );
+        return new CommonResponseEntity<>(isInUse ? HttpStatus.CONFLICT : HttpStatus.OK,
+                isInUse ? "이미 사용중인 이메일입니다." : "사용 가능한 이메일입니다.", !isInUse);
+    }
+
+    // email 찾기
+    @Operation(summary = "이메일 찾기", description = "이메일 찾기", tags = {"Auth"})
+    @ValidAop
+    @PostMapping("/find-email")
+    public CommonResponseEntity<String> findEmail(
+            @Valid @RequestBody FindEmailRequestDto findEmailRequestDto,
+            BindingResult bindingResult) {
+
+        Optional<String> emailResult = authService.findEmail(findEmailRequestDto);
+
+        return emailResult.map(email ->
+                        new CommonResponseEntity<>(HttpStatus.OK, "이메일 찾기가 성공하였습니다.", email))
+                .orElse(new CommonResponseEntity<>(HttpStatus.NOT_FOUND, "해당하는 회원 정보가 없습니다.", null));
     }
 
     //로그인 공통 로직
     private CommonResponseEntity<SignInResponseVo> signInResponse(SignInResponseDto responseDto,
-            HttpServletResponse response) {
+            HttpServletResponse response, int type) {
 
         response.setHeader(jwtProperties.getHeaderString(), responseDto.getAccessToken());
         response.setHeader("RefreshToken", responseDto.getRefreshToken());
 
         return new CommonResponseEntity<>(
-                HttpStatus.OK,
-                "로그인이 완료되었습니다.",
+                type == 0 ? HttpStatus.CREATED : HttpStatus.OK,
+                type == 0 ? "회원가입이 성공하였습니다." : "로그인이 성공하였습니다.",
                 responseDto.toVo(responseDto)
         );
     }

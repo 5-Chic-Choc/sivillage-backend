@@ -1,15 +1,10 @@
 package com.chicchoc.sivillage.global.error.exception;
 
-import com.chicchoc.sivillage.global.auth.dto.out.CheckEmailResponseDto;
-import com.chicchoc.sivillage.global.auth.exception.EmailAlreadyInUseException;
+import com.chicchoc.sivillage.global.auth.exception.UnknownException;
 import com.chicchoc.sivillage.global.auth.exception.ValidException;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,21 +14,6 @@ public class GlobalExceptionHandler {
 
     //todo : 예외 처리 관련 Team Rule 정리
 
-    // EmailAlreadyInUseException 예외 처리
-    @ExceptionHandler(EmailAlreadyInUseException.class)
-    public CommonResponseEntity<?> handleEmailAlreadyInUseException(EmailAlreadyInUseException ex) {
-        log.error("EmailAlreadyInUseException 발생: {}", ex.getMessage());
-
-        return new CommonResponseEntity<>(
-                HttpStatus.CONFLICT, // 409 Conflict 상태 코드
-                ex.getMessage(), // 예외 메시지
-                new CheckEmailResponseDto() {{
-                    setAvailable(false);
-                    setMessage(ex.getMessage());
-                }}
-        );
-    }
-
     // IllegalArgumentException 예외 처리
     @ExceptionHandler(IllegalArgumentException.class)
     public CommonResponseEntity<?> handleIllegalArgumentException(
@@ -41,25 +21,20 @@ public class GlobalExceptionHandler {
         log.error("IllegalArgumentException 발생: {}", ex.getMessage());
 
         return new CommonResponseEntity<>(
-                HttpStatus.BAD_REQUEST,  // 400 Bad Request 상태 코드
-                ex.getMessage(),  // 예외 메시지
-                null  // 데이터 없음
+                HttpStatus.BAD_REQUEST,  // 400
+                ex.getMessage(),
+                null
         );
     }
 
-    // MethodArgumentNotValidException 예외 처리
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
+    // UnKnownException 예외 처리
+    @ExceptionHandler(UnknownException.class)
+    public CommonResponseEntity<?> handleDatabaseException(Exception ex) {
+
         return new CommonResponseEntity<>(
-                HttpStatus.BAD_REQUEST,
-                "유효성 검사 오류:MethodArgumentNotValidException",
-                errors
+                HttpStatus.INTERNAL_SERVER_ERROR,  // 500
+                "서버에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                null
         );
     }
 
@@ -71,9 +46,9 @@ public class GlobalExceptionHandler {
 
         // CommonResponseEntity 객체 생성 및 반환
         return new CommonResponseEntity<>(
-                HttpStatus.BAD_REQUEST,  // 400 Bad Request 상태 코드
-                validException.getMessage(),  // 예외 메시지
-                validException.getErrorMap()  // 데이터 대신 에러 맵 반환
+                HttpStatus.BAD_REQUEST,  // 400
+                validException.getMessage(),
+                validException.getErrorMap()
         );
     }
 }
