@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.dto;
+package com.chicchoc.sivillage.global.jwt.dto.in;
 
 import lombok.Getter;
 import lombok.Setter;

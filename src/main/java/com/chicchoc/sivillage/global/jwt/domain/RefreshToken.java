@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.domain;
+package com.chicchoc.sivillage.global.jwt.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

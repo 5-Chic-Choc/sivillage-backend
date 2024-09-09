@@ -1,6 +1,6 @@
-package com.chicchoc.sivillage.global.auth.infrastructure;
+package com.chicchoc.sivillage.global.jwt.infrastructure;
 
-import com.chicchoc.sivillage.global.auth.domain.RefreshToken;
+import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

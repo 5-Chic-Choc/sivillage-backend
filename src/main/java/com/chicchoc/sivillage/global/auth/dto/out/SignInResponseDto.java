@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.auth.dto;
+package com.chicchoc.sivillage.global.auth.dto.out;
 
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
 import lombok.AllArgsConstructor;
