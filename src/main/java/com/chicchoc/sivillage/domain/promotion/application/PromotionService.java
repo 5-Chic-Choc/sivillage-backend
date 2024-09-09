@@ -15,4 +15,6 @@ public interface PromotionService {
     void updatePromotion(String promotionUuid, PromotionRequestDto promotionRequestDto);
 
     List<PromotionHashtagResponseDto> findPromotionHashtags(String promotionUuid);
+
+    PromotionResponseDto findPromotion(String promotionUuid);
 }

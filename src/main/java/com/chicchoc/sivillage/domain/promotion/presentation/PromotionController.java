@@ -90,4 +90,18 @@ public class PromotionController {
         );
     }
 
+    @Operation(summary = "getPromotion API", description = "프로모션 조회", tags = {"Promotion"})
+    @GetMapping("/{promotionUuid}")
+    public CommonResponseEntity<PromotionResponseVo> getPromotion(@PathVariable String promotionUuid) {
+        PromotionResponseDto promotionResponseDto = promotionService.findPromotion(promotionUuid);
+
+        PromotionResponseVo promotionResponseVo = promotionResponseDto.toResponseVo();
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                "프로모션 조회 성공",
+                promotionResponseVo
+        );
+    }
+
 }

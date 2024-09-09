@@ -72,4 +72,19 @@ public class PromotionServiceImpl implements PromotionService {
 
         return promotionHashtagResponseDtos;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PromotionResponseDto findPromotion(String promotionUuid) {
+        Promotion promotion = promotionRepository.findByPromotionUuid(promotionUuid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로모션이 존재하지 않습니다."));
+
+        return PromotionResponseDto.builder()
+                .promotionUuid(promotion.getPromotionUuid())
+                .title(promotion.getTitle())
+                .description(promotion.getDescription())
+                .thumbnailUrl(promotion.getThumbnailUrl())
+                .promotionDetailUrl(promotion.getPromotionDetailUrl())
+                .build();
+    }
 }
