@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
 
     @Override
+    @Transactional
     public void addBrand(BrandRequestDto brandRequestDto) {
 
         String brandUuid;
@@ -30,6 +32,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BrandResponseDto> findAllBrands() {
         List<Brand> brands = brandRepository.findAll();
 
@@ -43,12 +46,13 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    @Transactional
     public void updateBrand(String brandUuid, BrandRequestDto brandRequestDto) {
         Brand brand = brandRepository.findByBrandUuid(brandUuid)
                 .orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
 
         brand.updateBrand(brandRequestDto.getName(), brandRequestDto.getLogoUrl());
-        
+
         brandRepository.save(brand);
     }
 }

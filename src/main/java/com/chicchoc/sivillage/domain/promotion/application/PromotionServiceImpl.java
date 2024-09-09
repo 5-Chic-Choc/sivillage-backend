@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class PromotionServiceImpl implements PromotionService {
     private final PromotionRepository promotionRepository;
 
     @Override
+    @Transactional
     public void addPromotion(PromotionRequestDto promotionRequestDto) {
 
         String promotionUuid = nanoIdGenerator.generateNanoId();
@@ -28,6 +30,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PromotionResponseDto> findAllPromotions() {
 
         List<Promotion> promotions = promotionRepository.findAll();
@@ -43,6 +46,7 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
+    @Transactional
     public void updatePromotion(String promotionUuid, PromotionRequestDto promotionRequestDto) {
         Promotion promotion = promotionRepository.findByPromotionUuid(promotionUuid)
                 .orElseThrow(() -> new IllegalArgumentException("해당 프로모션이 존재하지 않습니다."));
