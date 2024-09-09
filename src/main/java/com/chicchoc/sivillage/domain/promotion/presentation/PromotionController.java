@@ -2,8 +2,10 @@ package com.chicchoc.sivillage.domain.promotion.presentation;
 
 import com.chicchoc.sivillage.domain.promotion.application.PromotionService;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionRequestDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionHashtagResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionResponseDto;
 import com.chicchoc.sivillage.domain.promotion.vo.in.PromotionRequestVo;
+import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionHashtagResponseVo;
 import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionResponseVo;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,6 +68,39 @@ public class PromotionController {
                 HttpStatus.OK,
                 "프로모션 수정 성공",
                 null
+        );
+    }
+
+    @Operation(summary = "getPromotionHashtags API", description = "프로모션 해시태그 조회", tags = {"Promotion"})
+    @GetMapping("/promotionHashtag/{promotionUuid}")
+    public CommonResponseEntity<List<PromotionHashtagResponseVo>> getPromotionHashtags(
+            @PathVariable String promotionUuid) {
+        List<PromotionHashtagResponseDto> promotionHashtagResponseDtos =
+                promotionService.findPromotionHashtags(promotionUuid);
+
+        List<PromotionHashtagResponseVo> promotionHashtagResponseVos =
+                promotionHashtagResponseDtos.stream()
+                        .map(PromotionHashtagResponseDto::toResponseVo)
+                        .toList();
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                "프로모션 해시태그 조회 성공",
+                promotionHashtagResponseVos
+        );
+    }
+
+    @Operation(summary = "getPromotion API", description = "프로모션 조회", tags = {"Promotion"})
+    @GetMapping("/{promotionUuid}")
+    public CommonResponseEntity<PromotionResponseVo> getPromotion(@PathVariable String promotionUuid) {
+        PromotionResponseDto promotionResponseDto = promotionService.findPromotion(promotionUuid);
+
+        PromotionResponseVo promotionResponseVo = promotionResponseDto.toResponseVo();
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                "프로모션 조회 성공",
+                promotionResponseVo
         );
     }
 
