@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartProductRequestDto {
 
+    private String cartUuid;
     private Long productOrderOptionId;
     private int amount;
 
-    public CartProduct toEntity(String cartProductUuid, String cartUuid) {
+    public CartProduct toEntity(String cartProductUuid) {
         return CartProduct.builder()
                 .cartProductUuid(cartProductUuid)
                 .cartUuid(cartUuid)
