@@ -9,4 +9,6 @@ public interface AuthService {
     void signUp(SignUpRequestDto signUpRequestDto);
 
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
+
+    CheckEmailResponseDto checkEmail(String email);
 }

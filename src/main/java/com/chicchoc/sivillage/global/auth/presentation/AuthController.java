@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
 import com.chicchoc.sivillage.global.common.aop.annotation.ValidAop;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -52,6 +53,23 @@ public class AuthController {
         SignInResponseDto responseDto = authService.signIn(signInRequestDto);
 
         return signInResponse(responseDto, response);
+    }
+
+    // 이메일 중복 검사
+    @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사", tags = {"Auth"})
+    @ValidAop
+    @PostMapping("/check-email")
+    public CommonResponseEntity<CheckEmailResponseDto> checkEmail(
+            @Valid @RequestBody CheckEmailRequestDto checkEmailRequestDto,
+            BindingResult bindingResult) {
+
+        CheckEmailResponseDto responseDto = authService.checkEmail(checkEmailRequestDto.getEmail());
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                responseDto.getMessage(),
+                responseDto
+        );
     }
 
     //로그인 공통 로직
