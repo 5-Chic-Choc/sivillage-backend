@@ -1,9 +1,13 @@
 package com.chicchoc.sivillage.global.jwt.application;
 
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import java.util.HashSet;
@@ -86,16 +90,31 @@ public class JwtTokenProvider {
     // 토큰에서 클레임 파싱하는 메서드
     private Claims parseClaims(String token) {
         try {
-            return Jwts.parser()
-                    .verifyWith(getSecretKey())       // 서명 검증
+            if(token == null) {
+                log.error("토큰이 존재하지 않습니다");
+                throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+            }
+            log.error("parseClaims token={}", token);
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSecretKey())
                     .build()
-                    .parseSignedClaims(token)         // JWT 클레임 파싱
+                    .parseSignedClaims(token)
                     .getPayload();
+            log.error("claims={}", claims);
+            return claims;
+
         } catch (ExpiredJwtException e) {
-            log.warn("만료된 토큰입니다.");
-            throw new IllegalArgumentException("다시 로그인 해주세요.");
-        } catch (Exception e) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            log.error("만료된 토큰입니다");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            log.error("지원되지 않는 유형의 토큰입니다");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+        } catch (MalformedJwtException | IllegalArgumentException e) {
+            log.error("잘못된 토큰입니다");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            log.error("SecretKey가 일치하지 않습니다");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
     }
 }
