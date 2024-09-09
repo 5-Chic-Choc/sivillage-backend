@@ -2,7 +2,9 @@ package com.chicchoc.sivillage.domain.promotion.application;
 
 import com.chicchoc.sivillage.domain.promotion.domain.Promotion;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionRequestDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionHashtagResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionResponseDto;
+import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionHashtagRepository;
 import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     private final NanoIdGenerator nanoIdGenerator;
     private final PromotionRepository promotionRepository;
+    private final PromotionHashtagRepository promotionHashtagRepository;
 
     @Override
     @Transactional
@@ -55,5 +58,18 @@ public class PromotionServiceImpl implements PromotionService {
                 promotionRequestDto.getPromotionDetailUrl(), promotionRequestDto.getThumbnailUrl());
 
         promotionRepository.save(promotion);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionHashtagResponseDto> findPromotionHashtags(String promotionUuid) {
+        List<PromotionHashtagResponseDto> promotionHashtagResponseDtos = promotionHashtagRepository
+                .findByPromotionUuid(promotionUuid).stream()
+                .map(promotionHashtag -> PromotionHashtagResponseDto.builder()
+                        .hashtagContent(promotionHashtag.getHashtagContent())
+                        .build())
+                .toList();
+
+        return promotionHashtagResponseDtos;
     }
 }
