@@ -55,4 +55,19 @@ public class BrandServiceImpl implements BrandService {
 
         brandRepository.save(brand);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BrandResponseDto findBrandByUuid(String brandUuid) {
+        Brand brand = brandRepository.findByBrandUuid(brandUuid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
+
+        BrandResponseDto brandResponseDto = BrandResponseDto.builder()
+                .brandUuid(brand.getBrandUuid())
+                .name(brand.getName())
+                .logoUrl(brand.getLogoUrl())
+                .build();
+
+        return brandResponseDto;
+    }
 }
