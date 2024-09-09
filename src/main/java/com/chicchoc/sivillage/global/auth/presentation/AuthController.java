@@ -1,6 +1,8 @@
 package com.chicchoc.sivillage.global.auth.presentation;
 
 import com.chicchoc.sivillage.global.auth.application.AuthService;
+import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;

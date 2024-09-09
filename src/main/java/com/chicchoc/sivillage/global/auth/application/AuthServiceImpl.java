@@ -7,6 +7,7 @@ import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
+import com.chicchoc.sivillage.global.common.aop.annotation.ExceptionHandleAop;
 import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
