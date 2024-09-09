@@ -25,7 +25,7 @@ public class CartController {
     private final CartProductService cartProductService;
 
     @GetMapping("/list")
-    public CommonResponseEntity<List<CartResponseVo>> getCartList(){
+    public CommonResponseEntity<List<CartResponseVo>> getCartList() {
         // jwt로 userUuid 가져오기
         String userUuid = "1";
         List<CartResponseDto> cartResponseDto = cartService.getCartUuidList(userUuid);

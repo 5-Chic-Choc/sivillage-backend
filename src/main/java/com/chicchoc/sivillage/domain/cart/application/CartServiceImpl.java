@@ -25,9 +25,9 @@ public class CartServiceImpl implements CartService {
         // TODO 회원, 비회원 userUuid 가져오는 로직
         String userUuid = null;
         // cartUuid 생성
-        String CartUuid = nanoIdGenerator.generateNanoId();
+        String cartUuid = nanoIdGenerator.generateNanoId();
 
-        cartRepository.save(cartRequestDto.toEntity(CartUuid, isSigned, userUuid));
+        cartRepository.save(cartRequestDto.toEntity(cartUuid, isSigned, userUuid));
     }
 
     @Override
