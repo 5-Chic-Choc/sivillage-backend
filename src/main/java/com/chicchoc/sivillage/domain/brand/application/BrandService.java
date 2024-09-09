@@ -12,4 +12,6 @@ public interface BrandService {
     List<BrandResponseDto> findAllBrands();
 
     void updateBrand(String brandUuid, BrandRequestDto brandRequestDto);
+
+    BrandResponseDto findBrandByUuid(String brandUuid);
 }

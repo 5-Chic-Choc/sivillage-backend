@@ -66,4 +66,16 @@ public class BrandController {
                 null
         );
     }
+
+    @Operation(summary = "getBrand API", description = "브랜드 조회", tags = {"Brand"})
+    @GetMapping("/{brandUuid}")
+    public CommonResponseEntity<BrandResponseVo> getBrand(@PathVariable String brandUuid) {
+        BrandResponseDto brandResponseDto = brandService.findBrandByUuid(brandUuid);
+
+        return new CommonResponseEntity<>(
+                HttpStatus.OK,
+                "브랜드 조회 성공",
+                brandResponseDto.toResponseVo()
+        );
+    }
 }
