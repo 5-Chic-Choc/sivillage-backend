@@ -1,14 +1,12 @@
 package com.chicchoc.sivillage.global.error.exception;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.security.sasl.AuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

@@ -8,9 +8,8 @@ import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     /**
-     * 비동기 작업에서 예외가 발생했을 때 처리
+     * 비동기 작업에서 예외가 발생했을 때 처리.
      */
-
     @Override
     public void handleUncaughtException(Throwable ex, Method method, Object... params) {
 
@@ -18,6 +17,5 @@ public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
             log.error("BaseException: [{}] {}", baseException.getStatus(), baseException.getStatus().getMessage());
         }
         log.error("EventException: ", ex);
-
     }
 }

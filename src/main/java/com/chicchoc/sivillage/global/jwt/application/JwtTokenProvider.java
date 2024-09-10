@@ -31,6 +31,7 @@ public class JwtTokenProvider {
 
     // jwtProperties가 초기화 된 후 secretKey를 생성
     private SecretKey getSecretKey() {
+
         if (secretKey == null) {
             secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
         }
@@ -89,8 +90,9 @@ public class JwtTokenProvider {
 
     // 토큰에서 클레임 파싱하는 메서드
     private Claims parseClaims(String token) {
+
         try {
-            if(token == null) {
+            if (token == null) {
                 log.error("토큰이 존재하지 않습니다");
                 throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
             }
