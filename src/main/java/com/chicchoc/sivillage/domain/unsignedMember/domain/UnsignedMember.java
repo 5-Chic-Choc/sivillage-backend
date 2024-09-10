@@ -17,5 +17,5 @@ public class UnsignedMember extends BaseEntity {
     private Long id;
 
     @Column(name = "unsignedMember_uuid")
-    private String UnsignedMemberUuid;
+    private String unsignedMemberUuid;
 }
