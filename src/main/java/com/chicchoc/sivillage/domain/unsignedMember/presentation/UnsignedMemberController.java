@@ -18,19 +18,19 @@ public class UnsignedMemberController {
     private final UnsignedMemberService unsignedMemberService;
 
     @GetMapping
-    public CommonResponseEntity<Void> getUnsignedMember(
+    public void getUnsignedMember(
             @CookieValue(value = "uuid", required = false) String uuid, HttpServletResponse response) {
         if(uuid == null) { // uuid 존재하지 않는다면
-            // String UnsignedMemberUuid = unsignedMemberService.createUnsignedUser(uuid);
+            String UnsignedMemberUuid = unsignedMemberService.createUnsignedMember();
+
             Cookie uuidCookie = new Cookie("uuid", UnsignedMemberUuid);
             uuidCookie.setMaxAge(60 * 60 * 24 * 30); // 30일 유지
             uuidCookie.setHttpOnly(true);
             uuidCookie.setPath("/");
             response.addCookie(uuidCookie);
-
         }
         else { // uuid 존재한다면
-            unsignedMemberService.updateUnsignedUser(uuid);
+            unsignedMemberService.updateUnsignedMember(uuid);
 
             Cookie uuidCookie = new Cookie("uuid", uuid);
             uuidCookie.setMaxAge(60 * 60 * 24 * 30); // 30일 유지
@@ -38,5 +38,6 @@ public class UnsignedMemberController {
             uuidCookie.setPath("/");
             response.addCookie(uuidCookie);
         }
+
     }
 }
