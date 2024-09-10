@@ -20,19 +20,17 @@ public class BaseExceptionHandler {
     //todo : 예외 처리 관련 Team Rule 정리
 
     /**
-     * 발생한 예외 처리
+     * 발생한 예외 처리.
      */
-
     @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<BaseResponse<Void>> BaseError(BaseException e) {
+    protected ResponseEntity<BaseResponse<Void>> baseError(BaseException e) {
         BaseResponse<Void> response = new BaseResponse<>(e.getStatus());
         log.error("BaseException -> {}({})", e.getStatus(), e.getStatus().getMessage(), e);
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
     /**
-     * security 인증 에러
-     * 아이디가 없거나 비밀번호가 틀린 경우 AuthenticationManager 에서 발생
+     * security 인증 에러 아이디가 없거나 비밀번호가 틀린 경우 AuthenticationManager 에서 발생.
      *
      * @return FAILED_TO_LOGIN 에러 response
      */
@@ -44,7 +42,7 @@ public class BaseExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<BaseResponse<Void>> RuntimeError(RuntimeException e) {
+    protected ResponseEntity<BaseResponse<Void>> runtimeError(RuntimeException e) {
         BaseResponse<Void> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
         log.error("RuntimeException: ", e);
         for (StackTraceElement s : e.getStackTrace()) {
