@@ -26,7 +26,7 @@ public class TokenController {
             @RequestBody CreateAccessTokenRequestDto requestDto, HttpServletResponse response) {
 
         String newAccessToken = tokenService.createNewAccessToken(requestDto.getRefreshToken());
-        response.setHeader(jwtProperties.getHeaderString(), newAccessToken);
+        response.setHeader(jwtProperties.getAccessTokenPrefix(), newAccessToken);
 
         return new CommonResponseEntity<>(
                 HttpStatus.CREATED,
