@@ -26,7 +26,9 @@ public class BaseExceptionHandler {
     protected ResponseEntity<BaseResponse<Void>> baseError(BaseException e) {
 
         BaseResponse<Void> response = new BaseResponse<>(e.getStatus());
-        log.error("BaseException -> {}({})", e.getStatus(), e.getStatus().getMessage(), e);
+
+        log.error("예외 발생: {}({}), 값 : {}", e.getStatus(), e.getStatus().getMessage(), e.getMessage());
+
         return new ResponseEntity<>(response, response.httpStatus());
     }
 

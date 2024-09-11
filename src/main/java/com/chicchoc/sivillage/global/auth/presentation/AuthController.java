@@ -10,6 +10,7 @@ import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "인증 관련 API", description = "회원가입, 로그인에 필요한 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
