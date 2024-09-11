@@ -7,11 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAutenticationFilter extends OncePerRequestFilter {
@@ -26,15 +28,23 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        String headerKey = jwtProperties.getHeaderString();
-        String token = getAccessToken(request.getHeader(headerKey));
+        String authHeader = request.getHeader(jwtProperties.getAccessTokenPrefix());
+
+        // 헤더에 토큰이 없거나, 토큰 접두사(Bearer) 가 아닌 경우 필터를 통과
+        if (authHeader == null || !authHeader.startsWith(jwtProperties.getTokenPrefix())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = getAccessToken(authHeader);
 
         boolean validToken = jwtTokenProvider.isValidToken(token);
-        boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null;
+        boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() == null;
 
         // 토큰이 유효하고 인증되어 있지 않다면, 토큰을 이용해 인증 객체 생성 => SecurityContext에 저장
-        if (validToken && !isAuthenticated) {
+        if (validToken && isAuthenticated) {
             Authentication authentication = jwtTokenProvider.createAuthentication(token);
+            log.error("authentication: {}", authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
