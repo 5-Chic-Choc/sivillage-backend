@@ -2,11 +2,15 @@ package com.chicchoc.sivillage.domain.promotion.application;
 
 import com.chicchoc.sivillage.domain.promotion.domain.Promotion;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionRequestDto;
-import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionHashtagResponseDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionBenefitResponseDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionMediaResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionResponseDto;
-import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionHashtagRepository;
+import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionBenefitRepository;
+import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionMediaRepository;
 import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionRepository;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +25,8 @@ public class PromotionServiceImpl implements PromotionService {
 
     private final NanoIdGenerator nanoIdGenerator;
     private final PromotionRepository promotionRepository;
-    private final PromotionHashtagRepository promotionHashtagRepository;
+    private final PromotionBenefitRepository promotionBenefitRepository;
+    private final PromotionMediaRepository promotionMediaRepository;
 
     @Override
     @Transactional
@@ -52,39 +57,60 @@ public class PromotionServiceImpl implements PromotionService {
     @Transactional
     public void updatePromotion(String promotionUuid, PromotionRequestDto promotionRequestDto) {
         Promotion promotion = promotionRepository.findByPromotionUuid(promotionUuid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 프로모션이 존재하지 않습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PROMOTION));
 
         promotion.updatePromotion(promotionRequestDto.getTitle(), promotionRequestDto.getDescription(),
-                promotionRequestDto.getPromotionDetailUrl(), promotionRequestDto.getThumbnailUrl());
+                promotionRequestDto.getThumbnailUrl());
 
         promotionRepository.save(promotion);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PromotionHashtagResponseDto> findPromotionHashtags(String promotionUuid) {
-        List<PromotionHashtagResponseDto> promotionHashtagResponseDtos = promotionHashtagRepository
-                .findByPromotionUuid(promotionUuid).stream()
-                .map(promotionHashtag -> PromotionHashtagResponseDto.builder()
-                        .hashtagContent(promotionHashtag.getHashtagContent())
-                        .build())
-                .toList();
-
-        return promotionHashtagResponseDtos;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public PromotionResponseDto findPromotion(String promotionUuid) {
         Promotion promotion = promotionRepository.findByPromotionUuid(promotionUuid)
-                .orElseThrow(() -> new IllegalArgumentException("해당 프로모션이 존재하지 않습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PROMOTION));
 
         return PromotionResponseDto.builder()
                 .promotionUuid(promotion.getPromotionUuid())
                 .title(promotion.getTitle())
                 .description(promotion.getDescription())
                 .thumbnailUrl(promotion.getThumbnailUrl())
-                .promotionDetailUrl(promotion.getPromotionDetailUrl())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionBenefitResponseDto> findPromotionBenefits(String promotionUuid) {
+
+        promotionRepository.findByPromotionUuid(promotionUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PROMOTION));
+
+        List<PromotionBenefitResponseDto> promotionBenefitResponseDtos = promotionBenefitRepository
+                .findByPromotionUuid(promotionUuid).stream()
+                .map(promotionBenefit -> PromotionBenefitResponseDto.builder()
+                        .benefitContent(promotionBenefit.getBenefitContent())
+                        .build())
+                .toList();
+
+        return promotionBenefitResponseDtos;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionMediaResponseDto> findPromotionMedias(String promotionUuid) {
+
+        promotionRepository.findByPromotionUuid(promotionUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PROMOTION));
+
+        List<PromotionMediaResponseDto> promotionMediaResponseDtos = promotionMediaRepository
+                .findByPromotionUuid(promotionUuid).stream()
+                .map(promotionMedia -> PromotionMediaResponseDto.builder()
+                        .mediaId(promotionMedia.getMediaId())
+                        .mediaOrder(promotionMedia.getMediaOrder())
+                        .build())
+                .toList();
+
+        return promotionMediaResponseDtos;
     }
 }

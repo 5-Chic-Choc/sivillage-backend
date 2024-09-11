@@ -10,5 +10,4 @@ public class PromotionResponseVo {
     private String title;
     private String description;
     private String thumbnailUrl;
-    private String promotionDetailUrl;
 }

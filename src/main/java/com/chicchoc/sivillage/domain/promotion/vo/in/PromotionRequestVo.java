@@ -7,14 +7,12 @@ import lombok.Getter;
 public class PromotionRequestVo {
     private String title;
     private String description;
-    private String promotionDetailUrl;
     private String thumbnailUrl;
 
     public PromotionRequestDto toDto() {
         return PromotionRequestDto.builder()
                 .title(title)
                 .description(description)
-                .promotionDetailUrl(promotionDetailUrl)
                 .thumbnailUrl(thumbnailUrl)
                 .build();
     }

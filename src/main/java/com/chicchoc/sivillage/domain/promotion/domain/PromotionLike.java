@@ -12,22 +12,22 @@ import org.hibernate.annotations.Comment;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PromotionProduct {
+public class PromotionLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "promotion_product_id")
+    @Column(name = "promotion_like_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
-
-    @Comment("상품 UUID")
+    @Comment("유저 UUID")
     @Column(nullable = false, length = 21)
-    private String productUuid;
+    private String userUuid;
 
-    @Comment("프로모션 타입")
-    @Column(nullable = false, length = 50)
-    private String promotionType;
+    @Comment("프로모션 UUID")
+    @Column(nullable = false, length = 21)
+    private String promotionUuid;
+
+    @Comment("좋아요 여부")
+    @Column(nullable = false)
+    private boolean isLiked;
 }
