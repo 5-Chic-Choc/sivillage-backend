@@ -47,7 +47,7 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 2102, "아이디 또는 비밀번호가 일치하지 않습니다."),
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, false, 2103, "이미 사용중인 이메일입니다."),
     DUPLICATED_NAME_AND_PHONE(HttpStatus.CONFLICT, false, 2104, "이미 사용중인 이름과 전화번호입니다."),
-    NO_EXIST_USER(HttpStatus.NOT_FOUND, false, 2105, "존재하지 않는 멤버 정보입니다."),
+    NO_EXIST_USER(HttpStatus.NOT_FOUND, false, 2105, "존재하지 않는 회원 정보입니다."),
     PASSWORD_SAME_FAILED(HttpStatus.BAD_REQUEST, false, 2106, "현재 사용중인 비밀번호입니다."),
     INVALID_EMAIL_ADDRESS(HttpStatus.BAD_REQUEST, false, 2012, "이메일을 다시 확인해주세요."),
     INVALID_EMAIL_CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, false, 2013, "이메일 인증번호가 일치하지 않습니다."),
