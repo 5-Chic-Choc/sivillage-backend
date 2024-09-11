@@ -21,23 +21,23 @@ public class ReviewRequestDto {
     private String reviewRateType3;
     private String reviewRateText3;
 
-        public Review toEntity(String reviewUuid, String userUuid, String reviewerEmail) {
-            return Review.builder()
-                    .reviewUuid(reviewUuid)
-                    .productUuid(productUuid)
-                    .userUuid(userUuid)
-                    .sizeName(sizeName)
-                    .colorValue(colorValue)
-                    .reviewContent(reviewContent)
-                    .starPoint(starPoint)
-                    .reviewerEmail(reviewerEmail)
-                    .reviewRateType1(reviewRateType1)
-                    .reviewRateText1(reviewRateText1)
-                    .reviewRateType2(reviewRateType2)
-                    .reviewRateText2(reviewRateText2)
-                    .reviewRateType3(reviewRateType3)
-                    .reviewRateText3(reviewRateText3)
-                    .build();
-        }
+    public Review toEntity(String reviewUuid, String userUuid, String reviewerEmail) {
+        return Review.builder()
+                .reviewUuid(reviewUuid)
+                .productUuid(productUuid)
+                .userUuid(userUuid)
+                .sizeName(sizeName)
+                .colorValue(colorValue)
+                .reviewContent(reviewContent)
+                .starPoint(starPoint)
+                .reviewerEmail(reviewerEmail)
+                .reviewRateType1(reviewRateType1)
+                .reviewRateText1(reviewRateText1)
+                .reviewRateType2(reviewRateType2)
+                .reviewRateText2(reviewRateText2)
+                .reviewRateType3(reviewRateType3)
+                .reviewRateText3(reviewRateText3)
+                .build();
+    }
 
 }

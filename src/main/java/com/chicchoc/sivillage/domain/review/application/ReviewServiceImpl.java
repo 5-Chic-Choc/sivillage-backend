@@ -21,12 +21,16 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final NanoIdGenerator nanoIdGenerator;
     private final MemberRepository memberRepository;
+
     @Override
     public void addReview(ReviewRequestDto reviewRequestDto) {
         String userUuid = JwtUtil.getUserUuid();
         String reviewUuid = nanoIdGenerator.generateNanoId();
         Optional<Member> member = memberRepository.findByUuid(userUuid);
-        String userEmail = member.get().getEmail();
+        String userEmail = null;
+        if (member.isPresent()) {
+            userEmail = member.get().getEmail();
+        }
 
         reviewRepository.save(reviewRequestDto.toEntity(reviewUuid, userUuid, userEmail));
     }
