@@ -4,6 +4,7 @@ import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
+import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviewByUserUuid() {
-        List<Review> reviewList = reviewRepository.findByProductUuid();
+        String userUuid = JwtUtil.getUserUuid();
+        List<Review> reviewList = reviewRepository.findByProductUuid(userUuid);
 
         return commonDtoStream(reviewList);
     }
