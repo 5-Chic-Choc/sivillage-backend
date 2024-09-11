@@ -17,7 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByNameAndPhone(String name, String phone);
 
-    // only email 가져오기(이름, 전화번호로)
+    // email만 가져오기(이름, 전화번호로)
     @Query("SELECT m.email FROM Member m WHERE m.name = :name AND m.phone = :phoneNumber")
     Optional<String> findEmailByNameAndPhoneNumber(@Param("name") String name,
             @Param("phoneNumber") String phoneNumber);
