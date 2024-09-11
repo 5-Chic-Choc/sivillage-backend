@@ -41,7 +41,7 @@ public class Review extends BaseEntity {
     private String reviewContent;
 
     @Column(name = "starpoint", nullable = false)
-    private byte starpoint;
+    private byte starPoint;
 
     @Column(name = "liked_cnt")
     private Integer likedCnt;

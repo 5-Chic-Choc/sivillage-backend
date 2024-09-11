@@ -29,21 +29,10 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public CommonResponseEntity<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
-        ReviewRequestDto reviewRequestDto = ReviewRequestDto.builder()
-                .productId(reviewRequestVo.getProductId())
-                .size(reviewRequestVo.getSize())
-                .reviewOption(reviewRequestVo.getReviewOption())
-                .info(reviewRequestVo.getInfo())
-                .rate(reviewRequestVo.getRate())
-                .content(reviewRequestVo.getContent())
-                .build();
+    public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
+        ReviewRequestDto reviewRequestDto = reviewRequestVo.toDto();
         reviewService.addReview(reviewRequestDto);
-        return new CommonResponseEntity<>(
-                HttpStatus.CREATED,
-                "리뷰 작성 성공",
-                null
-        );
+        return new BaseResponse<>();
     }
 
     @GetMapping("/product/{productUuid}")

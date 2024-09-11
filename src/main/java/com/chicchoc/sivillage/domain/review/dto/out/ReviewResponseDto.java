@@ -19,7 +19,7 @@ public class ReviewResponseDto {
     private String sizeName;
     private String colorValue;
     private String reviewContent;
-    private byte starpoint;
+    private byte starPoint;
     private Integer likedCnt;
     private String reviewerEmail;
     private String reviewRateType1;
@@ -37,7 +37,7 @@ public class ReviewResponseDto {
                 .sizeName(sizeName)
                 .colorValue(colorValue)
                 .reviewContent(reviewContent)
-                .starpoint(starpoint)
+                .starPoint(starPoint)
                 .likedCnt(likedCnt)
                 .reviewerEmail(reviewerEmail)
                 .reviewRateType1(reviewRateType1)

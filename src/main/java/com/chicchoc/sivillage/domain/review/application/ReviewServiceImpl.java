@@ -1,11 +1,15 @@
 package com.chicchoc.sivillage.domain.review.application;
 
+import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
+import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-
+    private final NanoIdGenerator nanoIdGenerator;
+    private final MemberRepository memberRepository;
     @Override
     public void addReview(ReviewRequestDto reviewRequestDto) {
-        // TODO UserID 받아오는 로직
-        Long userId = null;
-        //        reviewRepository.save(reviewRequestDto.toEntity(userId));
+        String userUuid = JwtUtil.getUserUuid();
+        String reviewUuid = nanoIdGenerator.generateNanoId();
+        Optional<Member> member = memberRepository.findByUuid(userUuid);
+        String userEmail = member.get().getEmail();
+
+        reviewRepository.save(reviewRequestDto.toEntity(reviewUuid, userUuid, userEmail));
     }
 
     @Override
@@ -49,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .sizeName(review.getSizeName())
                         .colorValue(review.getColorValue())
                         .reviewContent(review.getReviewContent())
-                        .starpoint(review.getStarpoint())
+                        .starPoint(review.getStarPoint())
                         .likedCnt(review.getLikedCnt())
                         .reviewerEmail(review.getReviewerEmail())
                         .reviewRateType1(review.getReviewRateType1())
