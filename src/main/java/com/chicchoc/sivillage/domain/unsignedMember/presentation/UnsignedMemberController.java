@@ -19,11 +19,10 @@ public class UnsignedMemberController {
     @GetMapping
     public void getUnsignedMember(HttpServletResponse response, HttpServletRequest request) {
         String uuid = request.getHeader("uuid");
-        if(uuid == null) { // uuid 존재하지 않는다면
-            String UnsignedMemberUuid = unsignedMemberService.createUnsignedMember();
-            response.setHeader("uuid", UnsignedMemberUuid);
-        }
-        else { // uuid 존재한다면
+        if (uuid == null) { // uuid 존재하지 않는다면
+            String unsignedMemberUuid = unsignedMemberService.createUnsignedMember();
+            response.setHeader("uuid", unsignedMemberUuid);
+        } else { // uuid 존재한다면
             unsignedMemberService.updateUnsignedMember(uuid);
         }
     }
