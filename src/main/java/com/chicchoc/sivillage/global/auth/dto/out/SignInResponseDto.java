@@ -16,9 +16,9 @@ public class SignInResponseDto {
     private String refreshToken;
     private String uuid;
 
-    public SignInResponseVo toVo(SignInResponseDto signInResponseDto) {
+    public SignInResponseVo toVo() {
         return SignInResponseVo.builder()
-                .uuid(signInResponseDto.getUuid())
+                .uuid(this.getUuid())
                 .build();
     }
 }
