@@ -4,11 +4,9 @@ import com.chicchoc.sivillage.global.auth.application.AuthService;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
-import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
+import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
-import com.chicchoc.sivillage.global.common.aop.annotation.ValidAop;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +15,6 @@ import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +29,9 @@ public class AuthController {
     private final JwtProperties jwtProperties;
 
     @Operation(summary = "회원가입", description = "회원가입과 동시에 로그인이 됩니다.", tags = {"Auth"})
-    @ValidAop
     @PostMapping("/sign-up")
     public CommonResponseEntity<SignInResponseVo> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto,
-            BindingResult bindingResult, HttpServletResponse response) {
+            HttpServletResponse response) {
 
         authService.signUp(signUpRequestDto);
 
@@ -48,10 +44,9 @@ public class AuthController {
     }
 
     @Operation(summary = "로그인 ", description = "로그인", tags = {"Auth"})
-    @ValidAop
     @PostMapping("/sign-in")
     public CommonResponseEntity<SignInResponseVo> signIn(@Valid @RequestBody SignInRequestDto signInRequestDto,
-            BindingResult bindingResult, HttpServletResponse response) {
+            HttpServletResponse response) {
 
         SignInResponseDto responseDto = authService.signIn(signInRequestDto);
 
@@ -60,11 +55,9 @@ public class AuthController {
 
     // 이메일 중복 검사
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사", tags = {"Auth"})
-    @ValidAop
     @PostMapping("/check-email")
     public CommonResponseEntity<Boolean> checkEmail(
-            @Valid @RequestBody CheckEmailRequestDto checkEmailRequestDto,
-            BindingResult bindingResult) {
+            @Valid @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
 
         boolean isInUse = authService.isInUseEmail(checkEmailRequestDto);
 
@@ -74,11 +67,9 @@ public class AuthController {
 
     // email 찾기
     @Operation(summary = "이메일 찾기", description = "이메일 찾기", tags = {"Auth"})
-    @ValidAop
     @PostMapping("/find-email")
     public CommonResponseEntity<String> findEmail(
-            @Valid @RequestBody FindEmailRequestDto findEmailRequestDto,
-            BindingResult bindingResult) {
+            @Valid @RequestBody FindEmailRequestDto findEmailRequestDto) {
 
         Optional<String> emailResult = authService.findEmail(findEmailRequestDto);
 
@@ -91,8 +82,8 @@ public class AuthController {
     private CommonResponseEntity<SignInResponseVo> signInResponse(SignInResponseDto responseDto,
             HttpServletResponse response, int type) {
 
-        response.setHeader(jwtProperties.getHeaderString(), responseDto.getAccessToken());
-        response.setHeader("RefreshToken", responseDto.getRefreshToken());
+        response.setHeader(jwtProperties.getAccessTokenPrefix(), responseDto.getAccessToken());
+        response.setHeader(jwtProperties.getRefreshTokenPrefix(), responseDto.getRefreshToken());
 
         return new CommonResponseEntity<>(
                 type == 0 ? HttpStatus.CREATED : HttpStatus.OK,
