@@ -9,7 +9,6 @@ public class PromotionResponseDto {
     private String title;
     private String description;
     private String thumbnailUrl;
-    private String promotionDetailUrl;
 
     public PromotionResponseVo toResponseVo() {
         return PromotionResponseVo.builder()
@@ -17,7 +16,6 @@ public class PromotionResponseDto {
                 .title(title)
                 .description(description)
                 .thumbnailUrl(thumbnailUrl)
-                .promotionDetailUrl(promotionDetailUrl)
                 .build();
     }
 }
