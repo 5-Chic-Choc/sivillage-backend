@@ -1,35 +1,43 @@
 package com.chicchoc.sivillage.domain.product.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
+@Builder
 @Getter
-public class ProductOrderOption {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_order_option_id")
+    @Column(name = "product_option_id")
     private Long id;
+
+    @Comment("상품옵션 uuid")
+    @Column(nullable = false, length = 21, name = "product_option_uuid")
+    private String productOptionUuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "size_id")
-    private Size size;
+    @Comment("색상ID")
+    @Column(nullable = false)
+    private Long sizeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "color_id")
-    private Color color;
+    @Comment("사이즈ID")
+    @Column(nullable = false)
+    private Long colorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "etc_option_id")
-    private EtcOption etcOption;
+    @Comment("기타옵션ID")
+    @Column(nullable = false)
+    private Long etcOptionId;
 
     @Comment("판매 상태")
     @Column(nullable = false)
@@ -48,7 +56,4 @@ public class ProductOrderOption {
     @Column(nullable = true)
     private int discountPrice;
 
-    @Comment("상품옵션코드")
-    @Column(nullable = false, length = 20)
-    private String productOptionCode;
 }
