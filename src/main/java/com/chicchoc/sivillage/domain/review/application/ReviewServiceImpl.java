@@ -20,7 +20,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void addReview(ReviewRequestDto reviewRequestDto) {
         // TODO UserID 받아오는 로직
         Long userId = null;
-        reviewRepository.save(reviewRequestDto.toEntity(userId));
+        //        reviewRepository.save(reviewRequestDto.toEntity(userId));
     }
 
     @Override
@@ -35,12 +35,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviewByUserUuid() {
         String userUuid = JwtUtil.getUserUuid();
-        List<Review> reviewList = reviewRepository.findByProductUuid(userUuid);
+        List<Review> reviewList = reviewRepository.findByUserUuid(userUuid);
 
         return commonDtoStream(reviewList);
     }
 
-    public List<ReviewResponseDto> commonDtoStream(List<Review> reviewList){
+    public List<ReviewResponseDto> commonDtoStream(List<Review> reviewList) {
         return reviewList.stream()
                 .map(review -> ReviewResponseDto.builder()
                         .reviewUuid(review.getReviewUuid())

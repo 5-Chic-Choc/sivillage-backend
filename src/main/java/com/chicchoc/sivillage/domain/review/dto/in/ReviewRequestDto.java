@@ -14,18 +14,17 @@ public class ReviewRequestDto {
     private final int rate;
     private final String content;
 
-
-    public Review toEntity(Long userId) {
-        return Review.builder()
-                .userId(userId)
-                .productId(productId)
-                .size(size)
-                .reviewOption(reviewOption)
-                .info(info)
-                .rate(rate)
-                .content(content)
-                .build();
-    }
+    //    public Review toEntity(Long userId) {
+    //        return Review.builder()
+    //                .userId(userId)
+    //                .productId(productId)
+    //                .size(size)
+    //                .reviewOption(reviewOption)
+    //                .info(info)
+    //                .rate(rate)
+    //                .content(content)
+    //                .build();
+    //    }
 
     @Builder
     public ReviewRequestDto(Long productId, String size, String reviewOption, String info, int rate,
