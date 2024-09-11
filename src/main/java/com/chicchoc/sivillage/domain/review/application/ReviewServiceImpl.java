@@ -7,6 +7,7 @@ import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,44 +23,39 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewResponseDto> getReviewByProductId(Long productId) {
-        List<Review> reviewListByProductId;
-        try {
-            reviewListByProductId = reviewRepository.findByProductId(productId);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("해당 리뷰를 찾을 수 없음.");
-        }
-        return reviewListByProductId.stream()
-                .map(review -> ReviewResponseDto.builder()
-                        .id(review.getId())
-                        .productId(review.getProductId())
-                        .size(review.getSize())
-                        .info(review.getInfo())
-                        .content(review.getContent())
-                        .rate(review.getRate())
-                        .createAt(review.getCreatedAt())
-                        .build())
-                .toList();
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getReviewByProductUuid(String productUuid) {
+        List<Review> reviewList = reviewRepository.findByProductUuid(productUuid);
+
+        return commonDtoStream(reviewList);
     }
 
     @Override
-    public List<ReviewResponseDto> getReviewByUserId(Long userId) {
-        List<Review> reviewListByUserId;
-        try {
-            reviewListByUserId = reviewRepository.findByUserId(userId);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("해당 사용자의 리뷰를 찾을 수 없음.");
-        }
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getReviewByUserUuid() {
+        List<Review> reviewList = reviewRepository.findByProductUuid();
 
-        return reviewListByUserId.stream()
+        return commonDtoStream(reviewList);
+    }
+
+    public List<ReviewResponseDto> commonDtoStream(List<Review> reviewList){
+        return reviewList.stream()
                 .map(review -> ReviewResponseDto.builder()
-                        .id(review.getId())
-                        .productId(review.getProductId())
-                        .size(review.getSize())
-                        .info(review.getInfo())
-                        .rate(review.getRate())
-                        .content(review.getContent())
-                        .createAt(review.getCreatedAt())
+                        .reviewUuid(review.getReviewUuid())
+                        .productUuid(review.getProductUuid())
+                        .userUuid(review.getUserUuid())
+                        .sizeName(review.getSizeName())
+                        .colorValue(review.getColorValue())
+                        .reviewContent(review.getReviewContent())
+                        .starpoint(review.getStarpoint())
+                        .likedCnt(review.getLikedCnt())
+                        .reviewerEmail(review.getReviewerEmail())
+                        .reviewRateType1(review.getReviewRateType1())
+                        .reviewRateText1(review.getReviewRateText1())
+                        .reviewRateType2(review.getReviewRateType2())
+                        .reviewRateText2(review.getReviewRateText2())
+                        .reviewRateType3(review.getReviewRateType3())
+                        .reviewRateText3(review.getReviewRateText3())
                         .build())
                 .toList();
     }

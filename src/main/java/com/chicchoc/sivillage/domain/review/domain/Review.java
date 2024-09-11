@@ -48,5 +48,22 @@ public class Review extends BaseEntity {
 
     @Column(name = "reviewer_email")
     private String reviewerEmail;
-    
+
+    @Column(name = "review_rate_type_1")
+    private String reviewRateType1;
+
+    @Column(name = "review_rate_text_1")
+    private String reviewRateText1;
+
+    @Column(name = "review_rate_type_2")
+    private String reviewRateType2;
+
+    @Column(name = "review_rate_text_2")
+    private String reviewRateText2;
+
+    @Column(name = "review_rate_type_3")
+    private String reviewRateType3;
+
+    @Column(name = "review_rate_text_3")
+    private String reviewRateText3;
 }

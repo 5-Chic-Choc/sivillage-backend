@@ -10,7 +10,7 @@ public interface ReviewService {
 
     void addReview(ReviewRequestDto reviewRequestDto);
 
-    List<ReviewResponseDto> getReviewByProductId(Long productId);
+    List<ReviewResponseDto> getReviewByProductUuid(String productUuid);
 
-    List<ReviewResponseDto> getReviewByUserId(Long userId);
+    List<ReviewResponseDto> getReviewByUserUuid();
 }

@@ -20,5 +20,11 @@ public class ReviewResponseVo {
     private byte starpoint;
     private Integer likedCnt;
     private String reviewerEmail;
+    private String reviewRateType1;
+    private String reviewRateType2;
+    private String reviewRateType3;
+    private String reviewRateText1;
+    private String reviewRateText2;
+    private String reviewRateText3;
 
 }

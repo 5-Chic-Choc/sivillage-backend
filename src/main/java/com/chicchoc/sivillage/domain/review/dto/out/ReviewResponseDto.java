@@ -22,6 +22,12 @@ public class ReviewResponseDto {
     private byte starpoint;
     private Integer likedCnt;
     private String reviewerEmail;
+    private String reviewRateType1;
+    private String reviewRateType2;
+    private String reviewRateType3;
+    private String reviewRateText1;
+    private String reviewRateText2;
+    private String reviewRateText3;
 
     public ReviewResponseVo toResponseVo() {
         return ReviewResponseVo.builder()
@@ -34,6 +40,12 @@ public class ReviewResponseDto {
                 .starpoint(starpoint)
                 .likedCnt(likedCnt)
                 .reviewerEmail(reviewerEmail)
+                .reviewRateType1(reviewRateType1)
+                .reviewRateText1(reviewRateText1)
+                .reviewRateType2(reviewRateType2)
+                .reviewRateText2(reviewRateText2)
+                .reviewRateType3(reviewRateType3)
+                .reviewRateText3(reviewRateText3)
                 .build();
     }
 }
