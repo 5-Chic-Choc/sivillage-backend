@@ -31,17 +31,17 @@ public class Review extends BaseEntity {
     @Column(name = "user_uud", nullable = false, length = 21)
     private String userUuid;
 
-    @Column(name = "size_id", nullable = false)
-    private Long sizeId;
+    @Column(name = "size_name", nullable = false)
+    private String sizeName;
 
-    @Column(name = "color_id", nullable = false)
-    private Long colorId;
+    @Column(name = "color_value", nullable = false)
+    private String colorValue;
 
     @Column(name = "review_content", nullable = false)
     private String reviewContent;
 
-    @Column(name = "startpoint", nullable = false)
-    private byte startpoint;
+    @Column(name = "starpoint", nullable = false)
+    private byte starpoint;
 
     @Column(name = "liked_cnt")
     private Integer likedCnt;
