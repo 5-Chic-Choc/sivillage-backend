@@ -22,21 +22,31 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "review_uuid", nullable = false, length = 21)
+    private String reviewUuid;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "product_uuid", nullable = false, length = 21)
+    private String productUuid;
 
-    private String size;
+    @Column(name = "user_uud", nullable = false, length = 21)
+    private String userUuid;
 
-    @Column(name = "review_option")
-    private String reviewOption;
+    @Column(name = "size_id", nullable = false)
+    private Long sizeId;
 
-    private String info;
+    @Column(name = "color_id", nullable = false)
+    private Long colorId;
 
-    private int rate;
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
 
-    private String content;
+    @Column(name = "startpoint", nullable = false)
+    private byte startpoint;
+
+    @Column(name = "liked_cnt")
+    private Integer likedCnt;
+
+    @Column(name = "reviewer_email")
+    private String reviewerEmail;
     
 }
