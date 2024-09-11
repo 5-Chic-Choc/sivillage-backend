@@ -31,6 +31,14 @@ public class Brand {
     @Column(nullable = false, length = 2000)
     private String logoUrl;
 
+    @Comment("브랜드 리스트 타입")
+    @Column(nullable = false, length = 10)
+    private String brandListType;
+
+    @Comment("브랜드 인덱스 문자")
+    @Column(nullable = false, length = 10)
+    private String brandIndexLetter;
+
     public void updateBrand(String name, String logoUrl) {
         this.name = name;
         this.logoUrl = logoUrl;
