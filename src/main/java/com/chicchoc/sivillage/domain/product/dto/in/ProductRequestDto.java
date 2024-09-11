@@ -8,7 +8,8 @@ import java.util.List;
 @Getter
 @Builder
 public class ProductRequestDto {
-    private List<String> categories;
+    private String category;
+    private Integer depth;
     private List<String> sizes;
     private List<String> colors;
     private List<String> brands;  // 필드를 복수형으로 수정

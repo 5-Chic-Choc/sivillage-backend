@@ -1,16 +1,22 @@
 package com.chicchoc.sivillage.domain.product.domain;
 
+import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter
-public class Product {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,22 +24,18 @@ public class Product {
     private Long id;
 
     @Comment("상품 uuid")
-    @Column(nullable = false, length = 20, name = "product_uuid")
+    @Column(nullable = false, length = 21, name = "product_uuid")
     private String productUuid;
 
-    @Comment("상품 이름")
+    @Comment("브랜드 uuid")
+    @Column(nullable = false, length = 21, name = "brand_uuid")
+    private String brandUuid;
+
+    @Comment("제품 이름")
     @Column(nullable = false, length = 30)
     private String productName;
 
-    @Comment("상품 등록일")
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Comment("상품 브랜드")
-    @Column(nullable = true)
-    private Long brandId;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductOrderOption> productOrderOptions;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductOption> productOptions = new ArrayList<>();
 
 }

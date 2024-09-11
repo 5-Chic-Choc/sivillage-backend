@@ -1,24 +1,20 @@
 package com.chicchoc.sivillage.domain.product.presentation;
 
-
 import com.chicchoc.sivillage.domain.product.application.ProductService;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
-import com.chicchoc.sivillage.domain.product.dto.out.ProductPerBrandResponseDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
-import com.chicchoc.sivillage.domain.product.vo.out.ProductPerBrandResponseVo;
 import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
-import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
+import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,32 +24,14 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "getProductByBrand API", description = "브랜드 별 상품 조회", tags = {"Product"})
-    @GetMapping("/{brandId}")
-    public CommonResponseEntity<List<ProductPerBrandResponseVo>> getProductsByBrandId(Long brandId) {
-
-        // 서비스 호출
-        List<ProductPerBrandResponseDto> productPerBrandResponseDtos = productService.findAllByBrandId(brandId);
-
-        // DTO를 VO로 변환
-        List<ProductPerBrandResponseVo> productPerBrandResponseVos = productPerBrandResponseDtos.stream()
-                .map(ProductPerBrandResponseDto::toResponseVo)
-                .collect(Collectors.toList());
-
-        return new CommonResponseEntity<>(
-                HttpStatus.OK,
-                "상품 조회 성공",
-                productPerBrandResponseVos
-        );
-    }
-
     @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"Product"})
     @GetMapping()
-    public CommonResponseEntity<List<ProductResponseVo>> getFilteredProductList(
-            @RequestParam(required = false) List<String> category,
-            @RequestParam(required = false) List<String> size,
-            @RequestParam(required = false) List<String> color,
-            @RequestParam(required = false) List<String> brand,
+    public BaseResponse<List<ProductResponseVo>> getFilteredProductList(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer depth,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) Integer minimumPrice,
             @RequestParam(required = false) Integer maximumPrice,
             @RequestParam(defaultValue = "1") int page,
@@ -62,32 +40,22 @@ public class ProductController {
             @RequestParam(defaultValue = "true") boolean isAscending) {
 
         ProductRequestDto productRequestDto = ProductRequestDto.builder()
-                .categories(category)
-                .sizes(size)
-                .colors(color)
-                .brands(brand)
-                .minimumPrice(minimumPrice)
-                .maximumPrice(maximumPrice)
+                .category(category)
+                .depth(Optional.ofNullable(depth).orElse(0))  // 기본값 처리
+                .sizes(sizes)
+                .colors(colors)
+                .brands(brands)
+                .minimumPrice(Optional.ofNullable(minimumPrice).orElse(0))  // 기본값 처리
+                .maximumPrice(Optional.ofNullable(maximumPrice).orElse(Integer.MAX_VALUE))  // 기본값 처리
                 .page(page)
                 .perPage(perPage)
                 .sortBy(sortBy)
                 .isAscending(isAscending)
                 .build();
 
-        // Service 호출
-        List<ProductResponseDto> productResponseDtos = productService.getFilteredProducts(
-                productRequestDto
-        );
+        List<ProductResponseVo> products = productService.getFilteredProducts(productRequestDto)
+                .stream().map(ProductResponseDto::toResponseVo).toList();
 
-        // DTO를 VO로 변환하여 리턴
-        List<ProductResponseVo> productResponseVos = productResponseDtos.stream()
-                .map(ProductResponseDto::toResponseVo)
-                .collect(Collectors.toList());
-
-        return new CommonResponseEntity<>(
-                HttpStatus.OK,
-                "상품 조회 성공",
-                productResponseVos
-        );
+        return new BaseResponse<>(products);
     }
 }

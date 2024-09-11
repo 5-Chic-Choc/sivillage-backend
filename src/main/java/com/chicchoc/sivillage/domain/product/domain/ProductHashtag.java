@@ -12,18 +12,18 @@ import org.hibernate.annotations.Comment;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Color {
+public class ProductHashtag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "color_id")
+    @Column(name = "product_hashtag_id")
     private Long id;
 
-    @Comment("색상 필터링 이름")
-    @Column(nullable = false, length = 10, unique = true)
-    private String name;
+    @Comment("상품 uuid")
+    @Column(nullable = false, length = 21, name = "product_uuid")
+    private Long productUuid;
 
-    @Comment("색상 상세 값")
+    @Comment("해시태그 내용")
     @Column(nullable = false, length = 30)
-    private String value;
+    private String hashtagContent;
 }
