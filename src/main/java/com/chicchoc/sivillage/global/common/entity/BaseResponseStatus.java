@@ -71,9 +71,6 @@ public enum BaseResponseStatus {
     // Promotion
     NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
 
-    // Promotion
-    NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
-
     /**
      * 3000: product service error.
      */
