@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PromotionHashtagResponseVo {
-    private String hashtagContent;
+public class PromotionBenefitResponseVo {
+    private String benefitContent;
 }

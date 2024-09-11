@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.global.jwt.application;
 
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
 import com.chicchoc.sivillage.global.jwt.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ public class RefreshTokenService {
     public RefreshToken findByRefreshToken(String refreshToken) {
 
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰이 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN));
     }
 
     @Transactional

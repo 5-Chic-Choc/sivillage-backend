@@ -96,13 +96,13 @@ public class JwtTokenProvider {
                 log.error("토큰이 존재하지 않습니다");
                 throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
             }
-            log.error("parseClaims token={}", token);
+            log.error(" 들어온 토큰: {}", token);
             Claims claims = Jwts.parser()
                     .verifyWith(getSecretKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            log.error("claims={}", claims);
+            log.error("토큰 내용: : {}", claims);
             return claims;
 
         } catch (ExpiredJwtException e) {

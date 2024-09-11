@@ -9,4 +9,6 @@ public class BrandResponseVo {
     private String brandUuid;
     private String name;
     private String logoUrl;
+    private String brandListType;
+    private String brandIndexLetter;
 }

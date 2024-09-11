@@ -27,13 +27,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    //AuthenticationEntryPoint : 인증이 필요한 리소스에 접근하려고 할 때 인증을 하지 않았을 때 발생하는 예외를 처리하는 클래스
-    //시큐리티의 모든 예외는 여기(CAEP)에서 처리함.
+    //시큐리티에서 발생하는 예외는 여기서 처리함.
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws ServletException, IOException {
 
-        log.error("CustomAuthenticationEntryPoint 예외 : {}", authException.getMessage());
+        log.error("Security 에서 예외 발생 : {}", authException.getMessage());
 
         // 응답 타입 설정 (JSON 형태)
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -59,7 +58,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         } else if (authException.getClass() == AccountExpiredException.class) {
             return BaseResponseStatus.DISABLED_USER;  // 계정 만료
         } else if (authException.getClass() == CredentialsExpiredException.class) {
-            return BaseResponseStatus.INTERNAL_SERVER_ERROR;  // 인증서 만료
+            return BaseResponseStatus.NO_SIGN_IN;  // 인증서 만료
         } else if (authException.getClass() == DisabledException.class) {
             return BaseResponseStatus.DISABLED_USER;  // 계정 비활성화
         } else if (authException.getClass() == LockedException.class) {

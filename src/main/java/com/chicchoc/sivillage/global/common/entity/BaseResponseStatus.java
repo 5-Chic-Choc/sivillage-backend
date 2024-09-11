@@ -20,19 +20,21 @@ public enum BaseResponseStatus {
     SUCCESS(HttpStatus.OK, true, 200, "요청에 성공하였습니다."),
 
     /**
-     * 400 : security 에러.
+     * 400 : security 에러. 아직 사용 안함.
      */
+    ILLEGAL_ARGUMENT(HttpStatus.BAD_REQUEST, false, 400, "잘못된 요청입니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, false, 401, "적절하지 않은 요청값입니다."),
     WRONG_JWT_TOKEN(HttpStatus.UNAUTHORIZED, false, 401, "다시 로그인 해주세요"),
     NO_SIGN_IN(HttpStatus.UNAUTHORIZED, false, 402, "로그인을 먼저 진행해주세요"),
     NO_ACCESS_AUTHORITY(HttpStatus.FORBIDDEN, false, 403, "접근 권한이 없습니다"),
     DISABLED_USER(HttpStatus.FORBIDDEN, false, 404, "비활성화된 계정입니다. 계정을 복구하시겠습니까?"),
-    FAILED_TO_RESTORE(HttpStatus.INTERNAL_SERVER_ERROR, false, 405, "계정 복구에 실패했습니다. 관리자에게 문의해주세요."),
+    //FAILED_TO_RESTORE(HttpStatus.INTERNAL_SERVER_ERROR, false, 405, "계정 복구에 실패했습니다. 관리자에게 문의해주세요."),
 
     /**
      * 900: 기타 에러.
      */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 900, "Internal server error."),
-    SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 901, "알림 전송에 실패하였습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 900, "요청 처리 중 에러가 발생하였습니다."),
+    //SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 901, "알림 전송에 실패하였습니다."),
 
     /**
      * 2000: users service error.
@@ -42,23 +44,38 @@ public enum BaseResponseStatus {
 
     // Users
     DUPLICATED_USER(HttpStatus.CONFLICT, false, 2101, "이미 가입된 멤버입니다."),
-    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 2102, "아이디 또는 패스워드를 다시 확인하세요."),
-    DUPLICATED_SOCIAL_USER(HttpStatus.CONFLICT, false, 2103, "이미 소셜 연동된 계정입니다."),
-    DUPLICATED_SOCIAL_PROVIDER_USER(HttpStatus.CONFLICT, false, 2104, "계정에 동일한 플랫폼이 이미 연동되어있습니다."),
-    NO_EXIST_USER(HttpStatus.NOT_FOUND, false, 2105, "존재하지 않는 멤버 정보입니다."),
+    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 2102, "아이디 또는 비밀번호가 일치하지 않습니다."),
+    DUPLICATED_EMAIL(HttpStatus.CONFLICT, false, 2103, "이미 사용중인 이메일입니다."),
+    DUPLICATED_NAME_AND_PHONE(HttpStatus.CONFLICT, false, 2104, "이미 사용중인 이름과 전화번호입니다."),
+    NO_EXIST_USER(HttpStatus.NOT_FOUND, false, 2105, "존재하지 않는 회원 정보입니다."),
     PASSWORD_SAME_FAILED(HttpStatus.BAD_REQUEST, false, 2106, "현재 사용중인 비밀번호입니다."),
-    PASSWORD_CONTAIN_NUM_FAILED(HttpStatus.BAD_REQUEST, false, 2107, "휴대폰 번호를 포함한 비밀번호입니다."),
-    PASSWORD_MATCH_FAILED(HttpStatus.BAD_REQUEST, false, 2108, "패스워드를 다시 확인해주세요."),
-    NO_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, false, 2109, "지원하지 않는 플랫폼입니다."),
-    DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2010, "이미 사용중인 닉네임입니다."),
-    SAME_NICKNAME(HttpStatus.CONFLICT, false, 2011, "현재 사용중인 닉네임입니다."),
     INVALID_EMAIL_ADDRESS(HttpStatus.BAD_REQUEST, false, 2012, "이메일을 다시 확인해주세요."),
+    INVALID_EMAIL_CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, false, 2013, "이메일 인증번호가 일치하지 않습니다."),
+    INVALID_EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, false, 2014, "이메일 인증번호가 만료되었습니다."),
+    //    DUPLICATED_SOCIAL_USER(HttpStatus.CONFLICT, false, 2103, "이미 소셜 연동된 계정입니다."),
+    //    DUPLICATED_SOCIAL_PROVIDER_USER(HttpStatus.CONFLICT, false, 2104, "계정에 동일한 플랫폼이 이미 연동되어있습니다."),
+    //    PASSWORD_CONTAIN_NUM_FAILED(HttpStatus.BAD_REQUEST, false, 2107, "휴대폰 번호를 포함한 비밀번호입니다."),
+    //    PASSWORD_MATCH_FAILED(HttpStatus.BAD_REQUEST, false, 2108, "패스워드를 다시 확인해주세요."),
+    //    NO_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, false, 2109, "지원하지 않는 플랫폼입니다."),
+    //    DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2010, "이미 사용중인 닉네임입니다."),
+    //    SAME_NICKNAME(HttpStatus.CONFLICT, false, 2011, "현재 사용중인 닉네임입니다."),
 
     // Pet
     NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2401, "존재하지 않는 카테고리입니다."),
 
     // Interest
     NO_EXIST_INTEREST(HttpStatus.NOT_FOUND, false, 2501, "존재하지 않는 관심사입니다."),
+
+    // Brand
+    NO_EXIST_BRAND(HttpStatus.NOT_FOUND, false, 2601, "존재하지 않는 브랜드입니다."),
+    DUPLICATED_BRAND(HttpStatus.CONFLICT, false, 2602, "이미 등록된 브랜드입니다."),
+    INVALID_BRAND_NAME_LENGTH(HttpStatus.BAD_REQUEST, false, 2603,
+            "브랜드 이름은 255자를 초과할 수 없습니다."),
+    INVALID_BRAND_LOGO_URL_LENGTH(HttpStatus.BAD_REQUEST, false, 2604,
+            "브랜드 로고 URL은 2000자를 초과할 수 없습니다."),
+
+    // Promotion
+    NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
 
     /**
      * 3000: product service error.

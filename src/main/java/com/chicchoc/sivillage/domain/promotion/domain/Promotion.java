@@ -31,18 +31,13 @@ public class Promotion {
     @Column(nullable = false, length = 255)
     private String description;
 
-    @Comment("프로모션 상세 URL")
-    @Column(nullable = false, length = 2000)
-    private String promotionDetailUrl;
-
-    @Comment("프로모션 썸네일 이미지 URL")
+    @Comment("프로모션 썸네일 URL")
     @Column(nullable = false, length = 2000)
     private String thumbnailUrl;
 
-    public void updatePromotion(String title, String description, String promotionDetailUrl, String thumbnailUrl) {
+    public void updatePromotion(String title, String description, String thumbnailUrl) {
         this.title = title;
         this.description = description;
-        this.promotionDetailUrl = promotionDetailUrl;
         this.thumbnailUrl = thumbnailUrl;
     }
 }

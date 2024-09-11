@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.global.jwt.application;
 
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,7 +17,7 @@ public class TokenService {
     public String createNewAccessToken(String refreshToken) {
 
         if (!jwtTokenProvider.isValidToken(refreshToken)) {
-            throw new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
 
         Authentication authentication = jwtTokenProvider.createAuthentication(refreshToken);

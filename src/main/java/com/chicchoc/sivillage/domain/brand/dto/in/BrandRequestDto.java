@@ -11,12 +11,16 @@ public class BrandRequestDto {
     private String brandUuid;
     private String name;
     private String logoUrl;
+    private String brandListType;
+    private String brandIndexLetter;
 
     public Brand toEntity(String brandUuid) {
         return Brand.builder()
                 .brandUuid(brandUuid)
                 .name(name)
                 .logoUrl(logoUrl)
+                .brandListType(brandListType)
+                .brandIndexLetter(brandIndexLetter)
                 .build();
     }
 }

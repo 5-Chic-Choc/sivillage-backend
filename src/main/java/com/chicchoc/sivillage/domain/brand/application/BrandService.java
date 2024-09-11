@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.brand.application;
 
 import com.chicchoc.sivillage.domain.brand.dto.in.BrandRequestDto;
+import com.chicchoc.sivillage.domain.brand.dto.out.BrandMediaResponseDto;
 import com.chicchoc.sivillage.domain.brand.dto.out.BrandResponseDto;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface BrandService {
     void updateBrand(String brandUuid, BrandRequestDto brandRequestDto);
 
     BrandResponseDto findBrandByUuid(String brandUuid);
+
+    List<BrandMediaResponseDto> findAllBrandMedias(String brandUuid);
 }

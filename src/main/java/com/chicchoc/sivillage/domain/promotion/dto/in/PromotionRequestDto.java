@@ -10,7 +10,6 @@ public class PromotionRequestDto {
 
     private String title;
     private String description;
-    private String promotionDetailUrl;
     private String thumbnailUrl;
 
     public Promotion toEntity(String promotionUuid) {
@@ -18,7 +17,6 @@ public class PromotionRequestDto {
                 .promotionUuid(promotionUuid)
                 .title(title)
                 .description(description)
-                .promotionDetailUrl(promotionDetailUrl)
                 .thumbnailUrl(thumbnailUrl)
                 .build();
     }

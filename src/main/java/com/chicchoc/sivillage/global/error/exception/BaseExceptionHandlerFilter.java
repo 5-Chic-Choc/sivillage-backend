@@ -23,7 +23,8 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (BaseException e) {
-            log.error("BaseException -> {}({})", e.getStatus(), e.getStatus().getMessage(), e);
+            log.error("BaseExceptionHandlerFilter에서 예외 발생: {}({}) 값:{}",
+                    e.getStatus(), e.getStatus().getMessage(), e.getMessage());
             setErrorResponse(response, e);
         } // 인증 예외는 CustomAuthenticationEntryPoint에서 처리
     }

@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.member.domain;
 
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
@@ -27,6 +29,6 @@ public enum Gender {
                 return gender;
             }
         }
-        throw new IllegalArgumentException("Unknown value " + value);
+        throw new BaseException(BaseResponseStatus.INVALID_INPUT_VALUE);
     }
 }
