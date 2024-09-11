@@ -5,13 +5,11 @@ import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
-import com.chicchoc.sivillage.global.common.aop.annotation.ExceptionHandleAop;
-import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
-import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
-import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
+import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
@@ -37,15 +35,15 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
 
-    @ExceptionHandleAop // save 중 예외 발생 시
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
         String uuid = new NanoIdGenerator().generateNanoId();
 
+        // 중복된 이름과 전화번호가 존재할 경우 예외 처리
         if (memberRepository.existsByNameAndPhone(signUpRequestDto.getName(), signUpRequestDto.getPhone())) {
-            throw new IllegalArgumentException("이미 가입된 ID가 있습니다.");
+            throw new BaseException(BaseResponseStatus.DUPLICATED_NAME_AND_PHONE);
         }
 
         String password = passwordEncoder.encode(signUpRequestDto.getPassword());
@@ -60,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
         //아이디 검증
         Member member = memberRepository.findByEmail(signInRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
         try {
             //인증 객체 생성
@@ -84,11 +82,10 @@ public class AuthServiceImpl implements AuthService {
 
         } catch (Exception e) {
             log.warn("로그인 시도 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
     }
 
-    @ExceptionHandleAop
     @Transactional(readOnly = true)
     @Override
     public boolean isInUseEmail(CheckEmailRequestDto checkEmailRequestDto) {
@@ -96,7 +93,6 @@ public class AuthServiceImpl implements AuthService {
         return memberRepository.existsByEmail(checkEmailRequestDto.getEmail());
     }
 
-    @ExceptionHandleAop
     @Transactional(readOnly = true)
     @Override
     public Optional<String> findEmail(FindEmailRequestDto findEmailRequestDto) {
