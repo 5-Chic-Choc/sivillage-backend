@@ -5,6 +5,7 @@ import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.vo.in.ReviewRequestVo;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
+import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.CommonResponseEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class ReviewController {
     }
 
     @GetMapping("/product/{productUuid}")
-    public CommonResponseEntity<List<ReviewResponseVo>> getReviewByProductUuId(
+    public BaseResponse<List<ReviewResponseVo>> getReviewByProductUuId(
             @PathVariable("productUuid") String productUuid) {
         List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByProductUuid(productUuid);
 
@@ -54,16 +55,18 @@ public class ReviewController {
                 .map(ReviewResponseDto::toResponseVo)  // 각각의 ReviewResponseDto를 ReviewResponseVo로 변환
                 .toList();         // 변환된 리스트를 List로 수집
 
-        return new CommonResponseEntity<>(
-                HttpStatus.OK,
-                "리뷰 불러오기 성공",
-                reviewResponseVoList
-        );
+        return new BaseResponse<>(reviewResponseVoList);
     }
 
-    @GetMapping("/user/{userId}")
-    public void getReviewByUserId(@PathVariable("userId") Long userId) {
+    @GetMapping("/user")
+    public BaseResponse<List<ReviewResponseVo>> getReviewByUserUuid() {
+        List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByUserUuid();
 
+        List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
+                .map(ReviewResponseDto::toResponseVo)
+                .toList();
+
+        return new BaseResponse<>(reviewResponseVoList);
     }
 }
 

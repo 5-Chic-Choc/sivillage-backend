@@ -26,5 +26,4 @@ public class ReviewResponseVo {
     private String reviewRateText1;
     private String reviewRateText2;
     private String reviewRateText3;
-
 }
