@@ -36,7 +36,7 @@ public class SecurityConfig {
         config.addAllowedOriginPattern("*"); //모든 Origin 허용
         config.addAllowedHeader("Content-Type"); // JSON 데이터만 헤더로 받음
         config.addAllowedMethod("*"); //모든 Method 허용
-        config.setExposedHeaders(List.of(jwtProperties.getHeaderString())); //Authorization 헤더를 노출
+        config.setExposedHeaders(List.of(jwtProperties.getAccessTokenPrefix())); //Authorization 헤더를 노출
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); //모든 URL에 대해 CORS 설정 적용
         return new CorsFilter(source);
