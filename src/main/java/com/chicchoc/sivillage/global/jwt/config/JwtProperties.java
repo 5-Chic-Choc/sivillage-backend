@@ -17,6 +17,7 @@ public class JwtProperties {
     private long accessExpireTime;
     private long refreshExpireTime;
     private String tokenPrefix;
-    private String headerString;
+    private String accessTokenPrefix;
+    private String refreshTokenPrefix;
 
 }

@@ -60,6 +60,17 @@ public enum BaseResponseStatus {
     // Interest
     NO_EXIST_INTEREST(HttpStatus.NOT_FOUND, false, 2501, "존재하지 않는 관심사입니다."),
 
+    // Brand
+    NO_EXIST_BRAND(HttpStatus.NOT_FOUND, false, 2601, "존재하지 않는 브랜드입니다."),
+    DUPLICATED_BRAND(HttpStatus.CONFLICT, false, 2602, "이미 등록된 브랜드입니다."),
+    INVALID_BRAND_NAME_LENGTH(HttpStatus.BAD_REQUEST, false, 2603,
+            "브랜드 이름은 255자를 초과할 수 없습니다."),
+    INVALID_BRAND_LOGO_URL_LENGTH(HttpStatus.BAD_REQUEST, false, 2604,
+            "브랜드 로고 URL은 2000자를 초과할 수 없습니다."),
+
+    // Promotion
+    NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
+
     /**
      * 3000: product service error.
      */
