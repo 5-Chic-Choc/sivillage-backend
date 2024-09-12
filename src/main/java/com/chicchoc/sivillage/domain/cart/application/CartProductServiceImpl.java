@@ -30,7 +30,7 @@ public class CartProductServiceImpl implements CartProductService {
 
         return cartProductList.stream()
                 .map(cartProduct -> CartProductResponseDto.builder().cartProductUuid(cartProduct.getCartProductUuid())
-                        .productOrderOptionId(cartProduct.getProductOrderOptionId()).amount(cartProduct.getAmount())
+                        .productOptionUuid(cartProduct.getProductOptionUuid()).amount(cartProduct.getAmount())
                         .build()).toList();
     }
 }

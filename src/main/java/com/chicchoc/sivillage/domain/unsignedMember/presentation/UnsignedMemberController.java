@@ -1,7 +1,6 @@
 package com.chicchoc.sivillage.domain.unsignedMember.presentation;
 
 import com.chicchoc.sivillage.domain.unsignedMember.application.UnsignedMemberService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +17,10 @@ public class UnsignedMemberController {
 
     @GetMapping
     public void getUnsignedMember(HttpServletResponse response, HttpServletRequest request) {
-        String uuid = request.getHeader("uuid");
+        String uuid = request.getHeader("X-Unsigned-User-UUID");
         if (uuid == null) { // uuid 존재하지 않는다면
             String unsignedMemberUuid = unsignedMemberService.createUnsignedMember();
-            response.setHeader("uuid", unsignedMemberUuid);
+            response.setHeader("X-Unsigned-User-UUID", unsignedMemberUuid);
         } else { // uuid 존재한다면
             unsignedMemberService.updateUnsignedMember(uuid);
         }

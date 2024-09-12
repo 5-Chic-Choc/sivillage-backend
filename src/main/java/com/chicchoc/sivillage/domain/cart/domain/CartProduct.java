@@ -1,6 +1,10 @@
 package com.chicchoc.sivillage.domain.cart.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +36,10 @@ public class CartProduct {
     private String productOptionUuid;
 
     @Comment("주문 수량")
-    @Column(nullable = false)
+    @Column(name = "amount", nullable = false)
     private int amount;
+
+    @Comment("제품 선택 여부")
+    @Column(name = "is_selected", columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isSelected;
 }
