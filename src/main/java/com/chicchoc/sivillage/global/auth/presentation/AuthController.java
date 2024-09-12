@@ -2,12 +2,15 @@ package com.chicchoc.sivillage.global.auth.presentation;
 
 import com.chicchoc.sivillage.global.auth.application.AuthService;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailVerificationRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
+import com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,6 +72,26 @@ public class AuthController {
             @Valid @RequestBody FindEmailRequestDto findEmailRequestDto) {
 
         return new BaseResponse<>(authService.findEmail(findEmailRequestDto));
+    }
+
+    @MethodLoggerAop
+    @Operation(summary = "이메일 인증코드 전송", description = "이메일 인증코드 전송")
+    @PostMapping("/email-verification")
+    public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {
+
+        authService.sendVerificationEmail(requestDto);
+
+        return new BaseResponse<>();
+    }
+
+    @Operation(summary = "이메일 인증코드 검증", description = "이메일 인증코드 검증")
+    @PostMapping("/check-email-verification")
+    public BaseResponse<Void> checkEmailVerification(
+            @Valid @RequestBody CheckEmailVerificationRequestDto requestDto) {
+
+        authService.checkEmailVerification(requestDto);
+
+        return new BaseResponse<>();
     }
 
     //로그인 공통 로직

@@ -75,12 +75,20 @@ dependencies {
 
     // nano id
     implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.3'
 }
 
 checkstyle {
     maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail
     configFile = file("config/checkstyle/google_checks.xml") // 설정 파일 경로 지정
     toolVersion = "10.18.0" //
+}
+
+// sourceSets를 통해 Checkstyle에서 특정 파일을 제외하는 방식
+tasks.withType(Checkstyle) {
+    exclude '**/global/auth/provider/EmailProvider.java' // 특정 파일을 제외
 }
 
 // checkstyleTest 비활성화
