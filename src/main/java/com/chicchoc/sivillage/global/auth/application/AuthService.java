@@ -4,8 +4,8 @@ import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
-import java.util.Optional;
 
 public interface AuthService {
 
@@ -13,7 +13,7 @@ public interface AuthService {
 
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
 
-    boolean isInUseEmail(CheckEmailRequestDto checkEmailRequestDto);
+    void checkEmail(CheckEmailRequestDto checkEmailRequestDto);
 
-    Optional<String> findEmail(FindEmailRequestDto findEmailRequestDto);
+    FindEmailResponseDto findEmail(FindEmailRequestDto findEmailRequestDto);
 }
