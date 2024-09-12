@@ -20,13 +20,13 @@ public class CartServiceImpl implements CartService {
 
         String cartUuid = nanoIdGenerator.generateNanoId();
 
-        cartRepository.save(toEntity(cartUuid, userUuid));
+        // cartRepository.save(toEntity(cartUuid, userUuid));
     }
 
-    public Cart toEntity(String cartUuid, String userUuid) {
-        return Cart.builder()
-                .cartUuid(cartUuid)
-                .userUuid(userUuid)
-                .build();
-    }
+    //public Cart toEntity(String cartUuid, String userUuid) {
+    //    return Cart.builder()
+    //            .cartUuid(cartUuid)
+    //            .userUuid(userUuid)
+    //            .build();
+    //}
 }

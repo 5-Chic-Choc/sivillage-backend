@@ -23,11 +23,19 @@ public class Cart {
     @Column(name = "cart_id")
     private Long id;
 
-    @Comment("장바구니 Uuid")
-    @Column(name = "cart_uuid", nullable = false, length = 21)
-    private String cartUuid;
-
-    @Comment("사용자 고유 코드")
+    @Comment("사용자 Uuid")
     @Column(name = "user_uuid", nullable = false, length = 21)
     private String userUuid;
+
+    @Comment("제품 옵션 uuid")
+    @Column(name = "product_option_uuid", nullable = false, length = 21)
+    private String productOptionUuid;
+
+    @Comment("주문 수량")
+    @Column(name = "amount", nullable = false)
+    private int amount;
+    
+    @Comment("선택 여부")
+    @Column(name = "is_selected", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isSelected;
 }
