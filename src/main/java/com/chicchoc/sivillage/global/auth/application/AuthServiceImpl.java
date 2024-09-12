@@ -104,22 +104,23 @@ public class AuthServiceImpl implements AuthService {
     @MethodLoggerAop
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void verifyEmail(EmailVerificationRequestDto requestDto) {
+    public void sendVerificationEmail(EmailVerificationRequestDto requestDto) {
 
         String userEmail = requestDto.getEmail();
         String verificationCode = VerificationCode.generateCode();
 
         // 이메일 중복 확인
-        if (memberRepository.existsByEmail(userEmail)) {
-            log.error("이미 사용중인 이메일입니다.");
-            throw new BaseException(BaseResponseStatus.DUPLICATED_EMAIL);
-        }
+        checkEmail(CheckEmailRequestDto.builder().email(userEmail).build());
 
         // 전송, 실패시 예외처리
         boolean isSent = emailProvider.sendVerificationEmail(userEmail, verificationCode);
         if (!isSent) {
+            log.error("이메일 전송에 실패했습니다.");
             throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
         }
+
+        //기존 내용은 삭제
+        emailVerificationRepository.deleteByEmail(userEmail);
 
         // 이메일 인증 정보 DB 저장
         EmailVerification emailVerification = EmailVerification.builder()
@@ -129,7 +130,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         emailVerificationRepository.save(emailVerification);
-
     }
 
     @Override
