@@ -4,6 +4,7 @@ import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.auth.domain.EmailVerification;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
@@ -12,6 +13,7 @@ import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.infrastructure.EmailVerificationRepository;
 import com.chicchoc.sivillage.global.auth.provider.EmailProvider;
+import com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.common.generator.VerificationCode;
@@ -45,31 +47,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void signUp(SignUpRequestDto signUpRequestDto) {
+    public void signUp(SignUpRequestDto requestDto) {
 
         String uuid = new NanoIdGenerator().generateNanoId();
 
         // 중복된 이름과 전화번호가 존재할 경우 예외 처리
-        if (memberRepository.existsByNameAndPhone(signUpRequestDto.getName(), signUpRequestDto.getPhone())) {
+        if (memberRepository.existsByNameAndPhone(requestDto.getName(), requestDto.getPhone())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_NAME_AND_PHONE);
         }
 
-        String encodedPassword = passwordEncoder.encode(signUpRequestDto.getPassword());
-        Member member = signUpRequestDto.toEntity(uuid, encodedPassword);
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        Member member = requestDto.toEntity(uuid, encodedPassword);
 
         memberRepository.save(member);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
+    public SignInResponseDto signIn(SignInRequestDto requestDto) {
 
         //아이디 검증
-        Member member = memberRepository.findByEmail(signInRequestDto.getEmail())
+        Member member = memberRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
         //인증 객체 생성
-        Authentication authentication = authenticateMember(member, signInRequestDto.getPassword());
+        Authentication authentication = authenticateMember(member, requestDto.getPassword());
 
         //토큰 생성
         String accessToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime());
@@ -81,24 +83,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(readOnly = true)
     @Override
-    public void checkEmail(CheckEmailRequestDto checkEmailRequestDto) {
+    public void checkEmail(CheckEmailRequestDto requestDto) {
 
-        if (memberRepository.existsByEmail(checkEmailRequestDto.getEmail())) {
+        if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_EMAIL);
         }
     }
 
     @Transactional(readOnly = true)
     @Override
-    public FindEmailResponseDto findEmail(FindEmailRequestDto dto) {
+    public FindEmailResponseDto findEmail(FindEmailRequestDto requestDto) {
 
-        String email = memberRepository.findEmailByNameAndPhoneNumber(dto.getName(), dto.getPhone())
+        String email = memberRepository.findEmailByNameAndPhoneNumber(requestDto.getName(), requestDto.getPhone())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         return new FindEmailResponseDto(maskEmail(email));
 
     }
 
+    @MethodLoggerAop
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void verifyEmail(EmailVerificationRequestDto requestDto) {
@@ -127,6 +130,29 @@ public class AuthServiceImpl implements AuthService {
 
         emailVerificationRepository.save(emailVerification);
 
+    }
+
+    @Override
+    public void checkEmailVerification(
+            CheckEmailVerificationRequestDto requestDto) {
+
+        String email = requestDto.getEmail();
+        String verificationCode = requestDto.getVerificationCode();
+
+        // 이메일 인증 정보 조회(여러개라면 마지막 것)
+        EmailVerification emailVerification = emailVerificationRepository.findTopByEmailOrderByIdDesc(email)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_EMAIL_ADDRESS));
+
+        boolean isMatched = emailVerification.getVerificationCode().equals(verificationCode)
+                && emailVerification.getEmail().equals(email);
+        boolean isExpired = emailVerification.getExpiresAt().isBefore(LocalDateTime.now());
+
+        if (!isMatched) { // 인증코드 불일치
+            throw new BaseException(BaseResponseStatus.INVALID_EMAIL_CODE_NOT_MATCH);
+        }
+        if (isExpired) { // 인증코드 만료
+            throw new BaseException(BaseResponseStatus.INVALID_EMAIL_CODE_EXPIRED);
+        }
     }
 
     private Authentication authenticateMember(Member member, String password) {

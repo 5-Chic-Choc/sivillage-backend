@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.auth.presentation;
 
 import com.chicchoc.sivillage.global.auth.application.AuthService;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
@@ -9,6 +10,7 @@ import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
+import com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,10 +74,22 @@ public class AuthController {
         return new BaseResponse<>(authService.findEmail(findEmailRequestDto));
     }
 
+    @MethodLoggerAop
     @Operation(summary = "이메일 인증", description = "이메일 인증")
     @PostMapping("/email-verification")
     public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {
+
         authService.verifyEmail(requestDto);
+
+        return new BaseResponse<>();
+    }
+
+    @Operation(summary = "이메일 인증 확인", description = "이메일 인증 확인")
+    @PostMapping("/check-email-verification")
+    public BaseResponse<Void> checkEmailVerification(
+            @Valid @RequestBody CheckEmailVerificationRequestDto requestDto) {
+
+        authService.checkEmailVerification(requestDto);
 
         return new BaseResponse<>();
     }
