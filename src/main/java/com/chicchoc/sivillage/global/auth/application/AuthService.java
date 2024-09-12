@@ -19,7 +19,7 @@ public interface AuthService {
 
     FindEmailResponseDto findEmail(FindEmailRequestDto requestDto);
 
-    void verifyEmail(EmailVerificationRequestDto requestDto);
+    void sendVerificationEmail(EmailVerificationRequestDto requestDto);
 
     void checkEmailVerification(CheckEmailVerificationRequestDto requestDto);
 }

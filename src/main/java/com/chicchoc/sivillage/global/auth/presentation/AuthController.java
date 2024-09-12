@@ -75,16 +75,16 @@ public class AuthController {
     }
 
     @MethodLoggerAop
-    @Operation(summary = "이메일 인증", description = "이메일 인증")
+    @Operation(summary = "이메일 인증코드 전송", description = "이메일 인증코드 전송")
     @PostMapping("/email-verification")
     public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {
 
-        authService.verifyEmail(requestDto);
+        authService.sendVerificationEmail(requestDto);
 
         return new BaseResponse<>();
     }
 
-    @Operation(summary = "이메일 인증 확인", description = "이메일 인증 확인")
+    @Operation(summary = "이메일 인증코드 검증", description = "이메일 인증코드 검증")
     @PostMapping("/check-email-verification")
     public BaseResponse<Void> checkEmailVerification(
             @Valid @RequestBody CheckEmailVerificationRequestDto requestDto) {

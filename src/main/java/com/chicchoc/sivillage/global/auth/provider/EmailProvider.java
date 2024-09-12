@@ -53,7 +53,7 @@ public class EmailProvider {
                                         </h1>
                                     </div>
                                     <table cellspacing='0' cellpadding='0' border='0' width='100%' 
-                                        style='border-bottom:16px solid #f0f0f0;border-collapse:collapse;border-spacing:0'>
+                                        style='border-bottom:4px solid #000000; border-collapse:collapse;border-spacing:0'>
                                         <tbody>
                                             <tr><td height='108'></td></tr>
                                             <tr>
@@ -67,9 +67,9 @@ public class EmailProvider {
                                                             <tr><td height='34'></td></tr>
                                                             <tr>
                                                                 <td style='text-align: center; color:#000; font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:28px;letter-spacing:-0.1px;line-height:44px'>
-                                                                    안녕하세요! 아래 인증번호를 입력해 주세요.<br/><br/>
-                                                                    <div style='color:#000;font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:28px;font-weight:normal;letter-spacing:-0.1px;line-height:40px;padding:16px 8px;padding-bottom:70px;padding-left:8px;padding-right:20px;padding-top:70px;'>
-                                                                        인증번호: """ + verificationCode + """
+                                                                    회원가입 폼에 아래 인증번호를 입력해 주세요.<br/><br/>
+                                                                    <div style='color:#000;font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:32px;font-weight:normal;letter-spacing:-0.1px;line-height:40px;padding:16px 8px;padding-bottom:70px;padding-left:8px;padding-right:20px;padding-top:70px;'>
+                                                                        인증번호     :     """ + verificationCode + """
                                                                     </div>
                                                                 </td>
                                                             </tr>
