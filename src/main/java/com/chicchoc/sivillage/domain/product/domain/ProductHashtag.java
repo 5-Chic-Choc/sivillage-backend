@@ -21,7 +21,7 @@ public class ProductHashtag {
 
     @Comment("상품 uuid")
     @Column(nullable = false, length = 21, name = "product_uuid")
-    private Long productUuid;
+    private String productUuid;
 
     @Comment("해시태그 내용")
     @Column(nullable = false, length = 30)

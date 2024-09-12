@@ -46,14 +46,14 @@ public class ProductOption {
 
     @Comment("가격")
     @Column(nullable = false)
-    private int price;
+    private Integer price;
 
     @Comment("할인율")
     @Column(nullable = true)
-    private int discountRate;
+    private Integer discountRate;
 
     @Comment("할인가격")
     @Column(nullable = true)
-    private int discountPrice;
+    private Integer discountPrice;
 
 }

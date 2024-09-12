@@ -12,7 +12,7 @@ public class ProductOptionResponseVo {
     private Long colorId;
     private Long etcOptionId;
     private String saleStatus;
-    private int price;
-    private int discountRate;
-    private int discountPrice;
+    private Integer price;
+    private Integer discountRate;
+    private Integer discountPrice;
 }
