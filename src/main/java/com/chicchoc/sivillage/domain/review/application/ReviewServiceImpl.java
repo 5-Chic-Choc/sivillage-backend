@@ -70,6 +70,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .reviewRateText2(review.getReviewRateText2())
                         .reviewRateType3(review.getReviewRateType3())
                         .reviewRateText3(review.getReviewRateText3())
+                        .createdAt(review.getCreatedAt())
                         .build())
                 .toList();
     }

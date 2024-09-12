@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.domain.review.dto.in;
 
 import com.chicchoc.sivillage.domain.review.domain.Review;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 

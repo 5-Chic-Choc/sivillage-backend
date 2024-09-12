@@ -28,6 +28,7 @@ public class ReviewResponseDto {
     private String reviewRateText1;
     private String reviewRateText2;
     private String reviewRateText3;
+    private LocalDateTime createdAt;
 
     public ReviewResponseVo toResponseVo() {
         return ReviewResponseVo.builder()
@@ -46,6 +47,7 @@ public class ReviewResponseDto {
                 .reviewRateText2(reviewRateText2)
                 .reviewRateType3(reviewRateType3)
                 .reviewRateText3(reviewRateText3)
+                .createdAt(createdAt)
                 .build();
     }
 }
