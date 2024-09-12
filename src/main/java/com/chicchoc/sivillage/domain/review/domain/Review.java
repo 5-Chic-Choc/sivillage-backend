@@ -22,21 +22,48 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "review_uuid", nullable = false, length = 21)
+    private String reviewUuid;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "product_uuid", nullable = false, length = 21)
+    private String productUuid;
 
-    private String size;
+    @Column(name = "user_uud", nullable = false, length = 21)
+    private String userUuid;
 
-    @Column(name = "review_option")
-    private String reviewOption;
+    @Column(name = "size_name", nullable = false)
+    private String sizeName;
 
-    private String info;
+    @Column(name = "color_value", nullable = false)
+    private String colorValue;
 
-    private int rate;
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
 
-    private String content;
-    
+    @Column(name = "starpoint", nullable = false)
+    private byte starPoint;
+
+    @Column(name = "liked_cnt")
+    private Integer likedCnt;
+
+    @Column(name = "reviewer_email")
+    private String reviewerEmail;
+
+    @Column(name = "review_rate_type_1")
+    private String reviewRateType1;
+
+    @Column(name = "review_rate_text_1")
+    private String reviewRateText1;
+
+    @Column(name = "review_rate_type_2")
+    private String reviewRateType2;
+
+    @Column(name = "review_rate_text_2")
+    private String reviewRateText2;
+
+    @Column(name = "review_rate_type_3")
+    private String reviewRateType3;
+
+    @Column(name = "review_rate_text_3")
+    private String reviewRateText3;
 }
