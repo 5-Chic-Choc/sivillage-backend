@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
@@ -16,4 +17,6 @@ public interface AuthService {
     void checkEmail(CheckEmailRequestDto checkEmailRequestDto);
 
     FindEmailResponseDto findEmail(FindEmailRequestDto findEmailRequestDto);
+
+    void verifyEmail(EmailVerificationRequestDto emailVerificationRequestDto);
 }

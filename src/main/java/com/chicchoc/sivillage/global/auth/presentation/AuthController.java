@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.auth.presentation;
 
 import com.chicchoc.sivillage.global.auth.application.AuthService;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
@@ -69,6 +70,14 @@ public class AuthController {
             @Valid @RequestBody FindEmailRequestDto findEmailRequestDto) {
 
         return new BaseResponse<>(authService.findEmail(findEmailRequestDto));
+    }
+
+    @Operation(summary = "이메일 인증", description = "이메일 인증")
+    @PostMapping("/email-verification")
+    public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {
+        authService.verifyEmail(requestDto);
+
+        return new BaseResponse<>();
     }
 
     //로그인 공통 로직
