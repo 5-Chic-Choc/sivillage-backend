@@ -1,8 +1,8 @@
 package com.chicchoc.sivillage.domain.cart.application;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
 
 public interface CartService {
 
-    void createCart(String userUuid);
+    void createCart(CartRequestDto cartRequestDto,String userUuid);
 }

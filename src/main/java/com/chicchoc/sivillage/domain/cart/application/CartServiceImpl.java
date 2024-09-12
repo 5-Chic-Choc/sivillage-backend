@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.cart.application;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
@@ -16,17 +17,10 @@ public class CartServiceImpl implements CartService {
     private final NanoIdGenerator nanoIdGenerator;
 
     @Override
-    public void createCart(String userUuid) {
+    public void createCart(CartRequestDto cartRequestDto, String userUuid) {
 
         String cartUuid = nanoIdGenerator.generateNanoId();
 
-        // cartRepository.save(toEntity(cartUuid, userUuid));
+        cartRepository.save(cartRequestDto.toEntity(cartUuid));
     }
-
-    //public Cart toEntity(String cartUuid, String userUuid) {
-    //    return Cart.builder()
-    //            .cartUuid(cartUuid)
-    //            .userUuid(userUuid)
-    //            .build();
-    //}
 }
