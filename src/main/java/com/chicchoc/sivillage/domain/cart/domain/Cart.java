@@ -21,19 +21,15 @@ public class Cart {
     private Long id;
 
     @Comment("장바구니 Uuid")
-    @Column(name = "cart_uuid", nullable = false, length = 50)
+    @Column(name = "cart_uuid", nullable = false, length = 21)
     private String cartUuid;
+
+    @Comment("사용자 고유 코드")
+    @Column(name = "user_uuid", nullable = false, length = 21)
+    private String userUuid;
 
     @Comment("회원 분류")
     @Column(nullable = false)
     private boolean isSigned;
-
-    @Comment("사용자 고유 코드")
-    @Column(name = "user_uuid", nullable = false, length = 50)
-    private String userUuid;
-
-    @Comment("장바구니 이름")
-    @Column(nullable = true, length = 30)
-    private String cartName;
 
 }
