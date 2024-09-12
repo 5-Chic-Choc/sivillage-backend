@@ -75,6 +75,9 @@ dependencies {
 
     // nano id
     implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.3'
 }
 
 checkstyle {
