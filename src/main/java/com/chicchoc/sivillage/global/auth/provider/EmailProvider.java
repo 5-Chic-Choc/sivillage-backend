@@ -48,7 +48,7 @@ public class EmailProvider {
                                         <h1 style='margin:0'>
                                             <a href='#' style='display:block;text-decoration:none'>
                                                 <img src='https://lh5.googleusercontent.com/proxy/ZfSLRg-MtiTUByZnWBAZysv5QepE8dqM2RbKyL2vJSZ5pHurcA5Wm2D2Zjd5r3ynVcM_91Prw5sKH57Q1db_FGiI8p5spwCSO7PX5Ov_Y8R5Ce6fL6WVJrxRvyEKplm1kCbJY-M-roNyzQ6m5ggREzPoZx0CFYhm8CIzOjPggAI_HqwGyQN94y6ja-9MUY57hJY6woZdc2ouberpHWuopSRRNv7iGH4n-pOJwWII-yYpdH7K9IRyDp1hUNQoRpzoEWjCiQx0aBloA8tvIiA_09DyZsy2DX41BAyTJh5WBXrbTz_1bVdDcu5AXtxA7MqYTpgSN2mC9cuMWd2urcZIMuAu1_EO9ifi8Hw5BiW2YROZn6jbApHdZBk-Worz5Mf55ECbeGIj0oEEb4w2picwUZ39HTGRW46GKPLXpKuhpETNRFaHdX4O86fdPMLrAIihEfU0lZah7g'
-                                                     alt='S.I.VILLAGE THE REAL LUXURY' style='border:0;vertical-align:top'/>
+                                                    alt='S.I.VILLAGE THE REAL LUXURY' style='border:0;vertical-align:top'/>
                                             </a>
                                         </h1>
                                     </div>

@@ -10,6 +10,4 @@ public class EmailVerificationRequestDto {
     @Email
     @NotBlank
     private String email;
-
-
 }

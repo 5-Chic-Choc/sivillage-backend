@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "email_verification")
-public class EmailVerification extends BaseEntity {
+public class EmailVerification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +28,14 @@ public class EmailVerification extends BaseEntity {
     @Column(name = "verification_code", nullable = false, length = 6)
     private String verificationCode;
 
-    @Column(name = "is_used", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean isUsed;
-
     @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
 
     @Builder
-    public EmailVerification(Long id, String email, String verificationCode, Boolean isUsed, LocalDateTime expiresAt) {
+    public EmailVerification(Long id, String email, String verificationCode, LocalDateTime expiresAt) {
         this.id = id;
         this.email = email;
         this.verificationCode = verificationCode;
-        this.isUsed = isUsed != null ? isUsed : false;
         this.expiresAt = expiresAt;
     }
 }
