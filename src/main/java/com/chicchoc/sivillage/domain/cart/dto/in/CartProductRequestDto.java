@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 public class CartProductRequestDto {
 
     private String cartUuid;
-    private Long productOrderOptionId;
+    private String productOptionUuid;
     private int amount;
 
     public CartProduct toEntity(String cartProductUuid) {
         return CartProduct.builder()
                 .cartProductUuid(cartProductUuid)
                 .cartUuid(cartUuid)
-                .productOrderOptionId(productOrderOptionId)
+                .productOptionUuid(productOptionUuid)
                 .amount(amount).build();
     }
 }

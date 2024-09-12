@@ -28,7 +28,7 @@ public class CartProductController {
     public CommonResponseEntity<Void> createCartProduct(@RequestBody CartProductRequestVo cartProductRequestVo) {
         CartProductRequestDto cartProductRequestDto = CartProductRequestDto.builder()
                 .cartUuid(cartProductRequestVo.getCartUuid())
-                .productOrderOptionId(cartProductRequestVo.getProductOrderOptionId())
+                .productOptionUuid(cartProductRequestVo.getProductOrderOptionId())
                 .amount(cartProductRequestVo.getAmount())
                 .build();
 

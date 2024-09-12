@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class CartProductResponseVo {
 
     private String cartProductUuid;
-    private Long productOrderOptionId;
+    private String productOptionUuid;
     private int amount;
 }
