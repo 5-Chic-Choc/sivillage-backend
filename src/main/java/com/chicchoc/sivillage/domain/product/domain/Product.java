@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Builder
 @Getter
@@ -34,8 +31,4 @@ public class Product extends BaseEntity {
     @Comment("제품 이름")
     @Column(nullable = false, length = 30)
     private String productName;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductOption> productOptions = new ArrayList<>();
-
 }

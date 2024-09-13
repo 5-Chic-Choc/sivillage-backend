@@ -55,5 +55,4 @@ public class ProductOption {
     @Comment("할인가격")
     @Column(nullable = true)
     private Integer discountPrice;
-
 }
