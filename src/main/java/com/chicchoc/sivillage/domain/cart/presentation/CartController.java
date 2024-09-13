@@ -34,8 +34,6 @@ public class CartController {
 
         String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
 
-        System.out.println(userIdentifier);
-
         cartService.createCart(cartRequestDto, userIdentifier);
 
         return new BaseResponse<>();
@@ -46,21 +44,15 @@ public class CartController {
             @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid) {
         String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
 
-        System.out.println(userIdentifier);
-
-        List<CartResponseVo> cartResponseVoList = getCartResponseVoList(userIdentifier);
+        List<CartResponseVo> cartResponseVoList = cartService.getCart(userIdentifier).stream()
+                .map(CartResponseDto::toVo)
+                .toList();
 
         return new BaseResponse<>(cartResponseVoList);
     }
 
     private String getUserIdentifier(Authentication authentication, String unsignedUserUuid) {
         return (authentication != null) ? authentication.getName() : unsignedUserUuid;
-    }
+    } // 재사용성이 떨어지므로 Jwtutil에 넣어도 좋음
 
-    private List<CartResponseVo> getCartResponseVoList(String userIdentifier) {
-        List<CartResponseDto> cartResponseDtoList = cartService.getCart(userIdentifier);
-        return cartResponseDtoList.stream()
-                .map(CartResponseDto::toVo)
-                .toList();
-    }
 }

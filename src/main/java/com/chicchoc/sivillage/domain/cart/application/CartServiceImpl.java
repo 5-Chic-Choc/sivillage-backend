@@ -5,9 +5,8 @@ import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
-import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,20 @@ import org.springframework.stereotype.Service;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-    private final NanoIdGenerator nanoIdGenerator;
 
     @Override
     public void createCart(CartRequestDto cartRequestDto, String userUuid) {
-        cartRepository.save(cartRequestDto.toEntity(userUuid));
+        Optional<Cart> existCartItem = cartRepository.findByUserUuidAndProductOptionUuid(userUuid,
+                cartRequestDto.getProductOptionUuid());
+
+        if (existCartItem.isPresent()) {
+            Cart cart = existCartItem.get();
+            cart.setAmount(cart.getAmount() + cartRequestDto.getAmount());
+            cartRepository.save(cart);
+        } else {
+            Cart newItem = cartRequestDto.toEntity(userUuid);
+            cartRepository.save(newItem);
+        }
     }
 
     @Override

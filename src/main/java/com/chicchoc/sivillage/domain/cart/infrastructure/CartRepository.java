@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findByUserUuid(String userUuid);
+
+    Optional<Cart> findByUserUuidAndProductOptionUuid(String userUuid, String productOptionUuid);
 }
