@@ -13,24 +13,11 @@ public class ProductCategory {
     @Column(name = "product_category_id")
     private Long id;
 
-    @Comment("상품 uuid")
-    @Column(nullable = false, length = 21, name = "product_uuid")
-    private String productUuid;
+    @Comment("상품 id")
+    @Column(nullable = false)
+    private Long productId;
 
-    @Comment("대분류")
-    @Column(nullable = false, length = 30)
-    private String majorCategory;
-
-    @Comment("중분류")
-    @Column(nullable = false, length = 30)
-    private String middleCategory;
-
-    @Comment("소분류")
-    @Column(nullable = false, length = 30)
-    private String subCategory;
-
-    @Comment("세부분류")
-    @Column(length = 30)
-    private String detailCategory;
-
+    @Comment("카테고리 id")
+    @Column(nullable = false)
+    private Long categoryId;
 }

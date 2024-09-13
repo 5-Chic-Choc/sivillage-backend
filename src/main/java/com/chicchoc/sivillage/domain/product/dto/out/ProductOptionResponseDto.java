@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.product.dto.out;
 
+import com.chicchoc.sivillage.domain.product.domain.ProductOption;
 import com.chicchoc.sivillage.domain.product.vo.out.ProductOptionResponseVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +14,9 @@ public class ProductOptionResponseDto {
     private Long colorId;
     private Long etcOptionId;
     private String saleStatus;
-    private int price;
-    private int discountRate;
-    private int discountPrice;
+    private Integer price;
+    private Integer discountRate;
+    private Integer discountPrice;
 
     public ProductOptionResponseVo toResponseVo() {
         return ProductOptionResponseVo.builder()
@@ -28,6 +29,17 @@ public class ProductOptionResponseDto {
                 .price(price)
                 .discountRate(discountRate)
                 .discountPrice(discountPrice)
+                .build();
+    }
+
+    public static ProductOptionResponseDto fromEntity(ProductOption productOption) {
+        return ProductOptionResponseDto.builder()
+                .sizeId(productOption.getSizeId())
+                .colorId(productOption.getColorId())
+                .etcOptionId(productOption.getEtcOptionId())
+                .price(productOption.getPrice())
+                .discountRate(productOption.getDiscountRate())
+                .discountPrice(productOption.getDiscountPrice())
                 .build();
     }
 

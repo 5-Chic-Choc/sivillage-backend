@@ -22,9 +22,9 @@ public class Category {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Comment("카테고리 경로")
-    @Column(nullable = false, length = 255)
-    private String path;
+    @Comment("깊이")
+    @Column(nullable = false)
+    private Integer depth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
