@@ -2,8 +2,10 @@ package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import java.util.List;
@@ -11,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +53,17 @@ public class CartController {
                 .toList();
 
         return new BaseResponse<>(cartResponseVoList);
+    }
+
+    @PutMapping("/{cartUuid}")
+    public BaseResponse<Void> updateCart(@PathVariable String cartUuid,
+            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
+
+        CartUpdateRequestDto cartUpdateRequestDto = cartUpdateRequestVo.toDto();
+
+        cartService.updateCart(cartUpdateRequestDto, cartUuid);
+
+        return new BaseResponse<>();
     }
 
     private String getUserIdentifier(Authentication authentication, String unsignedUserUuid) {

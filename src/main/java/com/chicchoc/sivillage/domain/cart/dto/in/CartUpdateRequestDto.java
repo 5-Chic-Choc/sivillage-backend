@@ -1,17 +1,14 @@
-package com.chicchoc.sivillage.domain.cart.vo.out;
+package com.chicchoc.sivillage.domain.cart.dto.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class CartResponseVo {
-    private String cartUuid;
+public class CartUpdateRequestDto {
     private String productOptionUuid;
-    private int amount;
-    private Boolean isSelected;
 }

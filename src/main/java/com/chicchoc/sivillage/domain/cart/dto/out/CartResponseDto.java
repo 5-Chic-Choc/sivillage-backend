@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartResponseDto {
 
+    private String cartUuid;
     private String productOptionUuid;
     private int amount;
     private Boolean isSelected;
 
     public CartResponseVo toVo() {
         return CartResponseVo.builder()
+                .cartUuid(cartUuid)
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)
                 .isSelected(isSelected).build();

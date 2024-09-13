@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,8 +17,9 @@ public class CartRequestDto {
     private String productOptionUuid;
     private int amount;
 
-    public Cart toEntity(String userUuid) {
+    public Cart toEntity(String cartUuid, String userUuid) {
         return Cart.builder()
+                .cartUuid(cartUuid)
                 .userUuid(userUuid)
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)
