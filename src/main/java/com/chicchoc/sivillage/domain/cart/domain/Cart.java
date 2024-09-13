@@ -8,11 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "cart")
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,8 +36,9 @@ public class Cart {
     @Comment("주문 수량")
     @Column(name = "amount", nullable = false)
     private int amount;
-    
+
     @Comment("선택 여부")
-    @Column(name = "is_selected", columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean isSelected;
+    @Builder.Default
+    @Column(name = "is_selected")
+    private Boolean isSelected = false;
 }

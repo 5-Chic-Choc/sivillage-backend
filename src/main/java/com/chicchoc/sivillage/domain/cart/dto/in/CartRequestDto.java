@@ -18,6 +18,7 @@ public class CartRequestDto {
                 .userUuid(userUuid)
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)
+                .isSelected(false)
                 .build();
     }
 }

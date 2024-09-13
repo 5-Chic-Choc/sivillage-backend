@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class CartRequestVo {
+
     private String productOptionUuid;
     private int amount;
 
-    public CartRequestDto toDto(){
+    public CartRequestDto toDto() {
         return CartRequestDto.builder()
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)

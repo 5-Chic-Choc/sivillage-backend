@@ -2,11 +2,15 @@ package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,11 +32,35 @@ public class CartController {
     ) {
         CartRequestDto cartRequestDto = cartRequestVo.toDto();
 
-        if (authentication != null) {
-            cartService.createCart(cartRequestDto, authentication.getName());
-        } else {
-            cartService.createCart(cartRequestDto, unsignedUserUuid);
-        }
+        String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
+
+        System.out.println(userIdentifier);
+
+        cartService.createCart(cartRequestDto, userIdentifier);
+
         return new BaseResponse<>();
+    }
+
+    @GetMapping
+    public BaseResponse<List<CartResponseVo>> getCart(Authentication authentication,
+            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid) {
+        String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
+
+        System.out.println(userIdentifier);
+
+        List<CartResponseVo> cartResponseVoList = getCartResponseVoList(userIdentifier);
+
+        return new BaseResponse<>(cartResponseVoList);
+    }
+
+    private String getUserIdentifier(Authentication authentication, String unsignedUserUuid) {
+        return (authentication != null) ? authentication.getName() : unsignedUserUuid;
+    }
+
+    private List<CartResponseVo> getCartResponseVoList(String userIdentifier) {
+        List<CartResponseDto> cartResponseDtoList = cartService.getCart(userIdentifier);
+        return cartResponseDtoList.stream()
+                .map(CartResponseDto::toVo)
+                .toList();
     }
 }
