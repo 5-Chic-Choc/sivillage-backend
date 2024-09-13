@@ -34,14 +34,16 @@ public class ProductOptionResponseDto {
 
     public static ProductOptionResponseDto fromEntity(ProductOption productOption) {
         return ProductOptionResponseDto.builder()
+                .productOptionUuid(productOption.getProductOptionUuid())
+                .productId(productOption.getProduct() != null ? productOption.getProduct().getId() : null)
                 .sizeId(productOption.getSizeId())
                 .colorId(productOption.getColorId())
                 .etcOptionId(productOption.getEtcOptionId())
+                .saleStatus(productOption.getSaleStatus() != null ? productOption.getSaleStatus().name() : null)
                 .price(productOption.getPrice())
                 .discountRate(productOption.getDiscountRate())
                 .discountPrice(productOption.getDiscountPrice())
                 .build();
     }
-
 
 }
