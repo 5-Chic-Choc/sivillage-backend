@@ -2,16 +2,16 @@ package com.chicchoc.sivillage.domain.product.presentation;
 
 import com.chicchoc.sivillage.domain.product.application.ProductService;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductOptionResponseDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
+import com.chicchoc.sivillage.domain.product.vo.out.ProductOptionResponseVo;
 import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +53,27 @@ public class ProductController {
                 .isAscending(isAscending)
                 .build();
 
-        List<ProductResponseVo> products = productService.getFilteredProducts(productRequestDto);
+        List<ProductResponseDto> products = productService.getFilteredProducts(productRequestDto);
 
-        return new BaseResponse<>(products);
+        List<ProductResponseVo> productResponseVos = products.stream()
+                .map(ProductResponseDto::toResponseVo)
+                .toList();
+
+        return new BaseResponse<>(productResponseVos);
+    }
+
+    @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"Product"})
+    @GetMapping("/{productUuid}")
+    public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid) {
+
+        // UUID를 사용하여 productId를 찾는다
+        Long productId = productService.findProductIdByUuid(productUuid);
+
+        List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productId);
+
+        List<ProductOptionResponseVo> productOptionResponseVos = productOptionResponseDtos.stream()
+                .map(ProductOptionResponseDto::toResponseVo)
+                .toList();
+        return new BaseResponse<>(productOptionResponseVos);
     }
 }
