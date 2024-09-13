@@ -7,7 +7,10 @@ import com.chicchoc.sivillage.domain.category.domain.QCategory;
 import com.chicchoc.sivillage.domain.category.domain.QProductCategory;
 import com.chicchoc.sivillage.domain.product.domain.*;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
-import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductOptionResponseDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
+import com.chicchoc.sivillage.domain.product.infrastructure.ProductOptionRepository;
+import com.chicchoc.sivillage.domain.product.infrastructure.ProductRepository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -25,9 +27,11 @@ public class ProductServiceImpl implements ProductService {
 
     // QueryDSL을 사용하는 쿼리문을 위한 객체
     private final JPAQueryFactory queryFactory;
+    private final ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     @Override
-    public List<ProductResponseVo> getFilteredProducts(ProductRequestDto dto) {
+    public List<ProductResponseDto> getFilteredProducts(ProductRequestDto dto) {
         // Q타입 객체를 메소드 상단으로 이동
         final QProduct product = QProduct.product;
         final QProductOption productOption = QProductOption.productOption;
@@ -41,18 +45,26 @@ public class ProductServiceImpl implements ProductService {
         final int perPage = dto.getPerPage() != null ? dto.getPerPage() : 20;
         final int offset = (page - 1) * perPage;
 
+        log.info("page : {}", page);
+        log.info("perPage : {}", perPage);
+        log.info("offset : {}", offset);
+
         List<Product> products = queryFactory.selectFrom(product)
-                .leftJoin(product.productOptions, productOption)
+                .leftJoin(productOption)
+                .on(product.id.eq(productOption.product.id))
                 .leftJoin(productCategory)
                 .on(product.id.eq(productCategory.productId))
                 .where(predicate) // 필터링 조건 쿼리에 적용
+                .groupBy(product.id) // product_id로 그룹화
                 .offset(offset) // 페이징 처리 시작 위치
                 .limit(perPage) // 페이지 당 결과 개수
                 .orderBy(getOrderSpecifier(dto.getSortBy(), dto.isAscending())) // 정렬
                 .fetch(); // 실행 결과를 가져옴
 
+        log.info("product : {}", products);
+
         return products.stream()
-                .map(ProductResponseVo::fromEntity)
+                .map(ProductResponseDto::fromEntity)
                 .toList();
     }
 
@@ -68,7 +80,8 @@ public class ProductServiceImpl implements ProductService {
         // 카테고리 필터링
         if (dto.getCategories() != null) {
             Long categoryId = findCategoryIdFromPath(dto.getCategories());
-            predicate = productCategoryFilter(categoryId);
+            BooleanExpression categoryPredicate = productCategoryFilter(categoryId);
+            predicate = predicate != null ? predicate.and(categoryPredicate) : categoryPredicate;
         }
 
         // 사이즈 필터링
@@ -123,6 +136,7 @@ public class ProductServiceImpl implements ProductService {
         return predicate;
     }
 
+    // 전체 경로를 사용한 카테고리 ID 찾기
     private Long findCategoryIdFromPath(List<String> categories) {
         if (categories == null || categories.isEmpty()) {
             throw new IllegalArgumentException("Category list cannot be null or empty");
@@ -163,38 +177,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private List<Long> findAllSubCategoryIds(Long categoryId) {
-        if (categoryId == null) {
-            return List.of();
-        }
-
-        // 최상위 카테고리 ID를 포함한 모든 하위 카테고리 ID를 찾기 위해 사용
-        List<Long> allCategoryIds = new ArrayList<>();
-        findSubCategoriesRecursive(categoryId, allCategoryIds);
-        return allCategoryIds;
-    }
-
-    private void findSubCategoriesRecursive(Long categoryId, List<Long> allCategoryIds) {
-        QCategory qcategory = QCategory.category;
-
-        // 현재 카테고리 ID를 결과 리스트에 추가
-        allCategoryIds.add(categoryId);
-
-        // 현재 카테고리의 하위 카테고리 ID를 조회
-        List<Long> childCategoryIds = queryFactory
-                .select(qcategory.id)
-                .from(qcategory)
-                .where(qcategory.parent.id.eq(categoryId))
-                .fetch();
-
-        // 하위 카테고리 ID를 결과 리스트에 추가
-        allCategoryIds.addAll(childCategoryIds);
-
-        // 재귀적으로 하위 카테고리의 하위 카테고리도 찾기
-        for (Long childCategoryId : childCategoryIds) {
-            findSubCategoriesRecursive(childCategoryId, allCategoryIds);
-        }
-    }
+    //    private List<Long> findAllSubCategoryIds(Long categoryId) {
+    //        if (categoryId == null) {
+    //            return List.of();
+    //        }
+    //
+    //        // 최상위 카테고리 ID를 포함한 모든 하위 카테고리 ID를 찾기 위해 사용
+    //        List<Long> allCategoryIds = new ArrayList<>();
+    //        findSubCategoriesRecursive(categoryId, allCategoryIds);
+    //        return allCategoryIds;
+    //    }
+    //
+    //    private void findSubCategoriesRecursive(Long categoryId, List<Long> allCategoryIds) {
+    //        QCategory qcategory = QCategory.category;
+    //
+    //        // 현재 카테고리 ID를 결과 리스트에 추가
+    //        allCategoryIds.add(categoryId);
+    //
+    //        // 현재 카테고리의 하위 카테고리 ID를 조회
+    //        List<Long> childCategoryIds = queryFactory
+    //                .select(qcategory.id)
+    //                .from(qcategory)
+    //                .where(qcategory.parent.id.eq(categoryId))
+    //                .fetch();
+    //
+    //        // 하위 카테고리 ID를 결과 리스트에 추가
+    //        allCategoryIds.addAll(childCategoryIds);
+    //
+    //        // 재귀적으로 하위 카테고리의 하위 카테고리도 찾기
+    //        for (Long childCategoryId : childCategoryIds) {
+    //            findSubCategoriesRecursive(childCategoryId, allCategoryIds);
+    //        }
+    //    }
 
 
     private BooleanExpression productCategoryFilter(Long categoryId) {
@@ -204,11 +218,7 @@ public class ProductServiceImpl implements ProductService {
             return null;
         }
 
-        // 주어진 카테고리와 모든 하위 카테고리 ID를 조회
-        List<Long> allCategoryIds = findAllSubCategoryIds(categoryId);
-
-        // 전체 카테고리 ID를 기반으로 필터링
-        return productCategory.categoryId.in(allCategoryIds);
+        return productCategory.categoryId.eq(categoryId);
     }
 
 
@@ -227,5 +237,20 @@ public class ProductServiceImpl implements ProductService {
             default:
                 return isAscending ? product.createdAt.asc() : product.createdAt.desc();
         }
+    }
+
+    @Override
+    public Long findProductIdByUuid(String productUuid) {
+        Product product = productRepository.findByProductUuid(productUuid)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        return product.getId();
+    }
+
+    @Override
+    public List<ProductOptionResponseDto> getProductOptions(Long productId) {
+        List<ProductOption> productOptions = productOptionRepository.findByProductId(productId);
+        return productOptions.stream()
+                .map(ProductOptionResponseDto::fromEntity)
+                .toList();
     }
 }
