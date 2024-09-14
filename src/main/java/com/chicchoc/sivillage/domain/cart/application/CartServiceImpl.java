@@ -134,17 +134,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void migrateCart(String SignedUserUuid, String unsignedMemberUuid) {
+    public void migrateCart(String signedUserUuid, String unsignedMemberUuid) {
 
-        List<Cart> UnsignedMemberCartList = cartRepository.findByUserUuid(unsignedMemberUuid);
-        List<Cart> SignedMemberCartList = cartRepository.findByUserUuid(SignedUserUuid);
+        List<Cart> unsignedMemberCartList = cartRepository.findByUserUuid(unsignedMemberUuid);
+        List<Cart> signedMemberCartList = cartRepository.findByUserUuid(signedUserUuid);
 
         List<Cart> updatedCartList = new ArrayList<>();
 
-        if (!UnsignedMemberCartList.isEmpty()) {
-            for (Cart cart : UnsignedMemberCartList) {
+        if (!unsignedMemberCartList.isEmpty()) {
+            for (Cart cart : unsignedMemberCartList) {
                 // 회원 장바구니에서 상품 찾는 로직
-                Optional<Cart> existCartItem = SignedMemberCartList.stream()
+                Optional<Cart> existCartItem = signedMemberCartList.stream()
                         .filter(userCart -> userCart.getProductOptionUuid()
                                 .equals(cart.getProductOptionUuid()))
                         .findFirst();
@@ -168,7 +168,7 @@ public class CartServiceImpl implements CartService {
                     Cart updateCart = Cart.builder()
                             .id(cart.getId())
                             .cartUuid(cart.getCartUuid())
-                            .userUuid(SignedUserUuid)
+                            .userUuid(signedUserUuid)
                             .productOptionUuid(cart.getProductOptionUuid())
                             .amount(cart.getAmount())
                             .isSelected(cart.getIsSelected())
