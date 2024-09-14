@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor
-public class CartStatusUpdateDto {
+public class CartStatusUpdateRequestDto {
 
     private String cartUuid;
     private Integer amount;
     private Boolean isSelected;
 
     @Builder
-    public CartStatusUpdateDto(String cartUuid, Integer amount, Boolean isSelected) {
+    public CartStatusUpdateRequestDto(String cartUuid, Integer amount, Boolean isSelected) {
         this.cartUuid = cartUuid;
         this.amount = amount;
         this.isSelected = isSelected;

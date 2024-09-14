@@ -2,11 +2,12 @@ package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
@@ -14,6 +15,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,15 +71,21 @@ public class CartController {
     }
 
     @PutMapping("/status/{cartUuid}")
-    public BaseResponse<Void> updateCart(@RequestBody List<CartStatusUpdateVo> cartUpdateStatusRequestVoList) {
+    public BaseResponse<Void> updateCart(@RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
 
-        List<CartStatusUpdateDto> cartUpdateStatusRequestDtoList = cartUpdateStatusRequestVoList.stream()
-                .map(CartStatusUpdateVo::toDto)
+        List<CartStatusUpdateRequestDto> cartUpdateStatusRequestDtoList = cartUpdateStatusRequestVoList.stream()
+                .map(CartStatusUpdateRequestVo::toDto)
                 .toList();
 
 
         cartService.updateCart(cartUpdateStatusRequestDtoList);
 
+        return new BaseResponse<>();
+    }
+
+    @DeleteMapping("/delete")
+    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
+        cartService.deleteCartItems(cartDeleteRequestVoList);
         return new BaseResponse<>();
     }
 

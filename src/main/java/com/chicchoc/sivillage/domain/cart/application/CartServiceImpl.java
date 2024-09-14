@@ -2,10 +2,11 @@ package com.chicchoc.sivillage.domain.cart.application;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import java.util.List;
 import java.util.Optional;
@@ -86,16 +87,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateCart(List<CartStatusUpdateDto> cartStatusUpdateDtoList) {
+    public void updateCart(List<CartStatusUpdateRequestDto> cartStatusUpdateRequestDtoList) {
 
-        for (CartStatusUpdateDto cartStatusUpdateDto : cartStatusUpdateDtoList) {
-            Optional<Cart> existCartItem = cartRepository.findByCartUuid(cartStatusUpdateDto.getCartUuid());
+        for (CartStatusUpdateRequestDto cartStatusUpdateRequestDto : cartStatusUpdateRequestDtoList) {
+            Optional<Cart> existCartItem = cartRepository.findByCartUuid(cartStatusUpdateRequestDto.getCartUuid());
 
             if (existCartItem.isPresent()) {
                 Cart cart = existCartItem.get();
 
-                Integer updatedAmount = cartStatusUpdateDto.getAmount() != null ? cartStatusUpdateDto.getAmount() : cart.getAmount();
-                Boolean updatedIsSelected = cartStatusUpdateDto.getIsSelected() != null ? cartStatusUpdateDto.getIsSelected() : cart.getIsSelected();
+                Integer updatedAmount =
+                        cartStatusUpdateRequestDto.getAmount() != null ? cartStatusUpdateRequestDto.getAmount()
+                                : cart.getAmount();
+                Boolean updatedIsSelected =
+                        cartStatusUpdateRequestDto.getIsSelected() != null ? cartStatusUpdateRequestDto.getIsSelected()
+                                : cart.getIsSelected();
 
                 Cart updatedCart = Cart.builder()
                         .id(cart.getId())
@@ -109,6 +114,20 @@ public class CartServiceImpl implements CartService {
                 cartRepository.save(updatedCart);
             } else {
                 // TODO 예외처리 해야함
+            }
+        }
+    }
+
+    @Override
+    public void deleteCartItems(List<CartDeleteRequestVo> cartDeleteRequestVoList) {
+
+        for (CartDeleteRequestVo cartDeleteRequestVo : cartDeleteRequestVoList) {
+            Optional<Cart> existCartItem = cartRepository.findByCartUuid(cartDeleteRequestVo.getCartUuid());
+
+            if (existCartItem.isPresent()) {
+                cartRepository.delete(existCartItem.get());
+            } else {
+                // TODO 예외처리
             }
         }
     }
