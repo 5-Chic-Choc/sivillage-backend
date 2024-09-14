@@ -2,9 +2,11 @@ package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
@@ -55,13 +57,26 @@ public class CartController {
         return new BaseResponse<>(cartResponseVoList);
     }
 
-    @PutMapping("/{cartUuid}")
-    public BaseResponse<Void> updateCart(@PathVariable String cartUuid,
+    @PutMapping("/option/{cartUuid}")
+    public BaseResponse<CartResponseVo> updateCart(@PathVariable String cartUuid,
             @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
 
         CartUpdateRequestDto cartUpdateRequestDto = cartUpdateRequestVo.toDto();
 
-        cartService.updateCart(cartUpdateRequestDto, cartUuid);
+        CartResponseVo cartResponseVo = cartService.updateCart(cartUpdateRequestDto, cartUuid).toVo();
+
+        return new BaseResponse<>(cartResponseVo);
+    }
+
+    @PutMapping("/status/{cartUuid}")
+    public BaseResponse<Void> updateCart(@RequestBody List<CartStatusUpdateVo> cartUpdateStatusRequestVoList) {
+
+        List<CartStatusUpdateDto> cartUpdateStatusRequestDtoList = cartUpdateStatusRequestVoList.stream()
+                .map(CartStatusUpdateVo::toDto)
+                .toList();
+
+
+        cartService.updateCart(cartUpdateStatusRequestDtoList);
 
         return new BaseResponse<>();
     }

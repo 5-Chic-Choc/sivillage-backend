@@ -15,7 +15,7 @@ import lombok.Setter;
 public class CartRequestDto {
 
     private String productOptionUuid;
-    private int amount;
+    private Integer amount;
 
     public Cart toEntity(String cartUuid, String userUuid) {
         return Cart.builder()

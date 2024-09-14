@@ -41,7 +41,7 @@ public class Cart extends BaseEntity {
 
     @Comment("주문 수량")
     @Column(name = "amount", nullable = false)
-    private int amount;
+    private Integer amount;
 
     @Comment("선택 여부")
     @Builder.Default

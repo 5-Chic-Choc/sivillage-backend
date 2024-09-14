@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.domain.cart.application;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
@@ -47,6 +48,7 @@ public class CartServiceImpl implements CartService {
 
         return cartList.stream()
                 .map(cart -> CartResponseDto.builder()
+                        .cartUuid(cart.getCartUuid())
                         .productOptionUuid(cart.getProductOptionUuid())
                         .amount(cart.getAmount())
                         .isSelected(cart.getIsSelected())
@@ -55,19 +57,61 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateCart(CartUpdateRequestDto cartUpdateRequestDto, String cartUuid) {
+    public CartResponseDto updateCart(CartUpdateRequestDto cartUpdateRequestDto, String cartUuid) {
         Optional<Cart> existCartItem = cartRepository.findByCartUuid(cartUuid);
 
         if (existCartItem.isPresent()) {
             Cart cart = existCartItem.get();
-            cartRepository.save(Cart.builder()
+
+            Cart updateCart = Cart.builder()
                     .id(cart.getId())
                     .userUuid(cart.getUserUuid())
                     .cartUuid(cart.getCartUuid())
                     .productOptionUuid(cartUpdateRequestDto.getProductOptionUuid())
+                    .amount(cartUpdateRequestDto.getAmount())
+                    .isSelected(cart.getIsSelected())
+                    .build();
+
+            cartRepository.save(updateCart);
+
+            return CartResponseDto.builder()
+                    .cartUuid(cart.getCartUuid())
+                    .productOptionUuid(cart.getProductOptionUuid())
                     .amount(cart.getAmount())
                     .isSelected(cart.getIsSelected())
-                    .build());
+                    .build();
+        }
+        // TODO 예외처리 해야함
+        return null;
+    }
+
+    @Override
+    public void updateCart(List<CartStatusUpdateDto> cartStatusUpdateDtoList) {
+
+        for (CartStatusUpdateDto cartStatusUpdateDto : cartStatusUpdateDtoList) {
+            Optional<Cart> existCartItem = cartRepository.findByCartUuid(cartStatusUpdateDto.getCartUuid());
+
+            if (existCartItem.isPresent()) {
+                Cart cart = existCartItem.get();
+
+                Integer updatedAmount = cartStatusUpdateDto.getAmount() != null ? cartStatusUpdateDto.getAmount() : cart.getAmount();
+                Boolean updatedIsSelected = cartStatusUpdateDto.getIsSelected() != null ? cartStatusUpdateDto.getIsSelected() : cart.getIsSelected();
+
+                Cart updatedCart = Cart.builder()
+                        .id(cart.getId())
+                        .userUuid(cart.getUserUuid())
+                        .cartUuid(cart.getCartUuid())
+                        .productOptionUuid(cart.getProductOptionUuid())
+                        .amount(updatedAmount)
+                        .isSelected(updatedIsSelected)
+                        .build();
+
+                cartRepository.save(updatedCart);
+            } else {
+                // TODO 예외처리 해야함
+            }
         }
     }
+
+
 }

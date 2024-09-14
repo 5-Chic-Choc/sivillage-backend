@@ -12,7 +12,7 @@ public class CartResponseDto {
 
     private String cartUuid;
     private String productOptionUuid;
-    private int amount;
+    private Integer amount;
     private Boolean isSelected;
 
     public CartResponseVo toVo() {
