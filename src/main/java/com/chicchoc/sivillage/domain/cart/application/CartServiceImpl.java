@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -129,6 +130,53 @@ public class CartServiceImpl implements CartService {
             } else {
                 // TODO 예외처리
             }
+        }
+    }
+
+    @Override
+    public void migrateCart(String SignedUserUuid, String unsignedMemberUuid) {
+
+        List<Cart> UnsignedMemberCartList = cartRepository.findByUserUuid(unsignedMemberUuid);
+        List<Cart> SignedMemberCartList = cartRepository.findByUserUuid(SignedUserUuid);
+
+        List<Cart> updatedCartList = new ArrayList<>();
+
+        if (!UnsignedMemberCartList.isEmpty()) {
+            for (Cart cart : UnsignedMemberCartList) {
+                // 회원 장바구니에서 상품 찾는 로직
+                Optional<Cart> existCartItem = SignedMemberCartList.stream()
+                        .filter(userCart -> userCart.getProductOptionUuid()
+                                .equals(cart.getProductOptionUuid()))
+                        .findFirst();
+
+                if (existCartItem.isPresent()) {
+                    Cart existCart = existCartItem.get();
+
+                    Cart updatedCart = Cart.builder()
+                            .id(existCart.getId())
+                            .cartUuid(existCart.getCartUuid())
+                            .userUuid(existCart.getUserUuid())
+                            .productOptionUuid(existCart.getProductOptionUuid())
+                            .amount(existCart.getAmount() + cart.getAmount())
+                            .isSelected(cart.getIsSelected())
+                            .build();
+
+                    cartRepository.save(updatedCart);
+                    cartRepository.delete(cart);
+
+                } else {
+                    Cart updateCart = Cart.builder()
+                            .id(cart.getId())
+                            .cartUuid(cart.getCartUuid())
+                            .userUuid(SignedUserUuid)
+                            .productOptionUuid(cart.getProductOptionUuid())
+                            .amount(cart.getAmount())
+                            .isSelected(cart.getIsSelected())
+                            .build();
+                    updatedCartList.add(updateCart);
+                }
+            }
+            cartRepository.saveAll(updatedCartList);
         }
     }
 

@@ -89,6 +89,15 @@ public class CartController {
         return new BaseResponse<>();
     }
 
+    @PostMapping("/migrate")
+    public BaseResponse<Void> migrateCart(Authentication authentication,
+            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
+    ) {
+        cartService.migrateCart(authentication.getName(), unsignedUserUuid);
+        return new BaseResponse<>();
+    }
+
+
     private String getUserIdentifier(Authentication authentication, String unsignedUserUuid) {
         return (authentication != null) ? authentication.getName() : unsignedUserUuid;
     } // 재사용성이 떨어지므로 Jwtutil에 넣어도 좋음

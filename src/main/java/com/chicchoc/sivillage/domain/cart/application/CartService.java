@@ -18,4 +18,6 @@ public interface CartService {
     void updateCart(List<CartStatusUpdateRequestDto> cartUpdateAmountRequestDtoList);
 
     void deleteCartItems(List<CartDeleteRequestVo> cartDeleteRequestVoList);
+
+    void migrateCart(String userUuid, String unsignedMemberUuid);
 }
