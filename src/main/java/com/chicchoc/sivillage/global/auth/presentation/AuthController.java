@@ -34,14 +34,12 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 + 로그인(토큰 응답)")
     @PostMapping("/sign-up")
-    public BaseResponse<SignInResponseVo> signUp(@Valid @RequestBody SignUpRequestDto requestDto,
+    public BaseResponse<SignInResponseVo> signUpAndSignIn(@Valid @RequestBody SignUpRequestDto requestDto,
             HttpServletResponse response) {
 
         // 회원가입 후 로그인 처리 (SignIn 호출)
-        authService.signUp(requestDto);
-        SignInResponseDto responseDto = authService.signIn(
-                new SignInRequestDto(requestDto.getEmail(), requestDto.getPassword())
-        );
+
+        SignInResponseDto responseDto = authService.signUpAndSignIn(requestDto);
 
         return sendTokens(responseDto, response);
     }

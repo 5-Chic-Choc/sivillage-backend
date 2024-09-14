@@ -11,7 +11,7 @@ import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 
 public interface AuthService {
 
-    void signUp(SignUpRequestDto requestDto);
+    SignInResponseDto signUpAndSignIn(SignUpRequestDto requestDto);
 
     SignInResponseDto signIn(SignInRequestDto requestDto);
 
