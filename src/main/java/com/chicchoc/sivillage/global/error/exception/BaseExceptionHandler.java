@@ -23,11 +23,17 @@ public class BaseExceptionHandler {
      * 발생한 예외 처리.
      */
     @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<BaseResponse<Void>> baseError(BaseException e) {
+    protected ResponseEntity<BaseResponse<String>> baseError(BaseException e) {
 
-        BaseResponse<Void> response = new BaseResponse<>(e.getStatus());
+        // 예외 메시지를 로그에 기록
+        log.error("RuntimeException: ", e.getMessage());
 
-        log.error("예외 발생: {}({}), 값 : {}", e.getStatus(), e.getStatus().getMessage(), e.getMessage());
+        // 예외 스택을 로그에 기록
+        for (StackTraceElement s : e.getStackTrace()) {
+            System.out.println(s);
+        }
+
+        BaseResponse<String> response = new BaseResponse<>(e.getStatus(), e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
     }
@@ -38,19 +44,19 @@ public class BaseExceptionHandler {
      * @return FAILED_TO_LOGIN 에러 response
      */
     @ExceptionHandler(BadCredentialsException.class)
-    protected ResponseEntity<BaseResponse<Void>> handleBadCredentialsException(BadCredentialsException e) {
+    protected ResponseEntity<BaseResponse<String>> handleBadCredentialsException(BadCredentialsException e) {
 
-        BaseResponse<Void> response = new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN);
-        log.error("BadCredentialsException: ", e);
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        log.error("BadCredentialsException: ", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<BaseResponse<Void>> runtimeError(RuntimeException e) {
+    protected ResponseEntity<BaseResponse<String>> runtimeError(RuntimeException e) {
 
-        BaseResponse<Void> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
-        log.error("RuntimeException: ", e);
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        log.error("RuntimeException: ", e.getMessage());
 
         for (StackTraceElement s : e.getStackTrace()) {
             System.out.println(s);
@@ -61,10 +67,10 @@ public class BaseExceptionHandler {
 
     // IllegalArgumentException 예외 처리
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<BaseResponse<Void>> handleIllegalArgumentException(
+    public ResponseEntity<BaseResponse<String>> handleIllegalArgumentException(
             IllegalArgumentException e) {
 
-        BaseResponse<Void> response = new BaseResponse<>(BaseResponseStatus.ILLEGAL_ARGUMENT);
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.ILLEGAL_ARGUMENT, e.getMessage());
         log.error("IllegalArgumentException : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
@@ -72,9 +78,9 @@ public class BaseExceptionHandler {
 
     // Database 관련 예외 처리
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<BaseResponse<Void>> handleDatabaseException(DataAccessException e) {
+    public ResponseEntity<BaseResponse<String>> handleDatabaseException(DataAccessException e) {
 
-        BaseResponse<Void> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         log.error("DataAccessException : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
