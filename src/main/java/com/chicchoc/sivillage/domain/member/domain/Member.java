@@ -38,7 +38,7 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
     private Long id;
 
     @Comment("회원 UUID")
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 21, unique = true)
     private String uuid;
 
     @Comment("회원 이메일")
@@ -71,7 +71,7 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
 
     @Comment("회원 자동 로그인 여부")
     @Column(nullable = false)
-    private boolean isAutoSignIn;
+    private boolean isAutoSignIn = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
