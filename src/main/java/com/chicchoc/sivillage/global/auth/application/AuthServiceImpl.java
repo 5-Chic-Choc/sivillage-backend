@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void signUp(SignUpRequestDto requestDto) {
+    public SignInResponseDto signUpAndSignIn(SignUpRequestDto requestDto) {
 
         String uuid = new NanoIdGenerator().generateNanoId();
 
@@ -60,6 +60,12 @@ public class AuthServiceImpl implements AuthService {
         Member member = requestDto.toEntity(uuid, encodedPassword);
 
         memberRepository.save(member);
+
+        return signIn(SignInRequestDto.builder()
+                .email(requestDto.getEmail())
+                .password(requestDto.getPassword())
+                .isAutoSignIn(false)
+                .build());
     }
 
     @Transactional(rollbackFor = Exception.class)

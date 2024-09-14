@@ -2,7 +2,6 @@ package com.chicchoc.sivillage.global.config.jwt;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
@@ -60,7 +59,6 @@ class TokenProviderTest {
                 .uuid(new NanoIdGenerator().generateNanoId())
                 .name("TestUser")
                 .phone("010-1234-5678")
-                .gender(Gender.GENDER_MALE)
                 .isAutoSignIn(true)
                 .build());
 

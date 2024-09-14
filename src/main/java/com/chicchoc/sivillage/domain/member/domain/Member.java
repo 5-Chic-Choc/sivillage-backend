@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -66,12 +67,7 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
 
     @Comment("회원 생년월일")
     @Column(nullable = true)
-    private Date birth;
-
-    @Comment("회원 성별")
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private LocalDate birth;
 
     @Comment("회원 자동 로그인 여부")
     @Column(nullable = false)

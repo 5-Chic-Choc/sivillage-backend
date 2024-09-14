@@ -3,7 +3,6 @@ package com.chicchoc.sivillage.global.auth.presentation;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
@@ -76,7 +75,6 @@ class TokenControllerTest {
                 .uuid(UUID.randomUUID().toString().substring(0, 5))
                 .name("zz")
                 .phone("010-1234-5678")
-                .gender(Gender.GENDER_MALE)
                 .isAutoSignIn(true)
                 .build());
 
