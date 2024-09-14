@@ -53,6 +53,10 @@ public enum BaseResponseStatus {
     INVALID_EMAIL_ADDRESS(HttpStatus.BAD_REQUEST, false, 2012, "이메일을 다시 확인해주세요."),
     INVALID_EMAIL_CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, false, 2013, "이메일 인증번호가 일치하지 않습니다."),
     INVALID_EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, false, 2014, "이메일 인증번호가 만료되었습니다."),
+
+    // Oauth
+    NOT_FOUND_OAUTH_MEMBER(HttpStatus.NOT_FOUND, false, 2201, "존재하지 않는 소셜 계정입니다."),
+    INVALID_OAUTH_INFO(HttpStatus.BAD_REQUEST, false, 2202, "소셜 계정 정보가 올바르지 않습니다."),
     //    DUPLICATED_SOCIAL_USER(HttpStatus.CONFLICT, false, 2103, "이미 소셜 연동된 계정입니다."),
     //    DUPLICATED_SOCIAL_PROVIDER_USER(HttpStatus.CONFLICT, false, 2104, "계정에 동일한 플랫폼이 이미 연동되어있습니다."),
     //    PASSWORD_CONTAIN_NUM_FAILED(HttpStatus.BAD_REQUEST, false, 2107, "휴대폰 번호를 포함한 비밀번호입니다."),

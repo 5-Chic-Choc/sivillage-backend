@@ -46,7 +46,7 @@ public class BaseExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<BaseResponse<String>> handleBadCredentialsException(BadCredentialsException e) {
 
-        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN, e.getMessage());
         log.error("BadCredentialsException: ", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
@@ -70,7 +70,7 @@ public class BaseExceptionHandler {
     public ResponseEntity<BaseResponse<String>> handleIllegalArgumentException(
             IllegalArgumentException e) {
 
-        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.ILLEGAL_ARGUMENT, e.getMessage() );
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.ILLEGAL_ARGUMENT, e.getMessage());
         log.error("IllegalArgumentException : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
