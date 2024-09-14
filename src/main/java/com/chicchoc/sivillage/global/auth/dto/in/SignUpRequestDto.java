@@ -1,10 +1,10 @@
 package com.chicchoc.sivillage.global.auth.dto.in;
 
-import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,13 +34,7 @@ public class SignUpRequestDto {
 
     private String address;
 
-    private Date birth;
-
-    @NotNull(message = "성별은 필수 입력 항목입니다.")
-    private Gender gender;
-
-    @NotNull(message = "자동 로그인 여부는 필수 입력 항목입니다.")
-    private boolean isAutoSignIn;
+    private LocalDate birth;
 
     public Member toEntity(String uuid, String password) {
         return Member.builder()
@@ -52,8 +46,6 @@ public class SignUpRequestDto {
                 .postalCode(postalCode)
                 .address(address)
                 .birth(birth)
-                .gender(gender)
-                .isAutoSignIn(isAutoSignIn)
                 .build();
     }
 
