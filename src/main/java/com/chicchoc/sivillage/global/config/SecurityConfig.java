@@ -1,5 +1,8 @@
 package com.chicchoc.sivillage.global.config;
 
+import com.chicchoc.sivillage.domain.oauth.application.Oauth2UserServiceImpl;
+import com.chicchoc.sivillage.domain.oauth.handler.OauthFailureHandler;
+import com.chicchoc.sivillage.domain.oauth.handler.OauthSuccessHandler;
 import com.chicchoc.sivillage.global.auth.exception.CustomAuthenticationEntryPoint;
 import com.chicchoc.sivillage.global.jwt.config.JwtAutenticationFilter;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
@@ -28,6 +31,10 @@ public class SecurityConfig {
     private final JwtAutenticationFilter jwtAutenticationFilter;
     private final JwtProperties jwtProperties;
 
+    private final Oauth2UserServiceImpl oauth2UserServiceImpl;
+    private final OauthSuccessHandler oauth2SuccessHandler;
+    private final OauthFailureHandler oauth2FailureHandler;
+
     @Bean
     public CorsFilter corsFilter() {
 
@@ -49,6 +56,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable) // Form 로그인 설정 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 설정 비활성화
                 .logout(AbstractHttpConfigurer::disable) // 로그아웃 설정 비활성화
+
                 // 인증되지 않은 사용자가 접근할 수 있는 URL 설정
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
@@ -63,9 +71,21 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .permitAll()
                 )
+
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
+
+                // oauth2
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(endpoint
+                                -> endpoint.baseUri("/api/v1/auth/oauth2")) // oauth2 로그인 URL
+                        .redirectionEndpoint(endpoint
+                                -> endpoint.baseUri("/oauth2/callback/*")) // oauth2 로그인 후 리다이렉션 URL
+                        .userInfoEndpoint(endpoint
+                                -> endpoint.userService(oauth2UserServiceImpl)) // oauth2 사용자 정보 가져오기(이메일, 이름 등)
+                        .successHandler(oauth2SuccessHandler) // oauth2 로그인 성공 핸들러(토큰 발급)
+                        .failureHandler(oauth2FailureHandler))
 
                 // 인증되지 않은 사용자가 접근할 경우 CustomAuthenticationEntryPoint로 이동
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(

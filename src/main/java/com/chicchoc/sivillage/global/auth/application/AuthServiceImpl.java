@@ -107,7 +107,6 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    @MethodLoggerAop
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto requestDto) {
