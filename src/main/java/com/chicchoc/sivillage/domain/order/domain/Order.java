@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,24 +26,24 @@ public class Order {
     private Long id;
 
     @Comment("주문 UUID")
-    @Column(name = "order_uuid", length = 30, nullable = false)
+    @Column(name = "order_uuid", length = 21, nullable = false)
     private String orderUuid;
 
     @Comment("사용자 UUID")
-    @Column(name = "user_uuid", length = 20, nullable = false)
+    @Column(name = "user_uuid", length = 21, nullable = false)
     private String userUuid;
 
     @Comment("결제 ID")
     @Column(name = "payment_uuid", nullable = false)
-    private Long paymentUuid;
+    private String paymentUuid;
 
     @Comment("주문 시간")
     @Column(name = "ordered_at", nullable = false)
     private LocalDateTime orderedAt;
 
-    @Comment("주문 상태")
-    @Column(name = "order_status", length = 20, nullable = true)
-    private String orderStatus;
+//    @Comment("주문 상태")
+//    @Column(name = "order_status", length = 20, nullable = true)
+//    private OrderStatus orderStatus;
 
     @Comment("주문자 이름")
     @Column(name = "orderer_name", length = 30, nullable = false)
@@ -73,13 +73,17 @@ public class Order {
     @Column(name = "recipient_phone", length = 20, nullable = false)
     private String recipientPhone;
 
+    @Comment("배송지 명")
+    @Column(name = "delivery_name")
+    private String deliveryName;
+
     @Comment("배송 요청 사항")
     @Column(name = "delivery_request")
     private String deliveryRequest;
 
-    @Comment("배송 상태")
-    @Column(name = "delivery_status", length = 20)
-    private String deliveryStatus;
+//    @Comment("배송 상태")
+//    @Column(name = "delivery_status", length = 20)
+//    private DeliveryStatus deliveryStatus;
 
     @Comment("택배사")
     @Column(name = "delivery_company", length = 20)
