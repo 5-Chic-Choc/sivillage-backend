@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderProductRequestDto {
+
     private String productUuid;
     private String productName;
     private String brandName;
@@ -20,7 +21,7 @@ public class OrderProductRequestDto {
     private int amount;
     private String thumbnailUrl;
 
-    public OrderProduct toEntity(String orderUuid){
+    public OrderProduct toEntity(String orderUuid) {
         return OrderProduct.builder()
                 .orderUuid(orderUuid)
                 .productUuid(productUuid)

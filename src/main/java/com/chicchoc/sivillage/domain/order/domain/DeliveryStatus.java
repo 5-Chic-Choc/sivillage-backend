@@ -21,7 +21,9 @@ public enum DeliveryStatus {
     private final String status;
 
     @JsonValue
-    public String getStatus() {return status;}
+    public String getStatus() {
+        return status;
+    }
 
     @JsonCreator
     public static DeliveryStatus fromString(String value) {

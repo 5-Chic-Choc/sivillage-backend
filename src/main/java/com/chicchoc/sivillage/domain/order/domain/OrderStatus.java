@@ -22,7 +22,9 @@ public enum OrderStatus {
 
     private final String status;
 
-    public String getStatus() {return status;}
+    public String getStatus() {
+        return status;
+    }
 
     @JsonCreator
     public static OrderStatus fromString(String value) {

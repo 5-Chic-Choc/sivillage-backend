@@ -15,7 +15,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<String> findOrderUuidByDateRangeWithUserUuid(String userUuid, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<String> findOrderUuidByDateRangeWithUserUuid(String userUuid, LocalDateTime startDate,
+            LocalDateTime endDate) {
 
         QOrder order = QOrder.order;
 

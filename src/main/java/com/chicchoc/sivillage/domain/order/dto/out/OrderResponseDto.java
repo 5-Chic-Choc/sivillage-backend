@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderResponseDto {
+
     private String orderUuid;
     private String productUuid;
     private String productName;
@@ -24,7 +25,7 @@ public class OrderResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public OrderResponseVo toVo(){
+    public OrderResponseVo toVo() {
         return OrderResponseVo.builder()
                 .orderUuid(orderUuid)
                 .productUuid(productUuid)
