@@ -72,7 +72,6 @@ public class AuthController {
         return new BaseResponse<>(authService.findEmail(findEmailRequestDto));
     }
 
-    @MethodLoggerAop
     @Operation(summary = "이메일 인증코드 전송", description = "이메일 인증코드 전송")
     @PostMapping("/email-verification")
     public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {

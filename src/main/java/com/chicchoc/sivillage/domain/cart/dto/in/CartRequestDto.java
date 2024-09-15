@@ -1,21 +1,29 @@
 package com.chicchoc.sivillage.domain.cart.dto.in;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartRequestDto {
 
-    private String cartName;
+    private String productOptionUuid;
+    private Integer amount;
 
-    public Cart toEntity(String cartUuid, boolean isSigned, String userUuid) {
+    public Cart toEntity(String cartUuid, String userUuid) {
         return Cart.builder()
                 .cartUuid(cartUuid)
-                .isSigned(isSigned)
                 .userUuid(userUuid)
-                .cartName(cartName)
+                .productOptionUuid(productOptionUuid)
+                .amount(amount)
+                .isSelected(false)
                 .build();
     }
 }
