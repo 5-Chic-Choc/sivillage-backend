@@ -1,16 +1,16 @@
 package com.chicchoc.sivillage.domain.cart.vo.in;
 
-import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import lombok.Getter;
 
 @Getter
-public class CartRequestVo {
+public class CartUpdateRequestVo {
 
     private String productOptionUuid;
     private Integer amount;
 
-    public CartRequestDto toDto() {
-        return CartRequestDto.builder()
+    public CartUpdateRequestDto toDto() {
+        return CartUpdateRequestDto.builder()
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)
                 .build();
