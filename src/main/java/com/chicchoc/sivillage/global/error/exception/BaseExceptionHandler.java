@@ -47,6 +47,7 @@ public class BaseExceptionHandler {
     protected ResponseEntity<BaseResponse<String>> handleBadCredentialsException(BadCredentialsException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN, e.getMessage());
+
         log.error("BadCredentialsException: ", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
