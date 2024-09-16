@@ -65,9 +65,6 @@ public enum BaseResponseStatus {
     //    DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2010, "이미 사용중인 닉네임입니다."),
     //    SAME_NICKNAME(HttpStatus.CONFLICT, false, 2011, "현재 사용중인 닉네임입니다."),
 
-    // Pet
-    NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2401, "존재하지 않는 카테고리입니다."),
-
     // Interest
     NO_EXIST_INTEREST(HttpStatus.NOT_FOUND, false, 2501, "존재하지 않는 관심사입니다."),
 
@@ -81,6 +78,9 @@ public enum BaseResponseStatus {
 
     // Promotion
     NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
+
+    // Category
+    NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2801, "존재하지 않는 카테고리입니다."),
 
     /**
      * 3000: product service error.
