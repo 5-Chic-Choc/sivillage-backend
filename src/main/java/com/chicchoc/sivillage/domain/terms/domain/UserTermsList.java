@@ -1,0 +1,39 @@
+package com.chicchoc.sivillage.domain.terms.domain;
+
+import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.global.common.entity.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
+
+@NoArgsConstructor
+@Getter
+@Entity
+public class UserTermsList extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_terms_list_id")
+    private Long id;
+
+    @Comment("회원 uuid")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "uuid", nullable = false)
+    private Member member;
+
+    @Comment("약관 id")
+    @Column(name = "terms_id", nullable = false)
+    private Long termsId;
+
+    @Comment("동의 여부")
+    @Column(nullable = false)
+    private Boolean isAgree;
+}
