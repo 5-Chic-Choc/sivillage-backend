@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -26,14 +27,21 @@ public class UserTermsList extends BaseEntity {
 
     @Comment("회원 uuid")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uuid", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Comment("약관 id")
-    @Column(name = "terms_id", nullable = false)
+    @Column(nullable = false)
     private Long termsId;
 
     @Comment("동의 여부")
     @Column(nullable = false)
     private Boolean isAgree;
+
+    @Builder
+    public UserTermsList(Member member, Long termsId, Boolean isAgree) {
+        this.member = member;
+        this.termsId = termsId;
+        this.isAgree = isAgree;
+    }
 }
