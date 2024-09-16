@@ -2,6 +2,8 @@ package com.chicchoc.sivillage.domain.order.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +36,7 @@ public class Order {
     @Column(name = "user_uuid", length = 21, nullable = false)
     private String userUuid;
 
-    @Comment("결제 ID")
+    @Comment("결제 UUID")
     @Column(name = "payment_uuid", nullable = false)
     private String paymentUuid;
 
@@ -42,9 +44,10 @@ public class Order {
     @Column(name = "ordered_at", nullable = false)
     private LocalDateTime orderedAt;
 
-    // @Comment("주문 상태")
-    // @Column(name = "order_status", length = 20, nullable = true)
-    // private OrderStatus orderStatus;
+     @Comment("주문 상태")
+     @Enumerated(EnumType.STRING)
+     @Column(name = "order_status", length = 20, nullable = true)
+     private OrderStatus orderStatus;
 
     @Comment("주문자 이름")
     @Column(name = "orderer_name", length = 30, nullable = false)
@@ -82,15 +85,4 @@ public class Order {
     @Column(name = "delivery_request")
     private String deliveryRequest;
 
-    // @Comment("배송 상태")
-    // @Column(name = "delivery_status", length = 20)
-    // private DeliveryStatus deliveryStatus;
-
-    @Comment("택배사")
-    @Column(name = "delivery_company", length = 20)
-    private String deliveryCompany;
-
-    @Comment("운송장 번호")
-    @Column(name = "tracking_number", length = 30, nullable = true)
-    private String trackingNumber;
 }

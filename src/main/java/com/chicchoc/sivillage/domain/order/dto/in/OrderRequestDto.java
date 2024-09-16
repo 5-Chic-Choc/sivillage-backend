@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.order.dto.in;
 
 import com.chicchoc.sivillage.domain.order.domain.Order;
+import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
 import com.chicchoc.sivillage.domain.order.vo.in.OrderProductRequestVo;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -28,12 +29,13 @@ public class OrderRequestDto {
     private List<OrderProductRequestDto> orderProductRequestDtoList;
 
     public Order toEntity(String orderUuid, String userUuid, String paymentUuid, LocalDateTime orderedAt,
-            String deliveryCompany, String trackingNumber) {
+            OrderStatus orderStatus) {
         return Order.builder()
                 .orderUuid(orderUuid)
                 .userUuid(userUuid)
                 .paymentUuid(paymentUuid)
                 .orderedAt(orderedAt)
+                .orderStatus(orderStatus)
                 .ordererName(ordererName)
                 .ordererEmail(ordererEmail)
                 .ordererPhone(ordererPhone)
@@ -43,8 +45,6 @@ public class OrderRequestDto {
                 .recipientPhone(recipientPhone)
                 .deliveryName(deliveryName)
                 .deliveryRequest(deliveryRequest)
-                .deliveryCompany(deliveryCompany)
-                .trackingNumber(trackingNumber)
                 .build();
     }
 }

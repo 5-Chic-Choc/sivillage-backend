@@ -32,9 +32,6 @@ public class OrderRequestVo {
                 .deliveryName(deliveryName)
                 .deliveryRequest(deliveryRequest)
                 .build();
-//                .orderProductRequestDtoList(orderProductRequestVoList.stream()
-//                        .map(OrderProductRequestVo::toDto)
-//                        .toList())
 
     }
 }
