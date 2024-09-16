@@ -65,9 +65,6 @@ public enum BaseResponseStatus {
     //    DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2010, "이미 사용중인 닉네임입니다."),
     //    SAME_NICKNAME(HttpStatus.CONFLICT, false, 2011, "현재 사용중인 닉네임입니다."),
 
-    // Pet
-    NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2401, "존재하지 않는 카테고리입니다."),
-
     // Interest
     NO_EXIST_INTEREST(HttpStatus.NOT_FOUND, false, 2501, "존재하지 않는 관심사입니다."),
 
@@ -82,13 +79,28 @@ public enum BaseResponseStatus {
     // Promotion
     NO_EXIST_PROMOTION(HttpStatus.NOT_FOUND, false, 2701, "존재하지 않는 프로모션입니다."),
 
+    // Category
+    NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2801, "존재하지 않는 카테고리입니다."),
+    INVALID_CATEGORY_PATH(HttpStatus.BAD_REQUEST, false, 2802, "잘못된 카테고리 경로입니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, false, 2803, "카테고리를 찾을 수 없습니다."),
+
     /**
      * 3000: product service error.
      */
-
-    // Shorts
     NO_EXIST_PRODUCT(HttpStatus.NOT_FOUND, false, 3001, "존재하지 않는 상품입니다."),
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다."),
+    INVALID_SORT_BY_PARAMETER(HttpStatus.BAD_REQUEST, false, 3003, "잘못된 정렬 기준 파라미터입니다."),
+    INVALID_FILTER_CRITERIA(HttpStatus.BAD_REQUEST, false, 3004, "잘못된 필터 조건입니다."),
+
+    // Size
+    NO_EXIST_SIZE(HttpStatus.NOT_FOUND, false, 3101, "존재하지 않는 사이즈입니다."),
+
+    // Color
+    NO_EXIST_COLOR(HttpStatus.NOT_FOUND, false, 3201, "존재하지 않는 색상입니다."),
+
+    // EtcOption
+    NO_EXIST_ETC_OPTION(HttpStatus.NOT_FOUND, false, 3301, "존재하지 않는 기타 옵션입니다."),
+
 
     /**
      * 4000: comment service error.
