@@ -101,7 +101,6 @@ public enum BaseResponseStatus {
     // EtcOption
     NO_EXIST_ETC_OPTION(HttpStatus.NOT_FOUND, false, 3301, "존재하지 않는 기타 옵션입니다."),
 
-
     /**
      * 4000: comment service error.
      */
