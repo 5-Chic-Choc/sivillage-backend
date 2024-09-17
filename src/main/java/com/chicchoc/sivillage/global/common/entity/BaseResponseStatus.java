@@ -101,6 +101,14 @@ public enum BaseResponseStatus {
     // EtcOption
     NO_EXIST_ETC_OPTION(HttpStatus.NOT_FOUND, false, 3301, "존재하지 않는 기타 옵션입니다."),
 
+    // Product Media
+    NO_EXIST_PRODUCT_MEDIA(HttpStatus.NOT_FOUND, false, 3401, "존재하지 않는 제품 미디어입니다."),
+    INVALID_MEDIA_REQUEST(HttpStatus.BAD_REQUEST, false, 3402, "잘못된 미디어 요청입니다."),
+
+    // Media
+    NO_EXIST_MEDIA(HttpStatus.NOT_FOUND, false, 3501, "존재하지 않는 미디어입니다."),
+    INVALID_MEDIA_TYPE(HttpStatus.BAD_REQUEST, false, 3502, "잘못된 미디어 종류입니다."),
+
     /**
      * 4000: comment service error.
      */
