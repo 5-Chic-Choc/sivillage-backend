@@ -92,6 +92,15 @@ public enum BaseResponseStatus {
     INVALID_SORT_BY_PARAMETER(HttpStatus.BAD_REQUEST, false, 3003, "잘못된 정렬 기준 파라미터입니다."),
     INVALID_FILTER_CRITERIA(HttpStatus.BAD_REQUEST, false, 3004, "잘못된 필터 조건입니다."),
 
+    // Size
+    NO_EXIST_SIZE(HttpStatus.NOT_FOUND, false, 3101, "존재하지 않는 사이즈입니다."),
+
+    // Color
+    NO_EXIST_COLOR(HttpStatus.NOT_FOUND, false, 3201, "존재하지 않는 색상입니다."),
+
+    // EtcOption
+    NO_EXIST_ETC_OPTION(HttpStatus.NOT_FOUND, false, 3301, "존재하지 않는 기타 옵션입니다."),
+
     /**
      * 4000: comment service error.
      */
