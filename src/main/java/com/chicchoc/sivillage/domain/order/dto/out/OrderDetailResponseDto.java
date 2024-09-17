@@ -3,6 +3,7 @@ package com.chicchoc.sivillage.domain.order.dto.out;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderDetailResponseVo;
 
 public class OrderDetailResponseDto {
+
     private String ordererName;
     private String ordererEmail;
     private String ordererPhone;
@@ -12,7 +13,7 @@ public class OrderDetailResponseDto {
     private String deliveryName;
     private String deliveryRequest;
 
-    public OrderDetailResponseVo toVo(){
+    public OrderDetailResponseVo toVo() {
         return OrderDetailResponseVo.builder()
                 .ordererName(ordererName)
                 .ordererEmail(ordererEmail)

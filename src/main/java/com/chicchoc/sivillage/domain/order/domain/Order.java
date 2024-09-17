@@ -44,10 +44,10 @@ public class Order {
     @Column(name = "ordered_at", nullable = false)
     private LocalDateTime orderedAt;
 
-     @Comment("주문 상태")
-     @Enumerated(EnumType.STRING)
-     @Column(name = "order_status", length = 20, nullable = true)
-     private OrderStatus orderStatus;
+    @Comment("주문 상태")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status", length = 20, nullable = true)
+    private OrderStatus orderStatus;
 
     @Comment("주문자 이름")
     @Column(name = "orderer_name", length = 30, nullable = false)

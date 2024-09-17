@@ -41,14 +41,14 @@ public class OrderController {
                 .map(OrderProductRequestVo::toDto)
                 .toList();
 
-//        if (orderRequestVo.getCartUuidRequestVoList() != null && !orderRequestVo.getCartUuidRequestVoList().isEmpty()) {
-//            List<CartUuidRequestVo> cartUuidRequestVoList = orderRequestVo.getCartUuidRequestVoList();
-//            List<CartUuidRequestDto> cartUuidRequestDtoList = cartUuidRequestVoList.stream()
-//                    .map(CartUuidRequestVo::toDto)
-//                    .toList();
-//            // 로직 검사 예정 -> 장바구니에 있는 데이터 주문하면 삭제되게
-//            // cartService.deleteCartItems(cartUuidRequestDtoList);
-//        }
+        if (orderRequestVo.getCartUuidRequestVoList() != null && !orderRequestVo.getCartUuidRequestVoList().isEmpty()) {
+            List<CartUuidRequestVo> cartUuidRequestVoList = orderRequestVo.getCartUuidRequestVoList();
+            List<CartUuidRequestDto> cartUuidRequestDtoList = cartUuidRequestVoList.stream()
+                    .map(CartUuidRequestVo::toDto)
+                    .toList();
+            // 로직 검사 예정 -> 장바구니에 있는 데이터 주문하면 삭제되게
+            // cartService.deleteCartItems(cartUuidRequestDtoList);
+        }
 
         String userUuid = authentication.getName();
         orderService.createOrder(orderRequestDto, orderProductRequestDtoList, userUuid);
@@ -71,9 +71,9 @@ public class OrderController {
         return new BaseResponse<>(orderResponseVoList);
     }
 
-     @GetMapping("/{orderUuid}")
-     public BaseResponse<Void> getOrderDetails(Authentication authentication, @PathVariable String orderUuid) {
-//         OrderDetailResponseDto orderDetailResponseDto = orderService.getOrder(orderUuid); 진행상황 -> 디테일 주문 조회
+    @GetMapping("/{orderUuid}")
+    public BaseResponse<Void> getOrderDetails(Authentication authentication, @PathVariable String orderUuid) {
+        // OrderDetailResponseDto orderDetailResponseDto = orderService.getOrder(orderUuid); 진행상황 -> 디테일 주문 조회
         return new BaseResponse<>();
     }
 }

@@ -21,6 +21,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderProduct extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -69,10 +70,10 @@ public class OrderProduct extends BaseEntity {
     @Column(name = "thumbnail_url", nullable = true)
     private String thumbnailUrl;
 
-     @Comment("배송 상태")
-     @Enumerated(EnumType.STRING)
-     @Column(name = "delivery_status", length = 20, nullable = true)
-     private DeliveryStatus deliveryStatus;
+    @Comment("배송 상태")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "delivery_status", length = 20, nullable = true)
+    private DeliveryStatus deliveryStatus;
 
     @Comment("택배사")
     @Column(name = "delivery_company", length = 20)
