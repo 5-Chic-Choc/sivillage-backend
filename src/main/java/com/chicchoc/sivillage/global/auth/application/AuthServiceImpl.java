@@ -2,6 +2,8 @@ package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
+import com.chicchoc.sivillage.domain.terms.domain.UserTermsList;
+import com.chicchoc.sivillage.domain.terms.infrastructure.UserTermsListRepository;
 import com.chicchoc.sivillage.global.auth.domain.EmailVerification;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailVerificationRequestDto;
@@ -9,11 +11,11 @@ import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
+import com.chicchoc.sivillage.global.auth.dto.in.UserTermsRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.infrastructure.EmailVerificationRepository;
 import com.chicchoc.sivillage.global.auth.provider.EmailProvider;
-import com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.common.generator.VerificationCode;
@@ -44,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final EmailProvider emailProvider;
     private final EmailVerificationRepository emailVerificationRepository;
+    private final UserTermsListRepository userTermsListRepository;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -60,6 +63,18 @@ public class AuthServiceImpl implements AuthService {
         Member member = requestDto.toEntity(uuid, encodedPassword);
 
         memberRepository.save(member);
+
+        // 약관 정보 추가
+        if (requestDto.getTerms() != null && !requestDto.getTerms().isEmpty()) {
+            for (UserTermsRequestDto termsRequestDto : requestDto.getTerms()) {
+                UserTermsList userTerms = UserTermsList.builder()
+                        .member(member)
+                        .termsId(termsRequestDto.getTermsId())
+                        .isAgree(termsRequestDto.getIsAgree())
+                        .build();
+                userTermsListRepository.save(userTerms);
+            }
+        }
 
         return signIn(SignInRequestDto.builder()
                 .email(requestDto.getEmail())
