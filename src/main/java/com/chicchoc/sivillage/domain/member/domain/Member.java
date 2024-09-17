@@ -71,6 +71,7 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
 
     @Comment("회원 자동 로그인 여부")
     @Column(nullable = false)
+    @Builder.Default
     private boolean isAutoSignIn = false;
 
     @Override
