@@ -81,14 +81,16 @@ public enum BaseResponseStatus {
 
     // Category
     NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 2801, "존재하지 않는 카테고리입니다."),
+    INVALID_CATEGORY_PATH(HttpStatus.BAD_REQUEST, false, 2802, "잘못된 카테고리 경로입니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, false, 2803, "카테고리를 찾을 수 없습니다."),
 
     /**
      * 3000: product service error.
      */
-
-    // Shorts
     NO_EXIST_PRODUCT(HttpStatus.NOT_FOUND, false, 3001, "존재하지 않는 상품입니다."),
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다."),
+    INVALID_SORT_BY_PARAMETER(HttpStatus.BAD_REQUEST, false, 3003, "잘못된 정렬 기준 파라미터입니다."),
+    INVALID_FILTER_CRITERIA(HttpStatus.BAD_REQUEST, false, 3004, "잘못된 필터 조건입니다."),
 
     /**
      * 4000: comment service error.
