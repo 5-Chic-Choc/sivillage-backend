@@ -15,7 +15,7 @@ public class DeliveryRequestVo {
     private String deliveryName;
     private String deliveryRequest;
 
-    public DeliveryRequestDto toDto(){
+    public DeliveryRequestDto toDto() {
         return DeliveryRequestDto.builder()
                 .templateName(templateName)
                 .isRep(isRep)

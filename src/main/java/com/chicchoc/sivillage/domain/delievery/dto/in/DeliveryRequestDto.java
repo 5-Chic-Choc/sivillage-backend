@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeliveryRequestDto {
+
     private String templateName;
     private boolean isRep;
     private String postalCode;
@@ -18,7 +19,7 @@ public class DeliveryRequestDto {
     private String deliveryName;
     private String deliveryRequest;
 
-    public DeliveryTemplate toEntity(String templateUuid, String userUuid){
+    public DeliveryTemplate toEntity(String templateUuid, String userUuid) {
         return DeliveryTemplate.builder()
                 .templateUuid(templateUuid)
                 .userUuid(userUuid)
