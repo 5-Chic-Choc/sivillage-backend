@@ -16,6 +16,7 @@ public enum DeliveryStatus {
     DEPARTURE("배송지시"),
     DELIVERING("배송중"),
     FINAL_DELIVERY("배송완료"),
+    CANCELED("취소됨"),
     NONE_TRACKING("업체 직접 배송/ 추적불가");
 
     private final String status;

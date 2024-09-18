@@ -1,6 +1,5 @@
 package com.chicchoc.sivillage.domain.order.domain;
 
-import com.chicchoc.sivillage.domain.member.domain.Gender;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.fasterxml.jackson.annotation.JsonCreator;

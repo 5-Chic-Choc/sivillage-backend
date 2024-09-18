@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.order.vo.out;
 
+import com.chicchoc.sivillage.domain.order.domain.DeliveryStatus;
+import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ public class OrderResponseVo {
     private String colorValue;
     private String sizeName;
     private String productOption;
+    private DeliveryStatus deliveryStatus;
     private int amount;
     private String thumbnailUrl;
     private LocalDateTime createdAt;

@@ -10,11 +10,13 @@ import com.chicchoc.sivillage.domain.order.dto.out.OrderResponseDto;
 import com.chicchoc.sivillage.domain.order.vo.in.CartUuidRequestVo;
 import com.chicchoc.sivillage.domain.order.vo.in.OrderProductRequestVo;
 import com.chicchoc.sivillage.domain.order.vo.in.OrderRequestVo;
+import com.chicchoc.sivillage.domain.order.vo.out.OrderDetailResponseVo;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,8 +74,15 @@ public class OrderController {
     }
 
     @GetMapping("/{orderUuid}")
-    public BaseResponse<Void> getOrderDetails(Authentication authentication, @PathVariable String orderUuid) {
-        // OrderDetailResponseDto orderDetailResponseDto = orderService.getOrder(orderUuid); 진행상황 -> 디테일 주문 조회
+    public BaseResponse<OrderDetailResponseVo> getOrderDetails(Authentication authentication, @PathVariable("orderUuid") String orderUuid) {
+        OrderDetailResponseDto orderDetailResponseDto = orderService.getOrderDetail(orderUuid);
+        OrderDetailResponseVo orderDetailResponseVo = orderDetailResponseDto.toVo();
+        return new BaseResponse<>(orderDetailResponseVo);
+    }
+
+    @DeleteMapping("/{orderUuid}")
+    public BaseResponse<Void> deleteOrder(Authentication authentication, @PathVariable("orderUuid") String orderUuid) {
+        orderService.deleteOrder(orderUuid);
         return new BaseResponse<>();
     }
 }

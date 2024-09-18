@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.order.dto.out;
 
+import com.chicchoc.sivillage.domain.order.domain.DeliveryStatus;
+import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderResponseVo;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ public class OrderResponseDto {
     private String colorValue;
     private String sizeName;
     private String productOption;
+    private DeliveryStatus deliveryStatus;
     private int amount;
     private String thumbnailUrl;
     private LocalDateTime createdAt;
@@ -36,6 +39,7 @@ public class OrderResponseDto {
                 .colorValue(colorValue)
                 .sizeName(sizeName)
                 .productOption(productOption)
+                .deliveryStatus(deliveryStatus)
                 .amount(amount)
                 .thumbnailUrl(thumbnailUrl)
                 .createdAt(createdAt)
