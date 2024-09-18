@@ -6,6 +6,7 @@ import com.chicchoc.sivillage.domain.order.domain.OrderProduct;
 import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderProductRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderRequestDto;
+import com.chicchoc.sivillage.domain.order.dto.out.OrderDetailResponseDto;
 import com.chicchoc.sivillage.domain.order.dto.out.OrderResponseDto;
 import com.chicchoc.sivillage.domain.order.infrastructure.OrderProductRepository;
 import com.chicchoc.sivillage.domain.order.infrastructure.OrderRepository;
@@ -14,10 +15,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderProductList.stream()
+                .sorted(Comparator.comparing(OrderProduct::getCreatedAt).reversed())
                 .map(orderProduct -> OrderResponseDto.builder()
                         .orderUuid(orderProduct.getOrderUuid())
                         .productUuid(orderProduct.getProductUuid())
@@ -102,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
                         .colorValue(orderProduct.getColorValue())
                         .sizeName(orderProduct.getSizeName())
                         .productOption(orderProduct.getProductOption())
+                        .deliveryStatus(orderProduct.getDeliveryStatus())
                         .amount(orderProduct.getAmount())
                         .thumbnailUrl(orderProduct.getThumbnailUrl())
                         .createdAt(orderProduct.getCreatedAt())
@@ -111,6 +116,76 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public OrderDetailResponseDto getOrderDetail(String orderUuid) {
+
+        Order order = orderRepository.findByOrderUuid(orderUuid);
+
+        return OrderDetailResponseDto.builder()
+                .ordererName(order.getOrdererName())
+                .ordererEmail(order.getOrdererEmail())
+                .ordererPhone(order.getOrdererPhone())
+                .recipientName(order.getRecipientName())
+                .recipientPhone(order.getRecipientPhone())
+                .recipientAddress(order.getRecipientAddress())
+                .deliveryName(order.getDeliveryName())
+                .deliveryRequest(order.getDeliveryRequest())
+                .build();
+    }
+
+    @Override
+    public void deleteOrder(String orderUuid) {
+
+        Order order = orderRepository.findByOrderUuid(orderUuid);;
+
+        Order modifiedOrder = Order.builder()
+                .id(order.getId())
+                .orderUuid(orderUuid)
+                .userUuid(order.getUserUuid())
+                .paymentUuid(order.getPaymentUuid())
+                .orderedAt(order.getOrderedAt())
+                .orderStatus(OrderStatus.CANCELED)
+                .ordererName(order.getOrdererName())
+                .ordererEmail(order.getOrdererEmail())
+                .ordererPhone(order.getOrdererPhone())
+                .postalCode(order.getPostalCode())
+                .recipientName(order.getRecipientName())
+                .recipientPhone(order.getRecipientPhone())
+                .recipientAddress(order.getRecipientAddress())
+                .deliveryName(order.getDeliveryName())
+                .deliveryRequest(order.getDeliveryRequest())
+                .build();
+
+        orderRepository.save(modifiedOrder);
+
+        List<OrderProduct> orderProductList = orderProductRepository.findByOrderUuid(orderUuid);
+
+        List<OrderProduct> modifiedOrderProductList = new ArrayList<>();
+
+        for (OrderProduct orderProduct : orderProductList) {
+            OrderProduct modifiedOrderProduct = OrderProduct.builder()
+                    .id(orderProduct.getId())
+                    .orderUuid(orderProduct.getOrderUuid())
+                    .productUuid(orderProduct.getProductUuid())
+                    .productName(orderProduct.getProductName())
+                    .brandName(orderProduct.getBrandName())
+                    .productPrice(orderProduct.getProductPrice())
+                    .discountedPrice(orderProduct.getDiscountedPrice())
+                    .colorValue(orderProduct.getColorValue())
+                    .sizeName(orderProduct.getSizeName())
+                    .productOption(orderProduct.getProductOption())
+                    .deliveryStatus(DeliveryStatus.CANCELED)
+                    .amount(orderProduct.getAmount())
+                    .thumbnailUrl(orderProduct.getThumbnailUrl())
+                    .deliveryCompany(orderProduct.getDeliveryCompany())
+                    .trackingNumber(orderProduct.getTrackingNumber())
+                    .build();
+
+            modifiedOrderProductList.add(modifiedOrderProduct);
+        }
+
+        orderProductRepository.saveAll(modifiedOrderProductList);
+    }
 
     private String assignRandomDeliveryCompany() {
         List<String> deliveryCompanies = Arrays.asList(
