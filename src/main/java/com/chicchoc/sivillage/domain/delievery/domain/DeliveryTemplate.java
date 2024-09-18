@@ -28,16 +28,20 @@ public class DeliveryTemplate {
     private String templateName;
 
     @Comment("대표 설정")
-    @Column(name = "is_rep", nullable = false)
+    @Column(name = "rep", nullable = false)
     private boolean isRep;
 
     @Comment("우편번호")
     @Column(name = "postal_code", length = 10, nullable = false)
     private String postalCode;
 
-    @Comment("배송지")
-    @Column(name = "recipient_address", length = 255, nullable = false)
-    private String recipientAddress;
+    @Comment("도로명 주소")
+    @Column(name = "road_name_address", length = 255, nullable = false)
+    private String roadNameAddress;
+
+    @Comment("지번 주소")
+    @Column(name = "lot_number_address", length = 255, nullable = false)
+    private String lotNumberAddress;
 
     @Comment("수신자 성명")
     @Column(name = "recipient_name", length = 30, nullable = false)

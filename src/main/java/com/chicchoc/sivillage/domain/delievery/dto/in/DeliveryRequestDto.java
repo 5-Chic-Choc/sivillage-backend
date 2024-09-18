@@ -13,7 +13,8 @@ public class DeliveryRequestDto {
     private String templateName;
     private boolean isRep;
     private String postalCode;
-    private String recipientAddress;
+    private String roadNameAddress;
+    private String lotNumberAddress;
     private String recipientName;
     private String recipientPhone;
     private String deliveryName;
@@ -26,7 +27,8 @@ public class DeliveryRequestDto {
                 .templateName(templateName)
                 .isRep(isRep)
                 .postalCode(postalCode)
-                .recipientAddress(recipientAddress)
+                .roadNameAddress(roadNameAddress)
+                .lotNumberAddress(lotNumberAddress)
                 .recipientName(recipientName)
                 .recipientPhone(recipientPhone)
                 .deliveryName(deliveryName)
