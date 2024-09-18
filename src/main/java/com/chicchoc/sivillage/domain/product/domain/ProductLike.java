@@ -35,13 +35,13 @@ public class ProductLike extends BaseEntity {
     private Boolean isLiked;
 
 
-    public ProductLike(String productUuid, String userUuid, boolean isLiked) {
+    public ProductLike(String productUuid, String userUuid, Boolean isLiked) {
         this.productUuid = productUuid;
         this.userUuid = userUuid;
         this.isLiked = isLiked;
     }
 
-    public void update(boolean isLiked) {
+    public void update(Boolean isLiked) {
         this.isLiked = isLiked;
     }
 }
