@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
 public class RefreshToken {
 
