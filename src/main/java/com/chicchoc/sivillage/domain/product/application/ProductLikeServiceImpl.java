@@ -14,9 +14,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
     private final ProductLikeRepository productLikeRepository;
 
-    /**
-     * 1. 좋아요가 있는지 확인 2. 좋아요가 있으면 수정(상태 변경) 3. 좋아요가 없으면 저장 좋아요 데이터 활용을 위해 기존 데이터의 상태를 수정하고 새 값을 넣는 로직으로 결정
-     */
+    // 좋아요 데이터 활용을 위해 기존 데이터의 상태를 수정하고 새 값을 넣는 로직으로 결정
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveAndUpdateProductLike(String productUuid, String userUuid) {
@@ -41,7 +39,9 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Override
     public Boolean isLikedProduct(String productUuid, String userUuid) {
 
-        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuidAndIsLiked(productUuid, userUuid,
+        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuidAndIsLiked(
+                        productUuid,
+                        userUuid,
                         true)
                 .orElse(null);
 

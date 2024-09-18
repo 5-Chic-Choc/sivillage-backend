@@ -24,7 +24,7 @@ public class ProductLikeController {
     private final ProductLikeService productLikeService;
 
     @CheckAuthentication
-    @Operation(summary = "상품 좋아요", description = "상품 좋아요를 등록하거나 취소합니다.")
+    @Operation(summary = "상품 좋아요", description = "@return : Void")
     @PostMapping("/{productUuid}")
     public BaseResponse<Void> likeProduct(@PathVariable String productUuid, Authentication authentication) {
 
