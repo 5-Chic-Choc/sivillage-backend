@@ -10,4 +10,8 @@ public interface DeliveryTemplateService {
     void createTemplate(String userUuid, DeliveryRequestDto deliveryRequestDto);
 
     List<DeliveryResponseDto> getTemplateList(String userUuid);
+
+    DeliveryResponseDto updateTemplate(String templateUuid, DeliveryRequestDto deliveryRequestDto);
+
+    void deleteTemplate(String templateUuid);
 }
