@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 public class AuthenticationCheckAspect {
 
     // @CheckAuthentication 어노테이션이 붙은 메서드에 대해서만 로그인 체크를 수행
-    @Before("@annotation(com.chicchoc.sivillage.global.common.aop.annotation.CheckAuthentication) && args(.., authentication)")
+    @Before("@annotation(com.chicchoc.sivillage.global.common.aop.annotation.CheckAuthentication)"
+            + " && args(.., authentication)")
     public void checkAuthentication(Authentication authentication) {
         if (authentication == null) {
             throw new IllegalArgumentException(BaseResponseStatus.NO_SIGN_IN.getMessage());
