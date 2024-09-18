@@ -1,15 +1,18 @@
 package com.chicchoc.sivillage.domain.delievery.vo.in;
 
 import com.chicchoc.sivillage.domain.delievery.dto.in.DeliveryRequestDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
 public class DeliveryRequestVo {
 
     private String templateName;
+    @JsonProperty("rep")
     private boolean isRep;
     private String postalCode;
-    private String recipientAddress;
+    private String roadNameAddress;
+    private String lotNumberAddress;
     private String recipientName;
     private String recipientPhone;
     private String deliveryName;
@@ -20,7 +23,8 @@ public class DeliveryRequestVo {
                 .templateName(templateName)
                 .isRep(isRep)
                 .postalCode(postalCode)
-                .recipientAddress(recipientAddress)
+                .roadNameAddress(roadNameAddress)
+                .lotNumberAddress(lotNumberAddress)
                 .recipientName(recipientName)
                 .recipientPhone(recipientPhone)
                 .deliveryName(deliveryName)
