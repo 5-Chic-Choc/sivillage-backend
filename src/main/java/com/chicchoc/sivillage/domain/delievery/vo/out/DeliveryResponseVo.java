@@ -16,6 +16,7 @@ public class DeliveryResponseVo {
     private String postalCode;
     private String roadNameAddress;
     private String lotNumberAddress;
+    private String detailAddress;
     private String recipientName;
     private String recipientPhone;
     private String deliveryName;

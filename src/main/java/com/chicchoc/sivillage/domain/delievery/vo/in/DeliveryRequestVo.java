@@ -13,6 +13,7 @@ public class DeliveryRequestVo {
     private String postalCode;
     private String roadNameAddress;
     private String lotNumberAddress;
+    private String detailAddress;
     private String recipientName;
     private String recipientPhone;
     private String deliveryName;
@@ -25,6 +26,7 @@ public class DeliveryRequestVo {
                 .postalCode(postalCode)
                 .roadNameAddress(roadNameAddress)
                 .lotNumberAddress(lotNumberAddress)
+                .detailAddress(detailAddress)
                 .recipientName(recipientName)
                 .recipientPhone(recipientPhone)
                 .deliveryName(deliveryName)

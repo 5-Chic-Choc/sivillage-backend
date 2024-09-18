@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeliveryTemplateRepository extends JpaRepository<DeliveryTemplate, Long> {
     List<DeliveryTemplate> findByUserUuid(String userUuid);
+
+    DeliveryTemplate findByTemplateUuid(String deliveryTemplateUuid);
 }
