@@ -1,9 +1,12 @@
 package com.chicchoc.sivillage.domain.product.domain;
 
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -19,24 +22,22 @@ public class ProductLike extends BaseEntity {
     @Column(name = "product_like_id")
     private Long id;
 
-    @Comment("회원 uuid")
-    @Column(nullable = false, length = 21, name = "user_uuid")
-    private String userUuid;
-
     @Comment("상품 uuid")
     @Column(nullable = false, length = 21, name = "product_uuid")
     private String productUuid;
+
+    @Comment("회원 uuid")
+    @Column(nullable = false, length = 21, name = "user_uuid")
+    private String userUuid;
 
     @Comment("좋아요 여부")
     @Column(nullable = false)
     private Boolean isLiked;
 
 
-
-    @Builder
-    public ProductLike(String userUuid, String productUuid, boolean isLiked) {
-        this.userUuid = userUuid;
+    public ProductLike(String productUuid, String userUuid, boolean isLiked) {
         this.productUuid = productUuid;
+        this.userUuid = userUuid;
         this.isLiked = isLiked;
     }
 
