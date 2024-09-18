@@ -74,7 +74,8 @@ public class OrderController {
     }
 
     @GetMapping("/{orderUuid}")
-    public BaseResponse<OrderDetailResponseVo> getOrderDetails(Authentication authentication, @PathVariable("orderUuid") String orderUuid) {
+    public BaseResponse<OrderDetailResponseVo> getOrderDetails(Authentication authentication,
+            @PathVariable("orderUuid") String orderUuid) {
         OrderDetailResponseDto orderDetailResponseDto = orderService.getOrderDetail(orderUuid);
         OrderDetailResponseVo orderDetailResponseVo = orderDetailResponseDto.toVo();
         return new BaseResponse<>(orderDetailResponseVo);
