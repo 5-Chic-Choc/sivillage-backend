@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DelieveryRequestDto {
+public class DeliveryRequestDto {
     private String templateName;
     private boolean isRep;
     private String postalCode;

@@ -1,10 +1,10 @@
 package com.chicchoc.sivillage.domain.delievery.vo.in;
 
-import com.chicchoc.sivillage.domain.delievery.dto.in.DelieveryRequestDto;
+import com.chicchoc.sivillage.domain.delievery.dto.in.DeliveryRequestDto;
 import lombok.Getter;
 
 @Getter
-public class DelieveryRequestVo {
+public class DeliveryRequestVo {
 
     private String templateName;
     private boolean isRep;
@@ -15,8 +15,8 @@ public class DelieveryRequestVo {
     private String deliveryName;
     private String deliveryRequest;
 
-    public DelieveryRequestDto toDto(){
-        return DelieveryRequestDto.builder()
+    public DeliveryRequestDto toDto(){
+        return DeliveryRequestDto.builder()
                 .templateName(templateName)
                 .isRep(isRep)
                 .postalCode(postalCode)
