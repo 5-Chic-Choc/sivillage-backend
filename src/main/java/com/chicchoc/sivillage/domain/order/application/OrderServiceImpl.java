@@ -37,7 +37,6 @@ public class OrderServiceImpl implements OrderService {
             String userUuid) {
 
         // 주문 정보 저장
-
         String orderUuid = nanoIdGenerator.generateNanoId();
         String paymentUuid = nanoIdGenerator.generateNanoId();
         LocalDateTime orderDate = LocalDateTime.now();
