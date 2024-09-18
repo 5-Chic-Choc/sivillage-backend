@@ -29,7 +29,7 @@ public class RefreshTokenService {
 
         if (existingToken != null) {
             // 토큰이 존재하면 수정
-            existingToken.setRefreshToken(newRefreshToken);
+            existingToken.update(newRefreshToken);
         } else {
             // 없으면 새로 저장
             RefreshToken newToken = new RefreshToken(uuid, newRefreshToken);
