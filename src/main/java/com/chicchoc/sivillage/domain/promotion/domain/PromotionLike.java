@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,15 +18,26 @@ public class PromotionLike {
     @Column(name = "promotion_like_id")
     private Long id;
 
-    @Comment("유저 UUID")
-    @Column(nullable = false, length = 21)
-    private String userUuid;
-
     @Comment("프로모션 UUID")
     @Column(nullable = false, length = 21)
     private String promotionUuid;
 
+    @Comment("유저 UUID")
+    @Column(nullable = false, length = 21)
+    private String userUuid;
+
+
     @Comment("좋아요 여부")
     @Column(nullable = false)
-    private boolean isLiked;
+    private Boolean isLiked;
+
+    public PromotionLike(String promotionUuid, String userUuid, Boolean isLiked) {
+        this.promotionUuid = promotionUuid;
+        this.userUuid = userUuid;
+        this.isLiked = isLiked;
+    }
+
+    public void update(Boolean isLiked) {
+        this.isLiked = isLiked;
+    }
 }

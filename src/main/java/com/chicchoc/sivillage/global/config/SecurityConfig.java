@@ -65,7 +65,8 @@ public class SecurityConfig {
                                         "/api/v1/mypage/**",
                                         "/api/v1/order/**",
                                         "/api/v1/payment/**",
-                                        "/api/v1/product/like"
+                                        "/api/v1/product/like",
+                                        "/api/v1/promotion/like"
                                 )
                                 .authenticated()
                                 // 위 URL 외의 요청은 인증 없이 접근 가능함
