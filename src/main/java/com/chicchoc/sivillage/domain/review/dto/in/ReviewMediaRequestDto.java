@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewMediaRequestDto {
+
     private Review review;
     private Long mediaId;
     private Integer mediaOrder;
 
-    public ReviewMedia toEntity(){
+    public ReviewMedia toEntity() {
         return ReviewMedia.builder()
                 .review(review)
                 .mediaId(mediaId)

@@ -57,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
                     MediaDto mediaDto = s3Service.uploadFile(file, "review");
                     Media media = mediaDto.toEntity();
                     Media savedMedia = mediaRepository.save(media);
-                    log.info("@@@@@@ ,{}" , savedMedia);
+                    log.info("@@@@@@ ,{}", savedMedia);
                     ReviewMediaRequestDto reviewMediaRequestDto = ReviewMediaRequestDto.builder()
                             .review(review)
                             .mediaId(savedMedia.getId())

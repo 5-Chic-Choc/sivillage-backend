@@ -70,21 +70,21 @@ public class S3Service {
     }
 
     private String fileTypeChecker(String fileNameExtension) {
-        String[] IMAGE_EXTENSIONS = {
-                ".jpeg", ".jpg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".heif", ".svg", ".ico"
+        String[] imageExtensions = {
+            ".jpeg", ".jpg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".heif", ".svg", ".ico"
         };
 
-        String[] VIDEO_EXTENSIONS = {
-                ".mp4", ".mov", ".avi", ".wmv", ".flv", ".mkv", ".webm", ".mpeg", ".mpg", ".3gp", ".ogg", ".ogv",
-                ".mts", ".ts", ".m4v"
+        String[] videoExtensions = {
+            ".mp4", ".mov", ".avi", ".wmv", ".flv", ".mkv", ".webm", ".mpeg", ".mpg", ".3gp", ".ogg", ".ogv", ".mts",
+            ".ts", ".m4v"
         };
-        for (String ext : IMAGE_EXTENSIONS) {
+        for (String ext : imageExtensions) {
             if (ext.equals(fileNameExtension)) {
                 return "이미지";
             }
         }
 
-        for (String ext : VIDEO_EXTENSIONS) {
+        for (String ext : videoExtensions) {
             if (ext.equals(fileNameExtension)) {
                 return "동영상";
             }

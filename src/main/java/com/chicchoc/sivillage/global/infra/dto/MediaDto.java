@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MediaDto {
+
     private String mediaUrl;
     private String mediaType;
     private String description;
 
-    public Media toEntity(){
+    public Media toEntity() {
         return Media.builder()
                 .mediaUrl(mediaUrl)
                 .mediaType(mediaType)
