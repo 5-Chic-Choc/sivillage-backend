@@ -24,11 +24,15 @@ public class Brand {
     private String brandUuid;
 
     @Comment("브랜드 이름")
-    @Column(nullable = false, length = 255, unique = true)
+    @Column(nullable = false, length = 255)
     private String name;
 
+    @Comment("브랜드 이름")
+    @Column(nullable = false, length = 255)
+    private String nameKo;
+
     @Comment("브랜드 로고 URL")
-    @Column(nullable = false, length = 2000)
+    @Column(nullable = true, length = 2000)
     private String logoUrl;
 
     @Comment("브랜드 리스트 타입")
@@ -42,5 +46,16 @@ public class Brand {
     public void updateBrand(String name, String logoUrl) {
         this.name = name;
         this.logoUrl = logoUrl;
+    }
+
+    @Builder
+    public Brand(String brandUuid, String name, String nameKo, String logoUrl, String brandListType,
+            String brandIndexLetter) {
+        this.brandUuid = brandUuid;
+        this.name = name;
+        this.nameKo = nameKo;
+        this.logoUrl = logoUrl;
+        this.brandListType = brandListType;
+        this.brandIndexLetter = brandIndexLetter;
     }
 }
