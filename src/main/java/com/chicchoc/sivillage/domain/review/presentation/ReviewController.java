@@ -6,7 +6,6 @@ import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.vo.in.ReviewRequestVo;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import java.util.Comparator;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public BaseResponse<Void> createReview(Authentication authentication, @RequestBody ReviewRequestVo reviewRequestVo) {
+    public BaseResponse<Void> createReview(Authentication authentication,
+            @RequestBody ReviewRequestVo reviewRequestVo) {
         ReviewRequestDto reviewRequestDto = reviewRequestVo.toDto();
         reviewService.addReview(authentication.getName(), reviewRequestDto);
         return new BaseResponse<>();
