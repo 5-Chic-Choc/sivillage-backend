@@ -6,8 +6,10 @@ import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
+import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void addReview(ReviewRequestDto reviewRequestDto) {
-        String userUuid = JwtUtil.getUserUuid();
+    public void addReview(String userUuid, ReviewRequestDto reviewRequestDto) {
         String reviewUuid = nanoIdGenerator.generateNanoId();
         Optional<Member> member = memberRepository.findByUuid(userUuid);
         String userEmail = null;
@@ -40,7 +41,9 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewResponseDto> getReviewByProductUuid(String productUuid) {
         List<Review> reviewList = reviewRepository.findByProductUuid(productUuid);
 
-        return commonDtoStream(reviewList);
+        return commonDtoStream(reviewList).stream()
+                .sorted(Comparator.comparingInt(ReviewResponseDto::getLikedCnt).reversed())
+                .toList();
     }
 
     @Override

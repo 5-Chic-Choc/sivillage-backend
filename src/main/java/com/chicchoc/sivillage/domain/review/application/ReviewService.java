@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReviewService {
 
-    void addReview(ReviewRequestDto reviewRequestDto);
+    void addReview(String userUuid, ReviewRequestDto reviewRequestDto);
 
     List<ReviewResponseDto> getReviewByProductUuid(String productUuid);
 

@@ -6,9 +6,11 @@ import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.vo.in.ReviewRequestVo;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import java.util.Comparator;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +26,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
+    public BaseResponse<Void> createReview(Authentication authentication, @RequestBody ReviewRequestVo reviewRequestVo) {
         ReviewRequestDto reviewRequestDto = reviewRequestVo.toDto();
-        reviewService.addReview(reviewRequestDto);
+        reviewService.addReview(authentication.getName(), reviewRequestDto);
         return new BaseResponse<>();
     }
 
@@ -36,8 +38,8 @@ public class ReviewController {
         List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByProductUuid(productUuid);
 
         List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
-                .map(ReviewResponseDto::toResponseVo)  // 각각의 ReviewResponseDto를 ReviewResponseVo로 변환
-                .toList();         // 변환된 리스트를 List로 수집
+                .map(ReviewResponseDto::toResponseVo)
+                .toList();
 
         return new BaseResponse<>(reviewResponseVoList);
     }
@@ -52,6 +54,7 @@ public class ReviewController {
 
         return new BaseResponse<>(reviewResponseVoList);
     }
+
 }
 
 
