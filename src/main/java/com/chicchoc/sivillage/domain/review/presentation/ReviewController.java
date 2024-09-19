@@ -8,13 +8,16 @@ import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,9 +28,10 @@ public class ReviewController {
 
     @PostMapping
     public BaseResponse<Void> createReview(Authentication authentication,
-            @RequestBody ReviewRequestVo reviewRequestVo) {
+            @RequestPart ReviewRequestVo reviewRequestVo,
+            @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
 
-        reviewService.addReview(authentication.getName(), reviewRequestVo.toDto());
+        reviewService.addReview(authentication.getName(), reviewRequestVo.toDto(), fileList);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
