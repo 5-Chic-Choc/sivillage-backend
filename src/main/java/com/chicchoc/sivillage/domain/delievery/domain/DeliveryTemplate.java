@@ -43,6 +43,10 @@ public class DeliveryTemplate {
     @Column(name = "lot_number_address", length = 255, nullable = false)
     private String lotNumberAddress;
 
+    @Comment("상세 주소")
+    @Column(name = "detail_address", length = 255, nullable = false)
+    private String detailAddress;
+
     @Comment("수신자 성명")
     @Column(name = "recipient_name", length = 30, nullable = false)
     private String recipientName;

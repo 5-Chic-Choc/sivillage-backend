@@ -3,8 +3,10 @@ package com.chicchoc.sivillage.domain.delievery.dto.in;
 import com.chicchoc.sivillage.domain.delievery.domain.DeliveryTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class DeliveryRequestDto {
     private String postalCode;
     private String roadNameAddress;
     private String lotNumberAddress;
+    private String detailAddress;
     private String recipientName;
     private String recipientPhone;
     private String deliveryName;
@@ -29,6 +32,7 @@ public class DeliveryRequestDto {
                 .postalCode(postalCode)
                 .roadNameAddress(roadNameAddress)
                 .lotNumberAddress(lotNumberAddress)
+                .detailAddress(detailAddress)
                 .recipientName(recipientName)
                 .recipientPhone(recipientPhone)
                 .deliveryName(deliveryName)
