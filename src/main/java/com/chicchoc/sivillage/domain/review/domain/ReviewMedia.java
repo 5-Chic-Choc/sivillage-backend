@@ -14,8 +14,8 @@ public class ReviewMedia {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", nullable = false)
-    private Review review;
+    @JoinColumn(name = "review_uuid", nullable = false)
+    private Review reviewUuid;
 
     @Column(name = "media_id")
     private Long mediaId;

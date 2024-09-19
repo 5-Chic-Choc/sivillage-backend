@@ -1,11 +1,11 @@
 package com.chicchoc.sivillage.domain.review.dto.out;
 
+import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -51,5 +51,28 @@ public class ReviewResponseDto {
                 .reviewRateText3(reviewRateText3)
                 .createdAt(createdAt)
                 .build();
+    }
+
+    public static List<ReviewResponseDto> fromEntity(List<Review> reviewList) {
+        return reviewList.stream()
+                .map(review -> ReviewResponseDto.builder()
+                        .reviewUuid(review.getReviewUuid())
+                        .productUuid(review.getProductUuid())
+                        .userUuid(review.getUserUuid())
+                        .sizeName(review.getSizeName())
+                        .colorValue(review.getColorValue())
+                        .reviewContent(review.getReviewContent())
+                        .starPoint(review.getStarPoint())
+                        .likedCnt(review.getLikedCnt())
+                        .reviewerEmail(review.getReviewerEmail())
+                        .reviewRateType1(review.getReviewRateType1())
+                        .reviewRateText1(review.getReviewRateText1())
+                        .reviewRateType2(review.getReviewRateType2())
+                        .reviewRateText2(review.getReviewRateText2())
+                        .reviewRateType3(review.getReviewRateType3())
+                        .reviewRateText3(review.getReviewRateText3())
+                        .createdAt(review.getCreatedAt())
+                        .build())
+                .toList();
     }
 }

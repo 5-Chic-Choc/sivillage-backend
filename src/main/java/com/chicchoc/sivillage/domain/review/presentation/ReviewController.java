@@ -1,13 +1,12 @@
 package com.chicchoc.sivillage.domain.review.presentation;
 
 import com.chicchoc.sivillage.domain.review.application.ReviewService;
-import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
 import com.chicchoc.sivillage.domain.review.vo.in.ReviewRequestVo;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,17 +26,17 @@ public class ReviewController {
     @PostMapping
     public BaseResponse<Void> createReview(Authentication authentication,
             @RequestBody ReviewRequestVo reviewRequestVo) {
-        ReviewRequestDto reviewRequestDto = reviewRequestVo.toDto();
-        reviewService.addReview(authentication.getName(), reviewRequestDto);
-        return new BaseResponse<>();
+
+        reviewService.addReview(authentication.getName(), reviewRequestVo.toDto());
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @GetMapping("/product/{productUuid}")
     public BaseResponse<List<ReviewResponseVo>> getReviewByProductUuId(
             @PathVariable("productUuid") String productUuid) {
-        List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByProductUuid(productUuid);
 
-        List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
+        List<ReviewResponseVo> reviewResponseVoList = reviewService.getReviewByProductUuid(productUuid).stream()
                 .map(ReviewResponseDto::toResponseVo)
                 .toList();
 
@@ -45,10 +44,10 @@ public class ReviewController {
     }
 
     @GetMapping("/user")
-    public BaseResponse<List<ReviewResponseVo>> getReviewByUserUuid() {
-        List<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByUserUuid();
+    public BaseResponse<List<ReviewResponseVo>> getReviewByUserUuid(Authentication authentication) {
 
-        List<ReviewResponseVo> reviewResponseVoList = reviewResponseDto.stream()
+        List<ReviewResponseVo> reviewResponseVoList = reviewService.getReviewByUserUuid(authentication.getName())
+                .stream()
                 .map(ReviewResponseDto::toResponseVo)
                 .toList();
 

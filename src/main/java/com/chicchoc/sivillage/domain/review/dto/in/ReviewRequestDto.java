@@ -30,7 +30,6 @@ public class ReviewRequestDto {
                 .sizeName(sizeName)
                 .colorValue(colorValue)
                 .reviewContent(reviewContent)
-                .likedCnt(0)
                 .starPoint(starPoint)
                 .reviewerEmail(reviewerEmail)
                 .reviewRateType1(reviewRateType1)
