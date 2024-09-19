@@ -1,7 +1,13 @@
 package com.chicchoc.sivillage.domain.order.dto.out;
 
 import com.chicchoc.sivillage.domain.order.vo.out.OrderDetailResponseVo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDetailResponseDto {
 
     private String ordererName;
