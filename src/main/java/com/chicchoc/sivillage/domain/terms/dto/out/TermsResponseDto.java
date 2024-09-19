@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TermsResponseDto {
+
     private Long id;
     private Long parent;
     private Boolean isRequired;
@@ -23,10 +24,9 @@ public class TermsResponseDto {
         this.title = terms.getTitle();
         this.content = terms.getContent();
 
-        // null 체크 후 빈 리스트로 초기화
         if (childTerms != null) {
             for (Terms childTerm : childTerms) {
-                if (childTerm.getParent().equals(terms.getId()) && childTerm != null) {
+                if (childTerm.getParent().equals(terms.getId())) {
                     children.add(new TermsResponseDto(childTerm, childTerms));
                 }
             }

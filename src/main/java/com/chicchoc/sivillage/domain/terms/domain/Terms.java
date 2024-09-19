@@ -1,16 +1,18 @@
 package com.chicchoc.sivillage.domain.terms.domain;
 
-import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -39,16 +41,22 @@ public class Terms extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Comment("약관 종류")
+    @Column(name = "type", nullable = false)
+    private TermsType type;
+
     @Comment("view 여부")
     @Column(name = "isview", nullable = false)
     private Boolean isView;
 
     @Builder
-    public Terms(Long parent, Boolean isRequired, String title, String content, Boolean isView) {
+    public Terms(Long parent, Boolean isRequired, String title, String content, TermsType type, Boolean isView) {
         this.parent = parent;
         this.isRequired = isRequired;
         this.title = title;
         this.content = content;
+        this.type = type;
         this.isView = isView;
     }
 }
