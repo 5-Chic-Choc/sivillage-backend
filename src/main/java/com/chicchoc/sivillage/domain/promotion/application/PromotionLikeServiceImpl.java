@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     private final PromotionLikeRepository promotionLikeRepository;
 
     //제품 좋아요와 달리, 이벤트 좋아요는 데이터 활용성이 떨어지므로 좋아요 데이터를 삭제하는 로직으로 결정
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveAndDeletePromotionLike(String promotionUuid, String userUuid) {
         //1. 좋아요가 있는지 확인
@@ -33,6 +35,7 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     }
 
     // 좋아요 여부 확인
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean isLikedPromotion(String promotionUuid, String userUuid) {
 
@@ -46,6 +49,7 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     }
 
     // 좋아요한 이벤트 전체 조회
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public List<String> getLikedPromotionList(String userUuid) {
 

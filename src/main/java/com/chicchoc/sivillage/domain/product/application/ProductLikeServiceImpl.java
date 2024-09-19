@@ -36,6 +36,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     }
 
     // 좋아요 여부 확인
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean isLikedProduct(String productUuid, String userUuid) {
 
@@ -49,6 +50,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     }
 
     // 좋아요한 상품 전체 조회
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public List<String> getLikedProductList(String userUuid) {
 
