@@ -9,9 +9,7 @@ public interface ProductService {
 
     List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto);
 
-    Long findProductIdByUuid(String productUuid);
-
-    List<ProductOptionResponseDto> getProductOptions(Long productId);
+    List<ProductOptionResponseDto> getProductOptions(String productUuid);
 
     List<ProductDetailResponseDto> getProductDetails(String productOptionUuid);
 

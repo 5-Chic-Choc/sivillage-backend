@@ -27,6 +27,10 @@ public class ProductOption {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Comment("상품 uuid")
+    @Column(nullable = false, length = 21, name = "product_uuid")
+    private String productUuid;
+
     @Comment("색상ID")
     @Column(nullable = false)
     private Long sizeId;

@@ -64,10 +64,7 @@ public class ProductController {
     @GetMapping("/{productUuid}")
     public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid) {
 
-        // UUID를 사용하여 productId를 찾는다
-        Long productId = productService.findProductIdByUuid(productUuid);
-
-        List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productId);
+        List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productUuid);
 
         List<ProductOptionResponseVo> productOptionResponseVos = productOptionResponseDtos.stream()
                 .map(ProductOptionResponseDto::toResponseVo)

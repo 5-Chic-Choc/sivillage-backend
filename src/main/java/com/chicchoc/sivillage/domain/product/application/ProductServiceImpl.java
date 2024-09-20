@@ -34,15 +34,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Long findProductIdByUuid(String productUuid) {
-        Product product = productRepository.findByProductUuid(productUuid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
-        return product.getId();
-    }
-
-    @Override
-    public List<ProductOptionResponseDto> getProductOptions(Long productId) {
-        List<ProductOption> productOptions = productOptionRepository.findByProductId(productId);
+    public List<ProductOptionResponseDto> getProductOptions(String productUuid) {
+        List<ProductOption> productOptions = productOptionRepository.findByProductUuid(productUuid);
         if (productOptions.isEmpty()) {
             throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
         }
