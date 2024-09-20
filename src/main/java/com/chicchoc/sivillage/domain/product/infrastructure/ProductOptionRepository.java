@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
-    List<ProductOption> findByProductId(Long productId);
+    List<ProductOption> findByProductUuid(String productUuid);
 
     Optional<ProductOption> findByProductOptionUuid(String productOptionUuid);
 }

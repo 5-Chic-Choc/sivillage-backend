@@ -14,7 +14,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,21 +25,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Product> findFilteredProducts(ProductRequestDto dto,
-                                              int offset,
-                                              int perPage,
-                                              OrderSpecifier<?> orderSpecifier) {
+    public List<Product> findFilteredProducts(ProductRequestDto dto) {
         final QProduct product = QProduct.product;
         final QProductOption productOption = QProductOption.productOption;
         final QProductCategory productCategory = QProductCategory.productCategory;
 
         BooleanBuilder predicate = createPredicate(dto);
 
+        int page = dto.getPage() != null ? dto.getPage() : 1;
+        int perPage = dto.getPerPage() != null ? dto.getPerPage() : 20;
+        int offset = (page - 1) * perPage;
+
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(dto.getSortBy(), dto.isAscending());
+
         return queryFactory.selectFrom(product)
-                .leftJoin(productOption)
-                .on(product.id.eq(productOption.product.id))
-                .leftJoin(productCategory)
-                .on(product.id.eq(productCategory.productId))
+                .leftJoin(productOption).on(product.id.eq(productOption.product.id))
+                .leftJoin(productCategory).on(product.id.eq(productCategory.productId))
                 .where(predicate)
                 .groupBy(product.id, productOption.price, productOption.discountRate)
                 .offset(offset)
@@ -45,6 +48,27 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(orderSpecifier)
                 .fetch();
     }
+
+    private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAscending) {
+        final QProduct product = QProduct.product;
+        final QProductOption productOption = QProductOption.productOption;
+
+        Map<String, OrderSpecifier<?>> orderMap = new HashMap<>();
+        orderMap.put(
+                "discount_rate", isAscending ? productOption.discountRate.asc() : productOption.discountRate.desc());
+        orderMap.put("price", isAscending ? productOption.price.asc() : productOption.price.desc());
+        orderMap.put("name", isAscending ? product.productName.asc() : product.productName.desc());
+        orderMap.put("createdAt", isAscending ? product.createdAt.asc() : product.createdAt.desc());
+
+        OrderSpecifier<?> orderSpecifier = orderMap.get(sortBy);
+
+        if (orderSpecifier == null) {
+            throw new BaseException(BaseResponseStatus.INVALID_SORT_BY_PARAMETER);
+        }
+
+        return orderSpecifier;
+    }
+
 
     private BooleanBuilder createPredicate(ProductRequestDto dto) {
         final QProduct product = QProduct.product;
