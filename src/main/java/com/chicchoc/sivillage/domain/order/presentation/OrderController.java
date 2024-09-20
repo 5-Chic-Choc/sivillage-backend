@@ -13,9 +13,12 @@ import com.chicchoc.sivillage.domain.order.vo.in.OrderRequestVo;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderDetailResponseVo;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,14 +37,8 @@ public class OrderController {
     private final CartService cartService;
 
     @PostMapping
-    public BaseResponse<Void> createOrder(Authentication authentication, @RequestBody OrderRequestVo orderRequestVo) {
-
-        OrderRequestDto orderRequestDto = orderRequestVo.toDto();
-
-        List<OrderProductRequestVo> orderProductRequestVoList = orderRequestVo.getOrderProductRequestVoList();
-        List<OrderProductRequestDto> orderProductRequestDtoList = orderProductRequestVoList.stream()
-                .map(OrderProductRequestVo::toDto)
-                .toList();
+    public BaseResponse<Void> createOrder(@AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody OrderRequestVo orderRequestVo) {
 
         if (orderRequestVo.getCartUuidRequestVoList() != null && !orderRequestVo.getCartUuidRequestVoList().isEmpty()) {
             List<CartUuidRequestVo> cartUuidRequestVoList = orderRequestVo.getCartUuidRequestVoList();
@@ -52,10 +49,12 @@ public class OrderController {
             // cartService.deleteCartItems(cartUuidRequestDtoList);
         }
 
-        String userUuid = authentication.getName();
-        orderService.createOrder(orderRequestDto, orderProductRequestDtoList, userUuid);
+        orderService.createOrder(orderRequestVo.toDto(userDetails.getUsername()),
+                orderRequestVo.getOrderProductRequestVoList().stream()
+                        .map(OrderProductRequestVo::toDto)
+                        .toList());
 
-        return new BaseResponse<>();
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @GetMapping

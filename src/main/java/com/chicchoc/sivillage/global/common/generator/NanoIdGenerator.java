@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 public class NanoIdGenerator {
 
     // 기본 길이로 NanoID 생성
-    public String generateNanoId() {
+    public static String generateNanoId() {
         return NanoIdUtils.randomNanoId();
     }
 
     // 사용자 지정 길이 및 문자 집합으로 NanoID 생성
-    public String generateNanoId(int length, char[] alphabet) {
+    public static String generateNanoId(int length, char[] alphabet) {
         return NanoIdUtils.randomNanoId(NanoIdUtils.DEFAULT_NUMBER_GENERATOR, alphabet, length);
     }
 }

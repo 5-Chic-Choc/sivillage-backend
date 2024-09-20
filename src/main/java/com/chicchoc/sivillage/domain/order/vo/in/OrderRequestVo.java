@@ -20,8 +20,9 @@ public class OrderRequestVo {
     private List<OrderProductRequestVo> orderProductRequestVoList;
     private List<CartUuidRequestVo> cartUuidRequestVoList;
 
-    public OrderRequestDto toDto() {
+    public OrderRequestDto toDto(String userUuid) {
         return OrderRequestDto.builder()
+                .userUuid(userUuid)
                 .ordererName(ordererName)
                 .ordererEmail(ordererEmail)
                 .ordererPhone(ordererPhone)

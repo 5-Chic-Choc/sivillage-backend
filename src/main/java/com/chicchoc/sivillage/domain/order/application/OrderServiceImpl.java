@@ -30,19 +30,15 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
-    private final NanoIdGenerator nanoIdGenerator;
 
     @Override
-    public void createOrder(OrderRequestDto orderRequestDto, List<OrderProductRequestDto> orderProductRequestDtoList,
-            String userUuid) {
+    public void createOrder(OrderRequestDto orderRequestDto, List<OrderProductRequestDto> orderProductRequestDtoList) {
+
 
         // 주문 정보 저장
-        String orderUuid = nanoIdGenerator.generateNanoId();
-        String paymentUuid = nanoIdGenerator.generateNanoId();
-        LocalDateTime orderDate = LocalDateTime.now();
+        String paymentUuid = NanoIdGenerator.generateNanoId();
 
-        Order order = orderRequestDto.toEntity(orderUuid, userUuid, paymentUuid, orderDate, OrderStatus.CREATED);
-        orderRepository.save(order);
+        orderRepository.save(orderRequestDto.toEntity(paymentUuid, LocalDateTime.now()));
 
         // 주문 제품 정보 저장
 
@@ -52,27 +48,19 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderProduct> orderProductEntities = new ArrayList<>();
 
-        for (OrderProductRequestDto productDto : orderProductRequestDtoList) {
-            String brandName = productDto.getBrandName();
+        orderProductRequestDtoList.stream()
+                .peek(productDto -> {
+                    String brandName = productDto.getBrandName();
 
-            // 동일 브랜드에 대해 같은 운송장 번호 및 택배사 할당
-            if (!brandToTrackingMap.containsKey(brandName) && !brandToDeliveryCompanyMap.containsKey(brandName)) {
-                String trackingNumber = nanoIdGenerator.generateNanoId(); // 운송장 번호 생성
-                String deliveryCompany = assignRandomDeliveryCompany(); //  동일 택배사 부여
-                brandToTrackingMap.put(brandName, trackingNumber);
-                brandToDeliveryCompanyMap.put(brandName, deliveryCompany);
-            }
-
-            // 해당 브랜드의 운송장 번호와 택배사 가져오기
-            String trackingNumber = brandToTrackingMap.get(brandName);
-            String deliveryCompany = brandToDeliveryCompanyMap.get(brandName);
-
-            // 각 OrderProduct 엔티티 생성 (toEntity 사용)
-            OrderProduct orderProduct = productDto.toEntity(orderUuid, deliveryCompany, trackingNumber,
-                    DeliveryStatus.ACCEPT);
-
-            orderProductEntities.add(orderProduct);
-        }
+                    // 동일 브랜드에 대해 같은 운송장 번호 및 택배사 할당
+                    brandToTrackingMap.computeIfAbsent(brandName, k -> NanoIdGenerator.generateNanoId());
+                    brandToDeliveryCompanyMap.computeIfAbsent(brandName, k -> assignRandomDeliveryCompany());
+                })
+                .map(productDto -> productDto.toEntity(orderRequestDto.getOrderUuid(),
+                        brandToDeliveryCompanyMap.get(productDto.getBrandName()),
+                        brandToTrackingMap.get(productDto.getBrandName()),
+                        DeliveryStatus.PREPARING_SHIPMENT))
+                .forEach(orderProductEntities::add);
 
         orderProductRepository.saveAll(orderProductEntities);
     }
@@ -112,7 +100,6 @@ public class OrderServiceImpl implements OrderService {
                         .updatedAt(orderProduct.getUpdatedAt())
                         .build())
                 .toList();
-
     }
 
     @Override
@@ -135,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(String orderUuid) {
 
-        Order order = orderRepository.findByOrderUuid(orderUuid);;
+        Order order = orderRepository.findByOrderUuid(orderUuid);
 
         Order modifiedOrder = Order.builder()
                 .id(order.getId())
@@ -143,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
                 .userUuid(order.getUserUuid())
                 .paymentUuid(order.getPaymentUuid())
                 .orderedAt(order.getOrderedAt())
-                .orderStatus(OrderStatus.CANCELED)
+                .orderStatus(OrderStatus.CANCELLED)
                 .ordererName(order.getOrdererName())
                 .ordererEmail(order.getOrdererEmail())
                 .ordererPhone(order.getOrdererPhone())
@@ -173,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
                     .colorValue(orderProduct.getColorValue())
                     .sizeName(orderProduct.getSizeName())
                     .productOption(orderProduct.getProductOption())
-                    .deliveryStatus(DeliveryStatus.CANCELED)
+                    .deliveryStatus(DeliveryStatus.DELIVERY_FAILED)
                     .amount(orderProduct.getAmount())
                     .thumbnailUrl(orderProduct.getThumbnailUrl())
                     .deliveryCompany(orderProduct.getDeliveryCompany())
