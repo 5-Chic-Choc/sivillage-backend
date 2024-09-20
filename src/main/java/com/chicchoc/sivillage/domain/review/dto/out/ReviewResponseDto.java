@@ -1,7 +1,6 @@
 package com.chicchoc.sivillage.domain.review.dto.out;
 
 import com.chicchoc.sivillage.domain.review.domain.Review;
-import com.chicchoc.sivillage.domain.review.domain.ReviewMedia;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

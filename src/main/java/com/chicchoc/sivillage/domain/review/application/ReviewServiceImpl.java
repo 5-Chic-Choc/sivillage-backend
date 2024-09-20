@@ -16,7 +16,6 @@ import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.infra.application.S3Service;
-import com.chicchoc.sivillage.global.infra.dto.MediaDto;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -45,27 +44,22 @@ public class ReviewServiceImpl implements ReviewService {
         Member member = memberRepository.findByUuid(userUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        Review review = reviewRequestDto.toEntity(nanoIdGenerator.generateNanoId(), userUuid, member.getEmail());
-
-        Review savedReview = reviewRepository.save(review);
-
-        // 여기까지 단순 리뷰 저장 로직
-        // 아래는 이미지 S3및 DB 저장
+        Review savedReview = reviewRepository.save(
+                reviewRequestDto.toEntity(nanoIdGenerator.generateNanoId(), userUuid, member.getEmail()));
 
         if (!fileList.isEmpty()) {
             int imgOrder = 1;
             for (MultipartFile file : fileList) {
                 try {
-                    MediaDto mediaDto = s3Service.uploadFile(file, "review");
-                    Media media = mediaDto.toEntity();
-                    Media savedMedia = mediaRepository.save(media);
-                    log.info("@@@@@@ ,{}", savedMedia);
-                    ReviewMediaRequestDto reviewMediaRequestDto = ReviewMediaRequestDto.builder()
-                            .reviewUuid(savedReview.getReviewUuid())
-                            .mediaId(savedMedia.getId())
-                            .mediaOrder(imgOrder++)
-                            .build();
-                    reviewMediaRepository.save(reviewMediaRequestDto.toEntity());
+                    Media savedMedia = mediaRepository.save(s3Service.uploadFile(file, "review").toEntity());
+
+                    reviewMediaRepository.save(
+                            ReviewMediaRequestDto.builder()
+                                    .reviewUuid(savedReview.getReviewUuid())
+                                    .mediaId(savedMedia.getId())
+                                    .mediaOrder(imgOrder++)
+                                    .build().toEntity()
+                    );
                 } catch (Exception e) {
                     throw new BaseException(BaseResponseStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -79,18 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<Review> reviewList = reviewRepository.findByProductUuid(productUuid);
 
-        List<String> reviewUuidList = reviewList.stream()
-                .map(Review::getReviewUuid)
-                .toList();
-
-        List<ReviewMedia> reviewMediaList = reviewMediaRepository.findByReviewUuidIn(reviewUuidList);
-
-        List<ReviewMediaResponseDto> reviewMediaResponseDtoList = reviewMediaList.stream()
-                .map(ReviewMediaResponseDto::fromEntity)
-                .toList();
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = reviewMediaResponseDtoList.stream()
-                .collect(Collectors.groupingBy(ReviewMediaResponseDto::getReviewUuid));
+        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
 
         return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap).stream()
                 .sorted(Comparator.comparingInt(ReviewResponseDto::getLikedCnt).reversed()).toList();
@@ -102,24 +85,28 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<Review> reviewList = reviewRepository.findByUserUuid(userUuid);
 
-        List<String> reviewUuidList = reviewList.stream()
-                .map(Review::getReviewUuid)
-                .toList();
-
-        List<ReviewMedia> reviewMediaList = reviewMediaRepository.findByReviewUuidIn(reviewUuidList);
-
-        List<ReviewMediaResponseDto> reviewMediaResponseDtoList = reviewMediaList.stream()
-                .map(ReviewMediaResponseDto::fromEntity)
-                .toList();
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = reviewMediaResponseDtoList.stream()
-                .collect(Collectors.groupingBy(ReviewMediaResponseDto::getReviewUuid));
+        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
 
         return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap);
     }
 
     @Override
     public void deleteReview(String reviewUuid) {
-//        Review review = reviewRepository.findByReviewUuid(reviewUuid).orElseThrow(() -> new BaseException(BaseResponseStatus.valueOf()));
+        reviewRepository.delete(reviewRepository.findByReviewUuid(reviewUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_REVIEW)));
+
+        reviewMediaRepository.deleteAll(reviewMediaRepository.findByReviewUuid(reviewUuid));
+    }
+
+    private Map<String, List<ReviewMediaResponseDto>> getReviews(List<Review> reviewList) {
+
+        List<ReviewMedia> reviewMediaList = reviewMediaRepository.findByReviewUuidIn(reviewList.stream()
+                .map(Review::getReviewUuid)
+                .toList());
+
+        return reviewMediaList.stream()
+                .map(ReviewMediaResponseDto::fromEntity)
+                .toList().stream()
+                .collect(Collectors.groupingBy(ReviewMediaResponseDto::getReviewUuid));
     }
 }

@@ -8,12 +8,11 @@ import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,24 +39,25 @@ public class ReviewController {
     public BaseResponse<List<ReviewResponseVo>> getReviewByProductUuId(
             @PathVariable("productUuid") String productUuid) {
 
-        List<ReviewResponseVo> reviewResponseVoList = reviewService.getReviewByProductUuid(productUuid).stream()
+        return new BaseResponse<>(reviewService.getReviewByProductUuid(productUuid).stream()
                 .map(ReviewResponseDto::toResponseVo)
-                .toList();
-
-        return new BaseResponse<>(reviewResponseVoList);
+                .toList());
     }
 
     @GetMapping("/user")
     public BaseResponse<List<ReviewResponseVo>> getReviewByUserUuid(Authentication authentication) {
 
-        List<ReviewResponseVo> reviewResponseVoList = reviewService.getReviewByUserUuid(authentication.getName())
+        return new BaseResponse<>(reviewService.getReviewByUserUuid(authentication.getName())
                 .stream()
                 .map(ReviewResponseDto::toResponseVo)
-                .toList();
-
-        return new BaseResponse<>(reviewResponseVoList);
+                .toList());
     }
 
+    @DeleteMapping("/{reviewUuid}")
+    public BaseResponse<Void> deleteReview(@PathVariable("reviewUuid") String reviewUuid) {
+        reviewService.deleteReview(reviewUuid);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    }
 }
 
 

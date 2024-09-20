@@ -1,6 +1,5 @@
 package com.chicchoc.sivillage.domain.review.dto.in;
 
-import com.chicchoc.sivillage.domain.review.domain.Review;
 import com.chicchoc.sivillage.domain.review.domain.ReviewMedia;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

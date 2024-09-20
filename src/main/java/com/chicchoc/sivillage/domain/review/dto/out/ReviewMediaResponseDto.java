@@ -17,7 +17,7 @@ public class ReviewMediaResponseDto {
     private Long mediaId;
     private int mediaOrder;
 
-    public ReviewMediaResponseVo toVo(){
+    public ReviewMediaResponseVo toVo() {
         return ReviewMediaResponseVo.builder()
                 .reviewUuid(reviewUuid)
                 .mediaId(mediaId)
@@ -25,7 +25,7 @@ public class ReviewMediaResponseDto {
                 .build();
     }
 
-    public static ReviewMediaResponseDto fromEntity(ReviewMedia reviewMedia){
+    public static ReviewMediaResponseDto fromEntity(ReviewMedia reviewMedia) {
         return ReviewMediaResponseDto.builder()
                 .reviewUuid(reviewMedia.getReviewUuid())
                 .mediaId(reviewMedia.getMediaId())
