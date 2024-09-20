@@ -54,7 +54,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         final QProductOption productOption = QProductOption.productOption;
 
         Map<String, OrderSpecifier<?>> orderMap = new HashMap<>();
-        orderMap.put("discount_rate", isAscending ? productOption.discountRate.asc() : productOption.discountRate.desc());
+        orderMap.put(
+                "discount_rate", isAscending ? productOption.discountRate.asc() : productOption.discountRate.desc());
         orderMap.put("price", isAscending ? productOption.price.asc() : productOption.price.desc());
         orderMap.put("name", isAscending ? product.productName.asc() : product.productName.desc());
         orderMap.put("createdAt", isAscending ? product.createdAt.asc() : product.createdAt.desc());
