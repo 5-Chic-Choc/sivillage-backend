@@ -149,6 +149,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (categoryId == null) {
             throw new BaseException(BaseResponseStatus.INVALID_CATEGORY_PATH);
         }
+
         return new BooleanBuilder().and(productCategory.categoryId.eq(categoryId));
     }
 }

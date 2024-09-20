@@ -10,5 +10,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     Optional<Brand> findByBrandUuid(String brandUuid);
 
+    Optional<Brand> findByNameAndBrandListTypeAndNameKo(String name, String brandListType, String nameKo);
+
     List<Brand> findByNameIn(List<String> names);
 }
