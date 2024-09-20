@@ -9,7 +9,7 @@ import com.chicchoc.sivillage.domain.promotion.domain.QPromotion;
 import com.chicchoc.sivillage.domain.promotion.domain.QPromotionBenefit;
 import com.chicchoc.sivillage.domain.promotion.domain.QPromotionProduct;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionFilterRequestDto;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -27,16 +27,15 @@ public class PromotionRepositoryImpl implements PromotionRepositoryCustom {
         QPromotion promotion = QPromotion.promotion;
         QPromotionBenefit promotionBenefit = QPromotionBenefit.promotionBenefit;
         QPromotionProduct promotionProduct = QPromotionProduct.promotionProduct;
-        QProduct product = QProduct.product; // Product 엔티티
-        QBrand brand = QBrand.brand; // Brand 엔티티
-        QCategory category = QCategory.category; // Category 엔티티
-        QProductCategory productCategory = QProductCategory.productCategory; // ProductCategory 엔티티
+        QProduct product = QProduct.product;
+        QBrand brand = QBrand.brand;
+        QCategory category = QCategory.category;
+        QProductCategory productCategory = QProductCategory.productCategory;
 
-        BooleanExpression predicate = createPredicate(dto);
+        BooleanBuilder predicate = createPredicate(dto);
 
         int perPage = dto.getPerPage() != null ? dto.getPerPage() : 20;
 
-        // PromotionProduct를 통해 Product를 조인하고, Product와 Brand, Category를 추가로 조인
         return queryFactory.selectFrom(promotion)
                 .leftJoin(promotionProduct)
                 .on(promotion.promotionUuid.eq(promotionProduct.promotion.promotionUuid))  // PromotionProduct 조인
@@ -51,35 +50,39 @@ public class PromotionRepositoryImpl implements PromotionRepositoryCustom {
                 .leftJoin(promotionBenefit)
                 .on(promotion.promotionUuid.eq(promotionBenefit.promotionUuid))  // Promotion과 PromotionBenefit 조인
                 .where(predicate)
+                .groupBy(
+                        promotion.promotionUuid,
+                        promotion.id,
+                        promotion.description,
+                        promotion.thumbnailUrl,
+                        promotion.title
+                )
                 .offset(offset)
                 .limit(perPage)
                 .fetch();
-
     }
 
-    private BooleanExpression createPredicate(PromotionFilterRequestDto dto) {
+    private BooleanBuilder createPredicate(PromotionFilterRequestDto dto) {
         QPromotion promotion = QPromotion.promotion;
         QPromotionBenefit promotionBenefit = QPromotionBenefit.promotionBenefit;
         QCategory category = QCategory.category;
         QBrand brand = QBrand.brand;
 
-        BooleanExpression predicate = promotion.isNotNull(); // 기본 필터링
+        BooleanBuilder predicate = new BooleanBuilder();
 
         // 카테고리 필터링
         if (dto.getCategoryId() != null) {
-            predicate = predicate.and(category.id.eq(dto.getCategoryId()));  // Product의 Category로 필터링
+            predicate.and(category.id.eq(dto.getCategoryId()));  // Product의 Category로 필터링
         }
 
         // PromotionBenefit 필터링
         if (dto.getBenefitTypes() != null && !dto.getBenefitTypes().isEmpty()) {
-            BooleanExpression benefitPredicate = promotionBenefit.benefitContent.in(dto.getBenefitTypes());
-            predicate = predicate.and(benefitPredicate);
+            predicate.and(promotionBenefit.benefitContent.in(dto.getBenefitTypes()));
         }
 
         // 브랜드 필터링
         if (dto.getBrandUuids() != null && !dto.getBrandUuids().isEmpty()) {
-            BooleanExpression brandPredicate = brand.brandUuid.in(dto.getBrandUuids());
-            predicate = predicate.and(brandPredicate);
+            predicate.and(brand.brandUuid.in(dto.getBrandUuids()));
         }
 
         return predicate;

@@ -8,8 +8,8 @@ import com.chicchoc.sivillage.domain.product.domain.*;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -31,7 +31,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         final QProductOption productOption = QProductOption.productOption;
         final QProductCategory productCategory = QProductCategory.productCategory;
 
-        BooleanExpression predicate = createPredicate(dto);
+        BooleanBuilder predicate = createPredicate(dto);
 
         return queryFactory.selectFrom(product)
                 .leftJoin(productOption)
@@ -46,19 +46,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetch();
     }
 
-    private BooleanExpression createPredicate(ProductRequestDto dto) {
+    private BooleanBuilder createPredicate(ProductRequestDto dto) {
         final QProduct product = QProduct.product;
         final QProductOption productOption = QProductOption.productOption;
-
-        BooleanExpression predicate = null;
+        BooleanBuilder predicate = new BooleanBuilder(); // BooleanBuilder 사용
 
         if (dto.getCategories() != null) {
             Long categoryId = findCategoryIdFromPath(dto.getCategories());
             if (categoryId == null) {
                 throw new BaseException(BaseResponseStatus.INVALID_CATEGORY_PATH);
             }
-            BooleanExpression categoryPredicate = productCategoryFilter(categoryId);
-            predicate = predicate != null ? predicate.and(categoryPredicate) : categoryPredicate;
+            predicate.and(productCategoryFilter(categoryId));
         }
 
         // 사이즈 필터링
@@ -72,8 +70,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
             }
 
-            BooleanExpression sizePredicate = productOption.sizeId.in(sizeIds);
-            predicate = predicate != null ? predicate.and(sizePredicate) : sizePredicate;
+            predicate.and(productOption.sizeId.in(sizeIds));
         }
 
         // 색상 필터링
@@ -87,8 +84,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
             }
 
-            BooleanExpression colorPredicate = productOption.colorId.in(colorIds);
-            predicate = predicate != null ? predicate.and(colorPredicate) : colorPredicate;
+            predicate.and(productOption.colorId.in(colorIds));
         }
 
         // 브랜드 필터링
@@ -102,22 +98,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 throw new BaseException(BaseResponseStatus.NO_EXIST_BRAND);
             }
 
-            BooleanExpression brandPredicate = product.brandUuid.in(brandUuids);
-            predicate = predicate != null ? predicate.and(brandPredicate) : brandPredicate;
+            predicate.and(product.brandUuid.in(brandUuids));
         }
 
         // 가격 필터링
         if (dto.getMinimumPrice() != null) {
-            predicate = predicate != null ? predicate.and(productOption.price.goe(dto.getMinimumPrice()))
-                    : productOption.price.goe(dto.getMinimumPrice());
+            predicate.and(productOption.price.goe(dto.getMinimumPrice()));
         }
 
         if (dto.getMaximumPrice() != null) {
-            predicate = predicate != null ? predicate.and(productOption.price.loe(dto.getMaximumPrice()))
-                    : productOption.price.loe(dto.getMaximumPrice());
+            predicate.and(productOption.price.loe(dto.getMaximumPrice()));
         }
 
-        if (predicate == null) {
+        if (!predicate.hasValue()) {
             throw new BaseException(BaseResponseStatus.INVALID_FILTER_CRITERIA);
         }
 
@@ -151,11 +144,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return parentCategory.getId();
     }
 
-    private BooleanExpression productCategoryFilter(Long categoryId) {
+    private BooleanBuilder productCategoryFilter(Long categoryId) {
         QProductCategory productCategory = QProductCategory.productCategory;
         if (categoryId == null) {
             throw new BaseException(BaseResponseStatus.INVALID_CATEGORY_PATH);
         }
-        return productCategory.categoryId.eq(categoryId);
+        return new BooleanBuilder().and(productCategory.categoryId.eq(categoryId));
     }
 }
