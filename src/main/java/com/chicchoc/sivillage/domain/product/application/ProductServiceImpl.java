@@ -6,13 +6,11 @@ import com.chicchoc.sivillage.domain.product.dto.out.*;
 import com.chicchoc.sivillage.domain.product.infrastructure.*;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
-import com.querydsl.core.types.OrderSpecifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,34 +26,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponseDto> getFilteredProducts(ProductRequestDto dto) {
-        final int page = dto.getPage() != null ? dto.getPage() : 1;
-        final int perPage = dto.getPerPage() != null ? dto.getPerPage() : 20;
-        final int offset = (page - 1) * perPage;
-        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(dto.getSortBy(), dto.isAscending());
-
-        List<Product> products = productRepositoryCustom.findFilteredProducts(dto, offset, perPage, orderSpecifier);
+        List<Product> products = productRepositoryCustom.findFilteredProducts(dto);
 
         return products.stream()
                 .map(ProductResponseDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAscending) {
-        final QProduct product = QProduct.product;
-        final QProductOption productOption = QProductOption.productOption;
-
-        switch (sortBy) {
-            case "discount_rate":
-                return isAscending ? productOption.discountRate.asc() : productOption.discountRate.desc();
-            case "price":
-                return isAscending ? productOption.price.asc() : productOption.price.desc();
-            case "name":
-                return isAscending ? product.productName.asc() : product.productName.desc();
-            case "createdAt":
-                return isAscending ? product.createdAt.asc() : product.createdAt.desc();
-            default:
-                throw new BaseException(BaseResponseStatus.INVALID_SORT_BY_PARAMETER);
-        }
+                .toList();
     }
 
     @Override
