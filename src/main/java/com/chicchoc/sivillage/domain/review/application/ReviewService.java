@@ -14,4 +14,6 @@ public interface ReviewService {
     List<ReviewResponseDto> getReviewByProductUuid(String productUuid);
 
     List<ReviewResponseDto> getReviewByUserUuid(String userUuid);
+
+    void deleteReview(String reviewUuid);
 }

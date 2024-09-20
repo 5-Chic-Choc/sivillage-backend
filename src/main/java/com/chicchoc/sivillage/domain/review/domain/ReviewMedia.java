@@ -17,9 +17,8 @@ public class ReviewMedia extends BaseEntity {
     @Column(name = "review_media_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review", nullable = false)
-    private Review review;
+    @Column(name = "review_uuid")
+    private String reviewUuid;
 
     @Column(name = "media_id")
     private Long mediaId;
@@ -28,8 +27,8 @@ public class ReviewMedia extends BaseEntity {
     private int mediaOrder;
 
     @Builder
-    public ReviewMedia(Long id, Review review, Long mediaId, int mediaOrder) {
-        this.review = review;
+    public ReviewMedia(String reviewUuid, Long mediaId, int mediaOrder) {
+        this.reviewUuid = reviewUuid;
         this.mediaId = mediaId;
         this.mediaOrder = mediaOrder;
     }

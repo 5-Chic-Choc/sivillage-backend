@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewMediaRequestDto {
 
-    private Review review;
+    private String reviewUuid;
     private Long mediaId;
     private Integer mediaOrder;
 
     public ReviewMedia toEntity() {
         return ReviewMedia.builder()
-                .review(review)
+                .reviewUuid(reviewUuid)
                 .mediaId(mediaId)
                 .mediaOrder(mediaOrder)
                 .build();
