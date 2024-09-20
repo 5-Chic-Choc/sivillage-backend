@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class DataService {
+public class BrandDataService {
 
     private final BrandRepository brandRepository;
     private final NanoIdGenerator nanoIdGenerator;

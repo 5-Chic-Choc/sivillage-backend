@@ -2,13 +2,12 @@ package com.chicchoc.sivillage.global.data.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
-import com.chicchoc.sivillage.global.data.application.DataService;
+import com.chicchoc.sivillage.global.data.application.BrandDataService;
 import com.chicchoc.sivillage.global.data.dto.BrandDataRequestDto;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.List;
@@ -23,12 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/data")
-public class DataController {
+public class BrandDataController {
 
-    private final DataService dataService;
+    private final BrandDataService brandDataService;
 
     @Operation(summary = "브랜드 데이터 업로드")
-    @ApiResponse(responseCode = "200", description = "성공적으로 업로드되었습니다.")
     @PostMapping(value = "/brand", consumes = {"multipart/form-data"})
     public BaseResponse<Void> uploadBrand(@RequestParam("file") MultipartFile file) {
 
@@ -40,13 +38,13 @@ public class DataController {
             // 파일을 String으로 변환
             String content = new String(file.getBytes());
 
-            // JSON을 List<ProductDto>로 변환
+            // JSON을 List<DTO>로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             List<BrandDataRequestDto> brandDataDtos = objectMapper.readValue(content,
                     new TypeReference<List<BrandDataRequestDto>>() {
                     });
 
-            dataService.saveOrUpdateBrand(brandDataDtos);
+            brandDataService.saveOrUpdateBrand(brandDataDtos);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
