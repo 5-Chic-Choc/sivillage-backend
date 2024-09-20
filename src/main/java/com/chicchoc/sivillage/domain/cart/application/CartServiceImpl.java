@@ -111,42 +111,33 @@ public class CartServiceImpl implements CartService {
         List<Cart> signedMemberCartList = cartRepository.findByUserUuid(cartMigrateRequestDto.getUserUuid());
 
         List<Cart> updatedCartList = new ArrayList<>();
-        
+
         if (!unsignedMemberCartList.isEmpty()) {
-            for (Cart cart : unsignedMemberCartList) {
-                // 회원 장바구니에서 상품 찾는 로직
-                Optional<Cart> existCartItem = signedMemberCartList.stream()
-                        .filter(userCart -> userCart.getProductOptionUuid()
-                                .equals(cart.getProductOptionUuid()))
-                        .findFirst();
-
-                if (existCartItem.isPresent()) {
-                    Cart existCart = existCartItem.get();
-
-                    Cart updatedCart = Cart.builder()
-                            .id(existCart.getId())
-                            .cartUuid(existCart.getCartUuid())
-                            .userUuid(existCart.getUserUuid())
-                            .productOptionUuid(existCart.getProductOptionUuid())
-                            .amount(existCart.getAmount() + cart.getAmount())
-                            .isSelected(cart.getIsSelected())
-                            .build();
-
-                    cartRepository.save(updatedCart);
-                    cartRepository.delete(cart);
-
-                } else {
-                    Cart updateCart = Cart.builder()
-                            .id(cart.getId())
-                            .cartUuid(cart.getCartUuid())
-                            .userUuid(cartMigrateRequestDto.getUserUuid())
-                            .productOptionUuid(cart.getProductOptionUuid())
-                            .amount(cart.getAmount())
-                            .isSelected(cart.getIsSelected())
-                            .build();
-                    updatedCartList.add(updateCart);
-                }
-            }
+            unsignedMemberCartList.forEach(cart ->
+                    signedMemberCartList.stream()
+                            .filter(userCart -> userCart.getProductOptionUuid().equals(cart.getProductOptionUuid()))
+                            .findFirst()
+                            .ifPresentOrElse(existCart -> {
+                                cartRepository.save(Cart.builder()
+                                        .id(existCart.getId())
+                                        .cartUuid(existCart.getCartUuid())
+                                        .userUuid(existCart.getUserUuid())
+                                        .productOptionUuid(existCart.getProductOptionUuid())
+                                        .amount(existCart.getAmount() + cart.getAmount())
+                                        .isSelected(cart.getIsSelected())
+                                        .build());
+                                cartRepository.delete(cart);
+                            }, () -> {
+                                updatedCartList.add(Cart.builder()
+                                        .id(cart.getId())
+                                        .cartUuid(cart.getCartUuid())
+                                        .userUuid(cartMigrateRequestDto.getUserUuid())
+                                        .productOptionUuid(cart.getProductOptionUuid())
+                                        .amount(cart.getAmount())
+                                        .isSelected(cart.getIsSelected())
+                                        .build());
+                            })
+            );
             cartRepository.saveAll(updatedCartList);
         }
     }
