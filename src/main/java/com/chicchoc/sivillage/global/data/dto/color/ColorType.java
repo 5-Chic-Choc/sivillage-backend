@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.data.dto;
+package com.chicchoc.sivillage.global.data.dto.color;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

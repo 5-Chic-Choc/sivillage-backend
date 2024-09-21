@@ -2,9 +2,9 @@ package com.chicchoc.sivillage.global.data.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
-import com.chicchoc.sivillage.global.data.application.ProductDataService;
-import com.chicchoc.sivillage.global.data.dto.ProductColorRequestDto;
-import com.chicchoc.sivillage.global.data.dto.ProductSizeRequestDto;
+import com.chicchoc.sivillage.global.data.application.ColorDataService;
+import com.chicchoc.sivillage.global.data.dto.color.ProductColorRequestDto;
+import com.chicchoc.sivillage.global.data.dto.size.ProductSizeRequestDto;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,37 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/data")
-public class ProductDataController {
+public class ColorDataController {
 
-    private final ProductDataService productDataService;
-
-    @Operation(summary = "상품 사이즈 데이터 업로드")
-    @PostMapping(value = "/product/size", consumes = {"multipart/form-data"})
-    public BaseResponse<Void> uploadProductSize(@RequestParam("file") MultipartFile file) {
-
-        if (file.isEmpty()) {
-            throw new BaseException(BaseResponseStatus.ILLEGAL_ARGUMENT);
-        }
-
-        try {
-            // 파일을 String으로 변환
-            String content = new String(file.getBytes());
-
-            // JSON을 List<DTO>로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<ProductSizeRequestDto> productSizeRequestDtos = objectMapper.readValue(content,
-                    new TypeReference<List<ProductSizeRequestDto>>() {
-                    });
-
-            productDataService.saveSizeData(productSizeRequestDtos);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            throw new BaseException(BaseResponseStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new BaseResponse<>();
-    }
+    private final ColorDataService productDataService;
 
     @Operation(summary = "상품 색상 데이터 업로드")
     @PostMapping(value = "/product/color", consumes = {"multipart/form-data"})

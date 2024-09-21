@@ -2,8 +2,10 @@ package com.chicchoc.sivillage.global.data.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
-import com.chicchoc.sivillage.global.data.application.BrandDataService;
-import com.chicchoc.sivillage.global.data.dto.brand.BrandDataRequestDto;
+import com.chicchoc.sivillage.global.data.application.ColorDataService;
+import com.chicchoc.sivillage.global.data.application.SizeDataService;
+import com.chicchoc.sivillage.global.data.dto.color.ProductColorRequestDto;
+import com.chicchoc.sivillage.global.data.dto.size.ProductSizeRequestDto;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,13 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/data")
-public class BrandDataController {
+public class SizeDataController {
 
-    private final BrandDataService brandDataService;
+    private final SizeDataService sizeDataService;
 
-    @Operation(summary = "브랜드 데이터 업로드")
-    @PostMapping(value = "/brand", consumes = {"multipart/form-data"})
-    public BaseResponse<Void> uploadBrand(@RequestParam("file") MultipartFile file) {
+    @Operation(summary = "상품 사이즈 데이터 업로드")
+    @PostMapping(value = "/product/size", consumes = {"multipart/form-data"})
+    public BaseResponse<Void> uploadProductSize(@RequestParam("file") MultipartFile file) {
 
         if (file.isEmpty()) {
             throw new BaseException(BaseResponseStatus.ILLEGAL_ARGUMENT);
@@ -40,11 +42,11 @@ public class BrandDataController {
 
             // JSON을 List<DTO>로 변환
             ObjectMapper objectMapper = new ObjectMapper();
-            List<BrandDataRequestDto> brandDataDtos = objectMapper.readValue(content,
-                    new TypeReference<List<BrandDataRequestDto>>() {
+            List<ProductSizeRequestDto> productSizeRequestDtos = objectMapper.readValue(content,
+                    new TypeReference<List<ProductSizeRequestDto>>() {
                     });
 
-            brandDataService.saveOrUpdateBrand(brandDataDtos);
+            sizeDataService.saveSizeData(productSizeRequestDtos);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

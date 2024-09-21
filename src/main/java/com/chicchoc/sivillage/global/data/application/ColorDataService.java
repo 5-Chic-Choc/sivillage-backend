@@ -6,10 +6,9 @@ import com.chicchoc.sivillage.domain.product.infrastructure.ColorRepository;
 import com.chicchoc.sivillage.domain.product.infrastructure.ProductRepository;
 import com.chicchoc.sivillage.domain.product.infrastructure.SizeRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
-import com.chicchoc.sivillage.global.data.dto.ColorType;
-import com.chicchoc.sivillage.global.data.dto.ProductColorRequestDto;
-import com.chicchoc.sivillage.global.data.dto.ProductSizeRequestDto;
-import java.util.Arrays;
+import com.chicchoc.sivillage.global.data.dto.color.ColorType;
+import com.chicchoc.sivillage.global.data.dto.color.ProductColorRequestDto;
+import com.chicchoc.sivillage.global.data.dto.size.ProductSizeRequestDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,33 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class ProductDataService {
+public class ColorDataService {
 
-    private final ProductRepository productRepository;
-    private final NanoIdGenerator nanoIdGenerator;
     private final ColorRepository colorRepository;
-    private final SizeRepository sizeRepository;
-
-    //상품 사이즈 데이터 저장
-    public void saveSizeData(List<ProductSizeRequestDto> sizeDtos) {
-
-        for (ProductSizeRequestDto dto : sizeDtos) {
-            String sizeValue = dto.getSizeValue();
-
-            // DB에 이미 해당 사이즈가 있는지 확인
-            Optional<Size> existingSize = sizeRepository.findByName(sizeValue);
-
-            // 사이즈가 이미 존재하면 로그 처리, 없으면 새로 저장
-            if (existingSize.isPresent()) {
-                System.out.println("이미 존재하는 사이즈: " + sizeValue);
-            } else {
-                Size newSize = Size.builder().name(sizeValue).build();
-                sizeRepository.save(newSize);
-                System.out.println("새로운 사이즈 저장: " + sizeValue);
-            }
-        }
-    }
-
 
     //상품 색상 데이터 저장
     @Transactional
@@ -68,7 +43,9 @@ public class ProductDataService {
         });
     }
 
-    // Enum 기반 색상 필터링 이름 매핑
+    // ==================== 아래는 Private 메서드 =====================
+
+    // Enum 기반 '색상 필터링 이름' 매핑
     private static final Map<String, List<String>> colorKeywordMapping = new HashMap<>() {
         {
             put(ColorType.WHITE.getName(),
@@ -104,7 +81,7 @@ public class ProductDataService {
         }
     };
 
-    // 색상 필터링 이름을 찾아주는 로직
+    // '색상 필터링 이름'을 찾아주는 로직
     private String matchColorName(String colorValue) {
         // color_value가 특정 키워드를 포함하는지 확인
         for (Map.Entry<String, List<String>> entry : colorKeywordMapping.entrySet()) {
@@ -116,7 +93,6 @@ public class ProductDataService {
         }
         return ColorType.OTHER.getName(); // 매칭되지 않으면 '기타'로 설정
     }
-
-
+    
 }
 

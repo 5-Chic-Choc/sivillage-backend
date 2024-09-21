@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.global.data.dto;
+package com.chicchoc.sivillage.global.data.dto.color;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

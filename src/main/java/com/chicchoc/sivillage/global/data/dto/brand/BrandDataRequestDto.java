@@ -1,10 +1,9 @@
-package com.chicchoc.sivillage.global.data.dto;
+package com.chicchoc.sivillage.global.data.dto.brand;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
