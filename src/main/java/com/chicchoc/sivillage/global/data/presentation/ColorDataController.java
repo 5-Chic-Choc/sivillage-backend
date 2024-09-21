@@ -1,13 +1,9 @@
 package com.chicchoc.sivillage.global.data.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.data.application.ColorDataService;
 import com.chicchoc.sivillage.global.data.dto.color.ProductColorRequestDto;
-import com.chicchoc.sivillage.global.data.dto.size.ProductSizeRequestDto;
-import com.chicchoc.sivillage.global.error.exception.BaseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.chicchoc.sivillage.global.data.util.JsonFileUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -25,32 +21,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/data")
 public class ColorDataController {
 
-    private final ColorDataService productDataService;
+    private final ColorDataService colorDataService;
 
     @Operation(summary = "상품 색상 데이터 업로드")
     @PostMapping(value = "/product/color", consumes = {"multipart/form-data"})
-    public BaseResponse<Void> uploadProductColor(@RequestParam("file") MultipartFile file) {
+    public BaseResponse<Void> uploadProductColor(@RequestParam("file") MultipartFile file) throws IOException {
 
-        if (file.isEmpty()) {
-            throw new BaseException(BaseResponseStatus.ILLEGAL_ARGUMENT);
-        }
+        List<ProductColorRequestDto> productColorRequestDtos = JsonFileUtil.parseFileToDtoList(
+                file,
+                ProductColorRequestDto[].class);
 
-        try {
-            // 파일을 String으로 변환
-            String content = new String(file.getBytes());
-
-            // JSON을 List<DTO>로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<ProductColorRequestDto> productColorData = objectMapper.readValue(content,
-                    new TypeReference<List<ProductColorRequestDto>>() {
-                    });
-
-            productDataService.saveColorData(productColorData);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            throw new BaseException(BaseResponseStatus.INTERNAL_SERVER_ERROR);
-        }
+        // 변환된 DTO 리스트 저장
+        colorDataService.saveColorData(productColorRequestDtos);
 
         return new BaseResponse<>();
     }

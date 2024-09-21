@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductSizeRequestDto {
 
-    @JsonProperty("product_code")
     private String productCode;
-
-    @JsonProperty("size_value")
     private String sizeValue;
-
 
 }

@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductColorRequestDto {
 
-    @JsonProperty("product_code")
     private String productCode;
-
-    @JsonProperty("color_value")
     private String colorValue;
 
 }
