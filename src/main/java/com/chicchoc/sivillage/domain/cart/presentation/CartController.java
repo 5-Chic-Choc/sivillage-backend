@@ -67,41 +67,6 @@ public class CartController {
         return new BaseResponse<>();
     }
 
-//    @PutMapping("/option/{cartUuid}")
-//    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
-//            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
-//
-//        return new BaseResponse<>(cartService.updateCartItem(cartUpdateRequestVo.toDto(cartUuid)).toVo());
-//    }
-//
-//    @PutMapping("/status")
-//    public BaseResponse<Void> updateCartStatus(
-//            @RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
-//
-//        cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
-//                .map(CartStatusUpdateRequestVo::toDto)
-//                .toList());
-//
-//        return new BaseResponse<>();
-//    }
-//
-//    @DeleteMapping
-//    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
-//        cartService.deleteCartItems(cartDeleteRequestVoList.stream()
-//                .map(CartDeleteRequestVo::toDto)
-//                .toList());
-//        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-//    }
-//
-//    @PostMapping("/migrate")
-//    public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,
-//            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
-//    ) {
-//        cartService.migrateCart(CartMigrateRequestDto.builder()
-//                .userUuid(userDetails.getUsername())
-//                .unsignedUserUuid(unsignedUserUuid)
-//                .build());
-//        return new BaseResponse<>();
-//    }
+
 
 }

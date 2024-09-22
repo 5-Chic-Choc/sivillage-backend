@@ -26,6 +26,10 @@ public class CartProduct extends BaseEntity {
     @Column(name = "cart_product_id")
     private Long id;
 
+    @Comment("제품 장바구니 Uuid")
+    @Column(name = "cart_product_uuid", nullable = false, length = 21)
+    private String cartProductUuid;
+
     @Comment("장바구니 Uuid")
     @Column(name = "cart_uuid", nullable = false, length = 21)
     private String cartUuid;
@@ -35,8 +39,8 @@ public class CartProduct extends BaseEntity {
     private String productOptionUuid;
 
     @Comment("주문 수량")
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @Comment("선택 여부")
     @Builder.Default
