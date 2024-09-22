@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.cart.application;
 
+import com.chicchoc.sivillage.domain.cart.dto.in.CartDeleteRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
@@ -9,15 +11,15 @@ import java.util.List;
 
 public interface CartService {
 
-    void createCart(CartRequestDto cartRequestDto, String userUuid);
+    void createCart(CartRequestDto cartRequestDto);
 
     List<CartResponseDto> getCart(String userUuid);
 
-    CartResponseDto updateCart(CartUpdateRequestDto cartUpdateRequestDto, String cartUuid);
+    CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto);
 
-    void updateCart(List<CartStatusUpdateRequestDto> cartUpdateAmountRequestDtoList);
+    void updateCartStatus(List<CartStatusUpdateRequestDto> cartUpdateAmountRequestDtoList);
 
-    void deleteCartItems(List<CartDeleteRequestVo> cartDeleteRequestVoList);
+    void deleteCartItems(List<CartDeleteRequestDto> cartDeleteRequestDtoList);
 
-    void migrateCart(String userUuid, String unsignedMemberUuid);
+    void migrateCart(CartMigrateRequestDto cartMigrateRequestDto);
 }

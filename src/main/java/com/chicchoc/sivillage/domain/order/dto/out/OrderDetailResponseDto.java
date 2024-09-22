@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.order.dto.out;
 
+import com.chicchoc.sivillage.domain.order.domain.Order;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderDetailResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,19 @@ public class OrderDetailResponseDto {
                 .recipientAddress(recipientAddress)
                 .deliveryName(deliveryName)
                 .deliveryRequest(deliveryRequest)
+                .build();
+    }
+
+    public static OrderDetailResponseDto fromEntity(Order order) {
+        return OrderDetailResponseDto.builder()
+                .ordererName(order.getOrdererName())
+                .ordererEmail(order.getOrdererEmail())
+                .ordererPhone(order.getOrdererPhone())
+                .recipientName(order.getRecipientName())
+                .recipientPhone(order.getRecipientPhone())
+                .recipientAddress(order.getRecipientAddress())
+                .deliveryName(order.getDeliveryName())
+                .deliveryRequest(order.getDeliveryRequest())
                 .build();
     }
 }

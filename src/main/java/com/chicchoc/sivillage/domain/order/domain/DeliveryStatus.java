@@ -11,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DeliveryStatus {
 
-    ACCEPT("결제완료"),
-    INSTRUCT("상품준비중"),
-    DEPARTURE("배송지시"),
-    DELIVERING("배송중"),
-    FINAL_DELIVERY("배송완료"),
-    CANCELED("취소됨"),
-    NONE_TRACKING("업체 직접 배송/ 추적불가");
+    PREPARING_SHIPMENT("배송 준비 중"),
+    INSTRUCTION_ISSUED("배송지시"),
+    IN_TRANSIT("배송 중"),
+    DELIVERED("배송 완료"),
+    DELIVERY_FAILED("취소됨");
 
     private final String status;
 

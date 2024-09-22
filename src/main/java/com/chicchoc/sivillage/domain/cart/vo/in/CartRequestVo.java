@@ -9,8 +9,9 @@ public class CartRequestVo {
     private String productOptionUuid;
     private Integer amount;
 
-    public CartRequestDto toDto() {
+    public CartRequestDto toDto(String userUuid) {
         return CartRequestDto.builder()
+                .userUuid(userUuid)
                 .productOptionUuid(productOptionUuid)
                 .amount(amount)
                 .build();

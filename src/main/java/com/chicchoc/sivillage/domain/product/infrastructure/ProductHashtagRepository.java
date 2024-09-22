@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductHashtagRepository extends JpaRepository<ProductHashtag, Long> {
+
     List<ProductHashtag> findByProductUuid(String productUuid);
 
 }

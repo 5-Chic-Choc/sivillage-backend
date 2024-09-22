@@ -23,7 +23,7 @@ public class ReviewMedia {
     private Long id;
 
     @Comment("리뷰 uuid")
-    @Column(name = "review_uuid", nullable = false, length = 21)
+    @Column(name = "review_uuid", length = 21)
     private String reviewUuid;
 
     @Comment("미디어 id")
@@ -41,3 +41,4 @@ public class ReviewMedia {
         this.mediaOrder = mediaOrder;
     }
 }
+

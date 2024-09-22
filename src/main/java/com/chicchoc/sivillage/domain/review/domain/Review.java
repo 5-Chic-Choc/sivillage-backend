@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,6 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Table(name = "review")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class Review extends BaseEntity {
 
@@ -52,7 +49,7 @@ public class Review extends BaseEntity {
 
     @Comment("좋아요 갯수")
     @Column(name = "liked_cnt")
-    private Integer likedCnt;
+    private Integer likedCnt = 0;
 
     @Comment("사이즈명")
     @Column(name = "size_name")
@@ -89,4 +86,25 @@ public class Review extends BaseEntity {
     @Comment("리뷰 태그 텍스트 3")
     @Column(name = "review_rate_text_3", length = 50)
     private String reviewRateText3;
+
+    @Builder
+    public Review(String reviewUuid, String productUuid, String userUuid, String sizeName, String colorValue,
+            String reviewContent, byte starPoint, String reviewerEmail, String reviewRateType1,
+            String reviewRateText1, String reviewRateType2, String reviewRateText2, String reviewRateType3,
+            String reviewRateText3) {
+        this.reviewUuid = reviewUuid;
+        this.productUuid = productUuid;
+        this.userUuid = userUuid;
+        this.sizeName = sizeName;
+        this.colorValue = colorValue;
+        this.reviewContent = reviewContent;
+        this.starPoint = starPoint;
+        this.reviewerEmail = reviewerEmail;
+        this.reviewRateType1 = reviewRateType1;
+        this.reviewRateText1 = reviewRateText1;
+        this.reviewRateType2 = reviewRateType2;
+        this.reviewRateText2 = reviewRateText2;
+        this.reviewRateType3 = reviewRateType3;
+        this.reviewRateText3 = reviewRateText3;
+    }
 }

@@ -29,5 +29,15 @@ public class BrandLike {
 
     @Comment("좋아요 여부")
     @Column(nullable = false)
-    private boolean isLiked;
+    private Boolean isLiked;
+
+    public BrandLike(String brandUuid, String userUuid, boolean isLiked) {
+        this.brandUuid = brandUuid;
+        this.userUuid = userUuid;
+        this.isLiked = isLiked;
+    }
+
+    public void update(Boolean isLiked) {
+        this.isLiked = isLiked;
+    }
 }

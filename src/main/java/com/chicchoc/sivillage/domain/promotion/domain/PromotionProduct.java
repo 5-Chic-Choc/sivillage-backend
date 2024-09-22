@@ -23,6 +23,10 @@ public class PromotionProduct {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
+    @Comment("프로모션 UUID")
+    @Column(nullable = false, length = 21)
+    private String promotionUuid;
+
     @Comment("상품 UUID")
     @Column(nullable = false, length = 21)
     private String productUuid;
