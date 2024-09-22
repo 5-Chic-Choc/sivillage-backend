@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.global.data.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import java.util.Arrays;
@@ -23,6 +24,8 @@ public class JsonFileUtil {
 
         // ObjectMapper 설정 (스네이크 케이스 -> 카멜 케이스 변환)
         ObjectMapper objectMapper = new ObjectMapper();
+        // 설정 : 알 수 없는 속성이 있어도 무시
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
         // JSON 문자열을 DTO 리스트로 변환
