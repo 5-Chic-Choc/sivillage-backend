@@ -1,11 +1,14 @@
 package com.chicchoc.sivillage.domain.media.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Media {
 
     @Id
@@ -24,4 +27,11 @@ public class Media {
     @Comment("미디어 설명")
     @Column(nullable = true, length = 255)
     private String description;
+
+    @Builder
+    public Media(String mediaUrl, String mediaType, String description) {
+        this.mediaUrl = mediaUrl;
+        this.mediaType = mediaType;
+        this.description = description;
+    }
 }

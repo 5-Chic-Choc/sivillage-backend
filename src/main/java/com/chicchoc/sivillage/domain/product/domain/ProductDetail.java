@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +23,10 @@ public class ProductDetail {
     @Comment("제품 상세 URL")
     @Column(nullable = false, length = 2000)
     private String productDetailUrl;
+
+    @Builder
+    public ProductDetail(String productOptionUuid, String productDetailUrl) {
+        this.productOptionUuid = productOptionUuid;
+        this.productDetailUrl = productDetailUrl;
+    }
 }

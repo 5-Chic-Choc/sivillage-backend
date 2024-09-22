@@ -6,13 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString
 public class Product extends BaseEntity {
 
     @Id
@@ -21,7 +21,7 @@ public class Product extends BaseEntity {
     private Long id;
 
     @Comment("상품 uuid")
-    @Column(nullable = false, length = 21, name = "product_uuid")
+    @Column(nullable = false, length = 21, name = "product_uuid", unique = true)
     private String productUuid;
 
     @Comment("브랜드 uuid")
@@ -29,6 +29,13 @@ public class Product extends BaseEntity {
     private String brandUuid;
 
     @Comment("제품 이름")
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100, name = "product_name")
     private String productName;
+
+    @Builder
+    public Product(String productUuid, String brandUuid, String productName) {
+        this.productUuid = productUuid;
+        this.brandUuid = brandUuid;
+        this.productName = productName;
+    }
 }

@@ -1,11 +1,14 @@
 package com.chicchoc.sivillage.domain.category.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ProductCategory {
 
     @Id
@@ -20,4 +23,10 @@ public class ProductCategory {
     @Comment("카테고리 id")
     @Column(nullable = false)
     private Long categoryId;
+
+    @Builder
+    public ProductCategory(Long productId, Long categoryId) {
+        this.productId = productId;
+        this.categoryId = categoryId;
+    }
 }
