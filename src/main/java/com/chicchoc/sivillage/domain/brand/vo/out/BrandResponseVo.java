@@ -8,6 +8,7 @@ import lombok.Getter;
 public class BrandResponseVo {
     private String brandUuid;
     private String name;
+    private String nameKo;
     private String logoUrl;
     private String brandListType;
     private String brandIndexLetter;
