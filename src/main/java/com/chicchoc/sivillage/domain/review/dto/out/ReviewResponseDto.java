@@ -22,6 +22,7 @@ public class ReviewResponseDto {
     private String userUuid;
     private String sizeName;
     private String colorValue;
+    private String optionName;
     private String reviewContent;
     private byte starPoint;
     private Integer likedCnt;
@@ -42,6 +43,7 @@ public class ReviewResponseDto {
                 .userUuid(userUuid)
                 .sizeName(sizeName)
                 .colorValue(colorValue)
+                .optionName(optionName)
                 .reviewContent(reviewContent)
                 .starPoint(starPoint)
                 .likedCnt(likedCnt)

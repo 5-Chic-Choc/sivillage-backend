@@ -125,13 +125,14 @@ public enum BaseResponseStatus {
      */
 
     // cart
-    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 5004, "존재하지 않는 장바구니 항목입니다."),
+    NO_EXIST_CART_ITEM(HttpStatus.NOT_FOUND, false, 5001, "존재하지 않는 장바구니 항목입니다."),
+    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 5004, "장바구니가 존재하지 않습니다."),
     INVALID_CART_ACTION(HttpStatus.BAD_REQUEST, false, 5005, "유효하지 않은 장바구니 액션입니다."),
 
     /**
      * 6000: order service error.
      */
-  
+
     // order
     NO_EXIST_ORDER(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 주문입니다."),
     NO_UPDATE_ORDER_AUTHORITY(HttpStatus.BAD_REQUEST, false, 6002, "주문 수정 권한이 없습니다."),
@@ -145,8 +146,6 @@ public enum BaseResponseStatus {
     ORDER_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, false, 6010, "배송 주소를 찾을 수 없습니다."),
     ORDER_PAYMENT_CANCELLED(HttpStatus.CONFLICT, false, 6011, "주문 결제가 취소되었습니다."),
     ORDER_SHIPPING_FAILED(HttpStatus.BAD_REQUEST, false, 6012, "배송 처리 중 오류가 발생했습니다.");
-    
-  ;
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
