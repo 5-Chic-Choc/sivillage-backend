@@ -49,7 +49,6 @@ public class ReviewDataRequestDto {
         // optionInfo에 콜론(:)이 포함되어 있으면, 콜론을 기준으로 문자열을 나누어 뒷부분을 optionName에 저장
         // ex) optionInfo = “구매옵션 : 화이트/FR”
 
-
         return Review.builder()
                 .reviewUuid(productEvalNo)
                 .productUuid(productCode)
