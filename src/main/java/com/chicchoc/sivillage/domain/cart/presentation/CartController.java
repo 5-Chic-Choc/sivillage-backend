@@ -1,11 +1,8 @@
 package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
@@ -55,41 +52,56 @@ public class CartController {
         );
     }
 
-    @PutMapping("/option/{cartUuid}")
-    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
-            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
+    @PutMapping
+    public BaseResponse<CartResponseVo> updateCartName(@RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
 
-        return new BaseResponse<>(cartService.updateCartItem(cartUpdateRequestVo.toDto(cartUuid)).toVo());
+        return new BaseResponse<>(cartService.updateCartName(
+                cartUpdateRequestVo.toDto()).toVo());
     }
 
-    @PutMapping("/status")
-    public BaseResponse<Void> updateCartStatus(
-            @RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
+    @DeleteMapping("/{cartUuid}")
+    public BaseResponse<Void> deleteCart(@PathVariable("cartUuid") String cartUuid) {
 
-        cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
-                .map(CartStatusUpdateRequestVo::toDto)
-                .toList());
+        cartService.deleteCart(cartUuid);
 
         return new BaseResponse<>();
     }
 
-    @DeleteMapping
-    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
-        cartService.deleteCartItems(cartDeleteRequestVoList.stream()
-                .map(CartDeleteRequestVo::toDto)
-                .toList());
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-    }
-
-    @PostMapping("/migrate")
-    public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
-    ) {
-        cartService.migrateCart(CartMigrateRequestDto.builder()
-                .userUuid(userDetails.getUsername())
-                .unsignedUserUuid(unsignedUserUuid)
-                .build());
-        return new BaseResponse<>();
-    }
+//    @PutMapping("/option/{cartUuid}")
+//    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
+//            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
+//
+//        return new BaseResponse<>(cartService.updateCartItem(cartUpdateRequestVo.toDto(cartUuid)).toVo());
+//    }
+//
+//    @PutMapping("/status")
+//    public BaseResponse<Void> updateCartStatus(
+//            @RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
+//
+//        cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
+//                .map(CartStatusUpdateRequestVo::toDto)
+//                .toList());
+//
+//        return new BaseResponse<>();
+//    }
+//
+//    @DeleteMapping
+//    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
+//        cartService.deleteCartItems(cartDeleteRequestVoList.stream()
+//                .map(CartDeleteRequestVo::toDto)
+//                .toList());
+//        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+//    }
+//
+//    @PostMapping("/migrate")
+//    public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,
+//            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
+//    ) {
+//        cartService.migrateCart(CartMigrateRequestDto.builder()
+//                .userUuid(userDetails.getUsername())
+//                .unsignedUserUuid(unsignedUserUuid)
+//                .build());
+//        return new BaseResponse<>();
+//    }
 
 }

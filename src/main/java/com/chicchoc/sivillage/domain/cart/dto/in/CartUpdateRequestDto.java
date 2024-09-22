@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class CartUpdateRequestDto {
-    private String cartUuid;
-    private String productOptionUuid;
-    private Integer amount;
 
-    @Builder
-    public CartUpdateRequestDto(String cartUuid, String productOptionUuid, int amount) {
-        this.cartUuid = cartUuid;
-        this.productOptionUuid = productOptionUuid;
-        this.amount = amount;
-    }
+    private String cartUuid;
+    private String cartName;
+
+//    @Builder
+//    public CartUpdateRequestDto(String cartUuid, String productOptionUuid, int amount) {
+//        this.cartUuid = cartUuid;
+//        this.productOptionUuid = productOptionUuid;
+//        this.amount = amount;
+//    }
 }

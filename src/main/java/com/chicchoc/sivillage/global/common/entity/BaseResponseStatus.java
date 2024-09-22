@@ -125,13 +125,15 @@ public enum BaseResponseStatus {
      */
 
     // cart
-    NO_EXIST_CART_ITEM(HttpStatus.NOT_FOUND, false, 5001, "존재하지 않는 장바구니 항목입니다."),
-    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 5004, "장바구니가 존재하지 않습니다."),
-    INVALID_CART_ACTION(HttpStatus.BAD_REQUEST, false, 5005, "유효하지 않은 장바구니 액션입니다."),
+    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 5001, "존재하지 않는 장바구니 항목입니다."),
+    INVALID_CART_ACTION(HttpStatus.BAD_REQUEST, false, 5002, "유효하지 않은 장바구니 액션입니다."),
+    EXIST_CART_NAME(HttpStatus.NOT_FOUND, false, 5003, "이미 존재하는 장바구니 이름입니다."),
 
     /**
      * 6000: order service error.
      */
+    // Gpt
+    GPT_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 6001, "GPT API 호출에 실패했습니다."),
 
     // order
     NO_EXIST_ORDER(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 주문입니다."),
