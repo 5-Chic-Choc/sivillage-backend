@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.order.application;
 
+import com.chicchoc.sivillage.domain.order.dto.in.CartUuidRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderProductRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.out.OrderDetailResponseDto;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface OrderService {
 
     void createOrder(OrderRequestDto orderRequestDto, List<OrderProductRequestDto> orderProductRequestDtoList,
-            String userUuid);
+            List<CartUuidRequestDto> cartUuidRequestDtoList);
 
     List<OrderResponseDto> getOrder(String userUuid, String startDate, String endDate);
 

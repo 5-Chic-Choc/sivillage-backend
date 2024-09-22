@@ -121,26 +121,32 @@ public enum BaseResponseStatus {
     NO_EXIST_PIN_AUTHORITY(HttpStatus.BAD_REQUEST, false, 4004, "고정 권한이 없습니다."),
 
     /**
-     * 5000: notification service error.
+     * 5000: cart service error.
      */
 
-    // Notification
-    NO_EXIST_NOTIFICATION_SETTING(HttpStatus.NOT_FOUND, false, 5001, "유저의 알림 설정이 존재하지 않습니다."),
-    EXIST_NOTIFICATION_SETTING(HttpStatus.BAD_REQUEST, false, 5002, "유저의 알림 설정이 이미 존재합니다."),
-    NO_EXIST_NOTIFICATION(HttpStatus.NOT_FOUND, false, 5003, "존재하지 않는 알림입니다."),
-    CANNOT_SHARE(HttpStatus.BAD_REQUEST, false, 5004, "공유할 수 없는 유저입니다."),
+    // cart
+    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 5004, "존재하지 않는 장바구니 항목입니다."),
+    INVALID_CART_ACTION(HttpStatus.BAD_REQUEST, false, 5005, "유효하지 않은 장바구니 액션입니다."),
 
     /**
-     * 6000: gpt-api error.
+     * 6000: order service error.
      */
-    // Gpt
-    GPT_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 6001, "GPT API 호출에 실패했습니다."),
-
-    /**
-     * 7000 : cart service error.
-     */
-    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 4001, "존재하지 않는 상품입니다."),
-    ;
+  
+    // order
+    NO_EXIST_ORDER(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 주문입니다."),
+    NO_UPDATE_ORDER_AUTHORITY(HttpStatus.BAD_REQUEST, false, 6002, "주문 수정 권한이 없습니다."),
+    NO_DELETE_ORDER_AUTHORITY(HttpStatus.BAD_REQUEST, false, 6003, "주문 삭제 권한이 없습니다."),
+    ORDER_ALREADY_CANCELLED(HttpStatus.CONFLICT, false, 6004, "이미 취소된 주문입니다."),
+    ORDER_PAYMENT_FAILED(HttpStatus.BAD_REQUEST, false, 6005, "주문 결제에 실패했습니다."),
+    INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, false, 6006, "유효하지 않은 주문 상태입니다."),
+    NO_ORDER_ITEM(HttpStatus.NOT_FOUND, false, 6007, "주문 항목이 존재하지 않습니다."),
+    ORDER_ITEM_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, false, 6008, "주문한 상품의 재고가 부족합니다."),
+    ORDER_CANNOT_BE_MODIFIED(HttpStatus.BAD_REQUEST, false, 6009, "현재 상태의 주문은 수정할 수 없습니다."),
+    ORDER_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, false, 6010, "배송 주소를 찾을 수 없습니다."),
+    ORDER_PAYMENT_CANCELLED(HttpStatus.CONFLICT, false, 6011, "주문 결제가 취소되었습니다."),
+    ORDER_SHIPPING_FAILED(HttpStatus.BAD_REQUEST, false, 6012, "배송 처리 중 오류가 발생했습니다.");
+    
+  ;
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
