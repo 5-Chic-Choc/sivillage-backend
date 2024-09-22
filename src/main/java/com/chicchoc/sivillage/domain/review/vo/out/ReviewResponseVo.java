@@ -17,6 +17,7 @@ public class ReviewResponseVo {
     private String userUuid;
     private String sizeName;
     private String colorValue;
+    private String optionName;
     private String reviewContent;
     private byte starPoint;
     private Integer likedCnt;

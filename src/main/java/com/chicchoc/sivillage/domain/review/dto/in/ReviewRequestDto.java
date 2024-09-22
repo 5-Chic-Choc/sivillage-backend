@@ -1,8 +1,6 @@
 package com.chicchoc.sivillage.domain.review.dto.in;
 
 import com.chicchoc.sivillage.domain.review.domain.Review;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +11,7 @@ public class ReviewRequestDto {
     private String productUuid;
     private String sizeName;
     private String colorValue;
+    private String optionName;
     private String reviewContent;
     private byte starPoint;
     private String reviewRateType1;
@@ -28,6 +27,7 @@ public class ReviewRequestDto {
                 .productUuid(productUuid)
                 .userUuid(userUuid)
                 .sizeName(sizeName)
+                .optionName(optionName)
                 .colorValue(colorValue)
                 .reviewContent(reviewContent)
                 .starPoint(starPoint)

@@ -60,6 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .userUuid(review.getUserUuid())
                         .sizeName(review.getSizeName())
                         .colorValue(review.getColorValue())
+                        .optionName(review.getOptionName())
                         .reviewContent(review.getReviewContent())
                         .starPoint(review.getStarPoint())
                         .likedCnt(review.getLikedCnt())

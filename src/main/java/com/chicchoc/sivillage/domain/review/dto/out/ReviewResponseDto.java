@@ -2,10 +2,8 @@ package com.chicchoc.sivillage.domain.review.dto.out;
 
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import java.util.Date;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -18,6 +16,7 @@ public class ReviewResponseDto {
     private String userUuid;
     private String sizeName;
     private String colorValue;
+    private String optionName;
     private String reviewContent;
     private byte starPoint;
     private Integer likedCnt;
@@ -37,6 +36,7 @@ public class ReviewResponseDto {
                 .userUuid(userUuid)
                 .sizeName(sizeName)
                 .colorValue(colorValue)
+                .optionName(optionName)
                 .reviewContent(reviewContent)
                 .starPoint(starPoint)
                 .likedCnt(likedCnt)
