@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProductMedia {
 
     @Id
@@ -30,4 +28,11 @@ public class ProductMedia {
     @Comment("제품 이미지 순서")
     @Column(nullable = false, name = "product_media_order")
     private int mediaOrder;
+
+    @Builder
+    public ProductMedia(String productOptionUuid, Long mediaId, int mediaOrder) {
+        this.productOptionUuid = productOptionUuid;
+        this.mediaId = mediaId;
+        this.mediaOrder = mediaOrder;
+    }
 }

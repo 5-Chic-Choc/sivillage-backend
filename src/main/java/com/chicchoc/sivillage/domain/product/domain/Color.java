@@ -20,7 +20,7 @@ public class Color {
     private Long id;
 
     @Comment("색상 필터링 이름")
-    @Column(nullable = false, length = 10, unique = true)
+    @Column(nullable = false, length = 10)
     private String name;
 
     @Comment("색상 상세 값")

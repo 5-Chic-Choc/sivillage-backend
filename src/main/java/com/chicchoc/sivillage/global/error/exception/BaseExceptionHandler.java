@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.error.exception;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,23 @@ public class BaseExceptionHandler {
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
+    // IOException 예외 처리
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<BaseResponse<String>> handleIoException(RuntimeException e) {
+
+        BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        log.error("IOException: ", e.getMessage());
+
+        for (StackTraceElement s : e.getStackTrace()) {
+            System.out.println(s);
+        }
+
+        return new ResponseEntity<>(response, response.httpStatus());
+    }
+
+    // RuntimeException 예외 처리
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<BaseResponse<String>> runtimeError(RuntimeException e) {
+    protected ResponseEntity<BaseResponse<String>> handleRuntimeException(RuntimeException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         log.error("RuntimeException: ", e.getMessage());

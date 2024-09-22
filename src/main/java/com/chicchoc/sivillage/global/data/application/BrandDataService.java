@@ -3,7 +3,7 @@ package com.chicchoc.sivillage.global.data.application;
 import com.chicchoc.sivillage.domain.brand.domain.Brand;
 import com.chicchoc.sivillage.domain.brand.infrastructure.BrandRepository;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
-import com.chicchoc.sivillage.global.data.dto.BrandDataRequestDto;
+import com.chicchoc.sivillage.global.data.dto.brand.BrandDataRequestDto;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class DataService {
+public class BrandDataService {
 
     private final BrandRepository brandRepository;
     private final NanoIdGenerator nanoIdGenerator;

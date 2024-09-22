@@ -19,7 +19,11 @@ public class Size {
     @Column(name = "size_id")
     private Long id;
 
-    @Comment("사이즈 이름")
-    @Column(nullable = false, length = 10, unique = true)
+    @Comment("사이즈 필터링 이름")
+    @Column(nullable = false, length = 10)
     private String name;
+
+    @Comment("사이즈 이름")
+    @Column(nullable = false, length = 20)
+    private String value;
 }

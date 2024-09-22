@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString
 public class Media {
 
     @Id
