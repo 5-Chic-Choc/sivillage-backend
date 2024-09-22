@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartProductDeleteRequestDto {
 
-    private String cartUuid;
+    private String cartProductUuid;
 
     @Builder
-    public CartProductDeleteRequestDto(String cartUuid) {
-        this.cartUuid = cartUuid;
+    public CartProductDeleteRequestDto(String cartProductUuid) {
+        this.cartProductUuid = cartProductUuid;
     }
 }

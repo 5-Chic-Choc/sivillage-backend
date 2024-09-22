@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class CartProductDeleteRequestVo {
 
-    private String cartUuid;
+    private String cartProductUuid;
 
     public CartProductDeleteRequestDto toDto() {
         return CartProductDeleteRequestDto.builder()
-                .cartUuid(cartUuid)
+                .cartProductUuid(cartProductUuid)
                 .build();
     }
 }

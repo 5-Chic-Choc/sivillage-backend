@@ -6,13 +6,11 @@ import lombok.Getter;
 @Getter
 public class CartProductStatusUpdateRequestVo {
 
-    private String cartProductUuid;
     private int quantity;
     private Boolean isSelected;
 
-    public CartProductStatusUpdateRequestDto toDto(String cartUuid){
+    public CartProductStatusUpdateRequestDto toDto(String cartProductUuid){
         return CartProductStatusUpdateRequestDto.builder()
-                .cartUuid(cartUuid)
                 .cartProductUuid(cartProductUuid)
                 .quantity(quantity)
                 .isSelected(isSelected)

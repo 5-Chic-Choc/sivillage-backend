@@ -28,6 +28,7 @@ public class CartProductRequestDto {
 
     public CartProduct toEntity() {
         return CartProduct.builder()
+                .cartProductUuid(cartProductUuid)
                 .cartUuid(cartUuid)
                 .productOptionUuid(productOptionUuid)
                 .quantity(quantity)

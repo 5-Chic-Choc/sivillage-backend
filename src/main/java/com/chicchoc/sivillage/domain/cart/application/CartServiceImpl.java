@@ -1,9 +1,11 @@
 package com.chicchoc.sivillage.domain.cart.application;
 
 import com.chicchoc.sivillage.domain.cart.domain.Cart;
+import com.chicchoc.sivillage.domain.cart.domain.CartProduct;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
+import com.chicchoc.sivillage.domain.cart.infrastructure.CartProductRepository;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
+    private final CartProductRepository cartProductRepository;
 
     @Override
     public void createCart(CartRequestDto cartRequestDto) {
@@ -48,12 +51,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void deleteCart(String cartUuid) {
+
         cartRepository.delete(cartRepository.findByCartUuid(cartUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART)));
+        cartProductRepository.deleteAll(cartProductRepository.findByCartUuid(cartUuid));
+
     }
-
-
-
 
 //    @Override
 //    public CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto) {

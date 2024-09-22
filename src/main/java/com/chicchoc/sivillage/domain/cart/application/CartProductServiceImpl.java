@@ -9,6 +9,7 @@ import com.chicchoc.sivillage.domain.cart.dto.out.CartProductResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartProductRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,12 @@ public class CartProductServiceImpl implements CartProductService {
         return cartProductRepository.findByCartUuid(cartUuid).stream().map(CartProductResponseDto::fromEntity).toList();
     }
 
+    @Transactional
     @Override
     public void deleteCartItems(List<CartProductDeleteRequestDto> cartProductDeleteRequestDtoList) {
         cartProductDeleteRequestDtoList.stream()
-                .map(CartProductDeleteRequestDto::getCartUuid)
-                .forEach(cartProductRepository::deleteByCartUuid);
+                .map(CartProductDeleteRequestDto::getCartProductUuid)
+                .forEach(cartProductRepository::deleteByCartProductUuid);
     }
 
     @Override
@@ -49,8 +51,9 @@ public class CartProductServiceImpl implements CartProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
 
         return CartProductResponseDto.fromEntity(cartProductRepository.save(CartProduct.builder()
+                .id(product.getId())
                 .cartProductUuid(product.getCartProductUuid())
-                .cartUuid(product.getProductOptionUuid())
+                .cartUuid(product.getCartUuid())
                 .productOptionUuid(cartProductOptionUpdateRequestDto.getProductOptionUuid())
                 .quantity(cartProductOptionUpdateRequestDto.getQuantity())
                 .isSelected(product.getIsSelected())
@@ -66,8 +69,9 @@ public class CartProductServiceImpl implements CartProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
 
         return CartProductResponseDto.fromEntity(cartProductRepository.save(CartProduct.builder()
+                .id(product.getId())
                 .cartProductUuid(product.getCartProductUuid())
-                .cartUuid(product.getProductOptionUuid())
+                .cartUuid(product.getCartUuid())
                 .productOptionUuid(product.getProductOptionUuid())
                 .quantity(cartProductStatusUpdateRequestDto.getQuantity())
                 .isSelected(cartProductStatusUpdateRequestDto.getIsSelected())
