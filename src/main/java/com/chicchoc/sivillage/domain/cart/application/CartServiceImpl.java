@@ -25,23 +25,31 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void createCart(CartRequestDto cartRequestDto) {
+        Cart existCart = cartRepository.findByUserUuidAndCartName(cartRequestDto.getUserUuid(),
+                cartRequestDto.getCartName()).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
 
-        Optional<Cart> existCartItem = cartRepository.findByUserUuidAndProductOptionUuid(cartRequestDto.getUserUuid(),
-                cartRequestDto.getProductOptionUuid());
-
-        if (existCartItem.isPresent()) {
-            cartRepository.save(Cart.builder()
-                    .id(existCartItem.get().getId())
-                    .userUuid(existCartItem.get().getUserUuid())
-                    .cartUuid(existCartItem.get().getCartUuid())
-                    .productOptionUuid(existCartItem.get().getProductOptionUuid())
-                    .amount(existCartItem.get().getAmount() + cartRequestDto.getAmount())
-                    .isSelected(existCartItem.get().getIsSelected())
-                    .build());
-        } else {
-            cartRepository.save(cartRequestDto.toEntity());
-        }
+        cartRepository.save(cartRequestDto.toEntity());
     }
+
+//    @Override
+//    public void createCart(CartRequestDto cartRequestDto) {
+//
+//        Optional<Cart> existCartItem = cartRepository.findByUserUuidAndProductOptionUuid(cartRequestDto.getUserUuid(),
+//                cartRequestDto.getProductOptionUuid());
+//
+//        if (existCartItem.isPresent()) {
+//            cartRepository.save(Cart.builder()
+//                    .id(existCartItem.get().getId())
+//                    .userUuid(existCartItem.get().getUserUuid())
+//                    .cartUuid(existCartItem.get().getCartUuid())
+//                    .productOptionUuid(existCartItem.get().getProductOptionUuid())
+//                    .amount(existCartItem.get().getAmount() + cartRequestDto.getAmount())
+//                    .isSelected(existCartItem.get().getIsSelected())
+//                    .build());
+//        } else {
+//            cartRepository.save(cartRequestDto.toEntity());
+//        }
+//    }
 
     @Override
     public List<CartResponseDto> getCart(String userUuid) {

@@ -14,27 +14,32 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "cart_product")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cart extends BaseEntity {
+public class CartProduct extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
+    @Column(name = "cart_product_id")
     private Long id;
-
-    @Comment("사용자 Uuid")
-    @Column(name = "user_uuid", nullable = false, length = 21)
-    private String userUuid;
 
     @Comment("장바구니 Uuid")
     @Column(name = "cart_uuid", nullable = false, length = 21)
     private String cartUuid;
 
-    @Comment("장바구니 이름")
-    @Column(name = "cart_name", nullable = false, length = 50)
-    private String cartName;
+    @Comment("제품 옵션 uuid")
+    @Column(name = "product_option_uuid", nullable = false, length = 21)
+    private String productOptionUuid;
+
+    @Comment("주문 수량")
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
+
+    @Comment("선택 여부")
+    @Builder.Default
+    @Column(name = "is_selected")
+    private Boolean isSelected = true;
 }

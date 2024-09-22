@@ -10,26 +10,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartRequestDto {
 
-    private String cartUuid;
     private String userUuid;
-    private String productOptionUuid;
-    private Integer amount;
-
-    public Cart toEntity() {
-        return Cart.builder()
-                .cartUuid(cartUuid)
-                .userUuid(userUuid)
-                .productOptionUuid(productOptionUuid)
-                .amount(amount)
-                .isSelected(false)
-                .build();
-    }
+    private String cartUuid;
+    private String cartName;
 
     @Builder
-    public CartRequestDto(String userUuid, String productOptionUuid, Integer amount) {
-        this.cartUuid = NanoIdGenerator.generateNanoId();
+    public CartRequestDto(String userUuid, String cartUuid, String cartName) {
         this.userUuid = userUuid;
-        this.productOptionUuid = productOptionUuid;
-        this.amount = amount;
+        this.cartUuid = NanoIdGenerator.generateNanoId();
+        this.cartName = cartName;
+    }
+
+    public Cart toEntity(){
+        return Cart.builder()
+                .userUuid(userUuid)
+                .cartUuid(cartUuid)
+                .cartName(cartName)
+                .build();
     }
 }

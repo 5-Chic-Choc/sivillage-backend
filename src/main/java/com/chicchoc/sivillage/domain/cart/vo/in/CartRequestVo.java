@@ -6,14 +6,12 @@ import lombok.Getter;
 @Getter
 public class CartRequestVo {
 
-    private String productOptionUuid;
-    private Integer amount;
+    private String cartName;
 
     public CartRequestDto toDto(String userUuid) {
         return CartRequestDto.builder()
                 .userUuid(userUuid)
-                .productOptionUuid(productOptionUuid)
-                .amount(amount)
+                .cartName(cartName)
                 .build();
     }
 }
