@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.infra.dto.MediaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class S3Service {
     @Value(("${cloud.aws.s3.bucket}"))
     private String bucketName;
 
-    public String uploadFile(MultipartFile file, String category) throws IOException {
+    public MediaDto uploadFile(MultipartFile file, String category) throws IOException {
         // 파일 이름 추출
         String originalFilename = file.getOriginalFilename();
 
@@ -46,8 +47,11 @@ public class S3Service {
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead)); // 파일 접근 권한을 public으로 설정
 
-        // 업로드된 파일의 URL 반환
-        return s3Client.getUrl(bucketName, fileName).toString();
+        return MediaDto.builder()
+                .mediaUrl(s3Client.getUrl(bucketName, fileName).toString())
+                .mediaType(fileTypeChecker(fileNameExtension))
+                .description(file.getOriginalFilename())
+                .build();
     }
 
     // DB에 저장된 URL 그대로 사용할 것 이기 때문에 get은 필요 없음
@@ -63,5 +67,29 @@ public class S3Service {
             return "";  // 확장자가 없는 경우 빈 문자열 반환
         }
         return fileName.substring(lastDotIndex);  // 확장자 반환
+    }
+
+    private String fileTypeChecker(String fileNameExtension) {
+        String[] imageExtensions = {
+            ".jpeg", ".jpg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".heif", ".svg", ".ico"
+        };
+
+        String[] videoExtensions = {
+            ".mp4", ".mov", ".avi", ".wmv", ".flv", ".mkv", ".webm", ".mpeg", ".mpg", ".3gp", ".ogg", ".ogv", ".mts",
+            ".ts", ".m4v"
+        };
+        for (String ext : imageExtensions) {
+            if (ext.equals(fileNameExtension)) {
+                return "이미지";
+            }
+        }
+
+        for (String ext : videoExtensions) {
+            if (ext.equals(fileNameExtension)) {
+                return "동영상";
+            }
+        }
+
+        return null;
     }
 }

@@ -2,10 +2,8 @@ package com.chicchoc.sivillage.domain.product.presentation;
 
 import com.chicchoc.sivillage.domain.product.application.ProductService;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
-import com.chicchoc.sivillage.domain.product.dto.out.ProductOptionResponseDto;
-import com.chicchoc.sivillage.domain.product.dto.out.ProductResponseDto;
-import com.chicchoc.sivillage.domain.product.vo.out.ProductOptionResponseVo;
-import com.chicchoc.sivillage.domain.product.vo.out.ProductResponseVo;
+import com.chicchoc.sivillage.domain.product.dto.out.*;
+import com.chicchoc.sivillage.domain.product.vo.out.*;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -66,14 +64,50 @@ public class ProductController {
     @GetMapping("/{productUuid}")
     public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid) {
 
-        // UUID를 사용하여 productId를 찾는다
-        Long productId = productService.findProductIdByUuid(productUuid);
-
-        List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productId);
+        List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productUuid);
 
         List<ProductOptionResponseVo> productOptionResponseVos = productOptionResponseDtos.stream()
                 .map(ProductOptionResponseDto::toResponseVo)
                 .toList();
         return new BaseResponse<>(productOptionResponseVos);
+    }
+
+    @Operation(summary = "getProductDetails API", description = "상품 상세 조회", tags = {"Product"})
+    @GetMapping("/details/{productOptionUuid}")
+    public BaseResponse<List<ProductDetailResponseVo>> getProductDetails(@PathVariable String productOptionUuid) {
+
+        List<ProductDetailResponseDto> productDetailResponseDtos = productService.getProductDetails(productOptionUuid);
+
+        List<ProductDetailResponseVo> productDetailResponseVos = productDetailResponseDtos.stream()
+                .map(ProductDetailResponseDto::toVo)
+                .toList();
+
+        return new BaseResponse<>(productDetailResponseVos);
+    }
+
+    @Operation(summary = "getProductInfos API", description = "상품 정보 조회", tags = {"Product"})
+    @GetMapping("/infos/{productUuid}")
+    public BaseResponse<List<ProductInfoResponseVo>> getProductInfos(@PathVariable String productUuid) {
+
+        List<ProductInfoResponseDto> productInfoResponseDtos = productService.getProductInfos(productUuid);
+
+        List<ProductInfoResponseVo> productInfoResponseVos = productInfoResponseDtos.stream()
+                .map(ProductInfoResponseDto::toVo)
+                .toList();
+
+        return new BaseResponse<>(productInfoResponseVos);
+    }
+
+    @Operation(summary = "getProductHashtags API", description = "상품 해시태그 조회", tags = {"Product"})
+    @GetMapping("/hashtags/{productUuid}")
+    public BaseResponse<List<ProductHashtagResponseVo>> getProductHashtags(@PathVariable String productUuid) {
+
+        List<ProductHashtagResponseDto> productHashtagResponseDtos = productService.getProductHashtags(productUuid);
+
+        List<ProductHashtagResponseVo> productHashtagResponseVos = productHashtagResponseDtos.stream()
+                .map(ProductHashtagResponseDto::toVo)
+                .toList();
+
+        return new BaseResponse<>(productHashtagResponseVos);
     }
 }

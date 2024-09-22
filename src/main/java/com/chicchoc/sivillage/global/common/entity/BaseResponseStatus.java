@@ -110,11 +110,11 @@ public enum BaseResponseStatus {
     INVALID_MEDIA_TYPE(HttpStatus.BAD_REQUEST, false, 3502, "잘못된 미디어 종류입니다."),
 
     /**
-     * 4000: comment service error.
+     * 4000: review service error.
      */
 
-    // Comment
-    NO_EXIST_COMMENT(HttpStatus.NOT_FOUND, false, 4001, "존재하지 않는 댓글입니다."),
+    // review
+    NO_EXIST_REVIEW(HttpStatus.NOT_FOUND, false, 4001, "존재하지 않는 리뷰입니다."),
     NO_DELETE_COMMENT_AUTHORITY(HttpStatus.BAD_REQUEST, false, 4002, "댓글 삭제 권한이 없습니다."),
     NO_DELETE_RE_COMMENT_AUTHORITY(HttpStatus.BAD_REQUEST, false, 4003, "대댓글 삭제 권한이 없습니다."),
     NO_EXIST_RE_COMMENT(HttpStatus.NOT_FOUND, false, 4003, "존재하지 않는 대댓글입니다."),
@@ -135,6 +135,11 @@ public enum BaseResponseStatus {
      */
     // Gpt
     GPT_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 6001, "GPT API 호출에 실패했습니다."),
+
+    /**
+     * 7000 : cart service error.
+     */
+    NO_EXIST_CART(HttpStatus.NOT_FOUND, false, 4001, "존재하지 않는 상품입니다."),
     ;
 
     private final HttpStatusCode httpStatusCode;

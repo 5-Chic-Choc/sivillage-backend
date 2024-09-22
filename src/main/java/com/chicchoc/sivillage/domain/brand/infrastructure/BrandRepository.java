@@ -17,5 +17,4 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     @Query("SELECT b.brandUuid FROM Brand b WHERE b.name = :name AND b.brandListType = 'en'")
     Optional<String> findTopBrandUuidByNameAndBrandListType(String name);
-
 }

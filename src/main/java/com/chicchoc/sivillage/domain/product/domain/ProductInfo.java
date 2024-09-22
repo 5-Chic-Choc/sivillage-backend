@@ -19,7 +19,8 @@ public class ProductInfo {
     @Column(name = "product_info_id")
     private Long id;
 
-    @Column(nullable = false, length = 21, name = "product_uuid")
+    @Comment("제품 UUID")
+    @Column(nullable = false, length = 21)
     private String productUuid;
 
     @Comment("제품 정보 종류")

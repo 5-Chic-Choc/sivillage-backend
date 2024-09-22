@@ -23,7 +23,7 @@ public class Brand {
     @Column(nullable = false, length = 21, unique = true)
     private String brandUuid;
 
-    @Comment("브랜드 이름")
+    @Comment("브랜드 한글 인덱스 문자")
     @Column(nullable = false, length = 255)
     private String name;
 
@@ -50,7 +50,7 @@ public class Brand {
 
     @Builder
     public Brand(String brandUuid, String name, String nameKo, String logoUrl, String brandListType,
-            String brandIndexLetter) {
+                 String brandIndexLetter) {
         this.brandUuid = brandUuid;
         this.name = name;
         this.nameKo = nameKo;

@@ -1,13 +1,16 @@
 package com.chicchoc.sivillage.domain.promotion.presentation;
 
 import com.chicchoc.sivillage.domain.promotion.application.PromotionService;
+import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionFilterRequestDto;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionRequestDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionBenefitResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionMediaResponseDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionProductResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionResponseDto;
 import com.chicchoc.sivillage.domain.promotion.vo.in.PromotionRequestVo;
 import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionBenefitResponseVo;
 import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionMediaResponseVo;
+import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionProductResponseVo;
 import com.chicchoc.sivillage.domain.promotion.vo.out.PromotionResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -98,6 +101,48 @@ public class PromotionController {
                         .toList();
 
         return new BaseResponse<>(promotionMediaResponseVos);
+    }
+
+    @Operation(summary = "getFilteredPromotions API", description = "필터링 된 프로모션 목록 조회", tags = {"Promotion"})
+    @GetMapping("/filtered")
+    public BaseResponse<List<PromotionResponseVo>> getFilteredPromotions(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> benefitTypes,
+            @RequestParam(required = false) List<String> brandUuids,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "20") Integer perPage) {
+
+        PromotionFilterRequestDto promotionFilterRequestDto = PromotionFilterRequestDto.builder()
+                .categoryId(categoryId)
+                .benefitTypes(benefitTypes)
+                .brandUuids(brandUuids)
+                .page(page)
+                .perPage(perPage)
+                .build();
+
+        List<PromotionResponseDto> promotionResponseDtos = promotionService
+                .getFilteredPromotions(promotionFilterRequestDto);
+
+        List<PromotionResponseVo> promotionResponseVos = promotionResponseDtos.stream()
+                .map(PromotionResponseDto::toResponseVo)
+                .toList();
+
+        return new BaseResponse<>(promotionResponseVos);
+    }
+
+    @Operation(summary = "getPromotionProducts API", description = "프로모션 상품 조회", tags = {"Promotion"})
+    @GetMapping("/promotionProduct/{promotionUuid}")
+    public BaseResponse<List<PromotionProductResponseVo>> getPromotionProducts(
+            @PathVariable String promotionUuid) {
+        List<PromotionProductResponseDto> promotionProductResponseDtos =
+                promotionService.findPromotionProducts(promotionUuid);
+
+        List<PromotionProductResponseVo> promotionProductResponseVos =
+                promotionProductResponseDtos.stream()
+                        .map(PromotionProductResponseDto::toVo)
+                        .toList();
+
+        return new BaseResponse<>(promotionProductResponseVos);
     }
 
 }

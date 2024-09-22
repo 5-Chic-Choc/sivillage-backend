@@ -1,13 +1,14 @@
 package com.chicchoc.sivillage.domain.promotion.application;
 
 import com.chicchoc.sivillage.domain.promotion.domain.Promotion;
+import com.chicchoc.sivillage.domain.promotion.domain.PromotionProduct;
+import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionFilterRequestDto;
 import com.chicchoc.sivillage.domain.promotion.dto.in.PromotionRequestDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionBenefitResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionMediaResponseDto;
+import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionProductResponseDto;
 import com.chicchoc.sivillage.domain.promotion.dto.out.PromotionResponseDto;
-import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionBenefitRepository;
-import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionMediaRepository;
-import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionRepository;
+import com.chicchoc.sivillage.domain.promotion.infrastructure.*;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
@@ -27,6 +28,8 @@ public class PromotionServiceImpl implements PromotionService {
     private final PromotionRepository promotionRepository;
     private final PromotionBenefitRepository promotionBenefitRepository;
     private final PromotionMediaRepository promotionMediaRepository;
+    private final PromotionRepositoryCustom promotionRepositoryCustom;
+    private final PromotionProductRepository promotionProductRepository;
 
     @Override
     @Transactional
@@ -112,5 +115,35 @@ public class PromotionServiceImpl implements PromotionService {
                 .toList();
 
         return promotionMediaResponseDtos;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionResponseDto> getFilteredPromotions(PromotionFilterRequestDto promotionFilterRequestDto) {
+        final int page = promotionFilterRequestDto
+                .getPage() != null ? promotionFilterRequestDto.getPage() : 1;
+        final int perPage = promotionFilterRequestDto
+                .getPerPage() != null ? promotionFilterRequestDto.getPerPage() : 20;
+        final int offset = (page - 1) * perPage;
+
+        List<Promotion> promotions = promotionRepositoryCustom
+                .findFilteredPromotions(promotionFilterRequestDto, offset);
+
+        return promotions.stream()
+                .map(PromotionResponseDto::fromEntity)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionProductResponseDto> findPromotionProducts(String promotionUuid) {
+        promotionRepository.findByPromotionUuid(promotionUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PROMOTION));
+
+        List<PromotionProduct> promotionProducts = promotionProductRepository.findByPromotionUuid(promotionUuid);
+
+        return promotionProducts.stream()
+                .map(PromotionProductResponseDto::fromEntity)
+                .toList();
     }
 }

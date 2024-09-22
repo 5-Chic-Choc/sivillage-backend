@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.infra.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.infra.application.S3Service;
+import com.chicchoc.sivillage.global.infra.dto.MediaDto;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +19,10 @@ public class S3Controller {
     private final S3Service s3Service;
 
     @PostMapping
-    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile file) throws IOException {
+    public BaseResponse<MediaDto> uploadFile(@RequestPart("file") MultipartFile file) throws IOException {
 
-        String imageUrl = s3Service.uploadFile(file, "review");
-        return new BaseResponse<>(imageUrl);
+        MediaDto mediaDto = s3Service.uploadFile(file, "review");
+        return new BaseResponse<>(mediaDto);
     }
 
     @GetMapping
