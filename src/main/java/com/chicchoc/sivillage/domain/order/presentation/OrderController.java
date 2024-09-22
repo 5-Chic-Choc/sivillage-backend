@@ -40,36 +40,24 @@ public class OrderController {
     public BaseResponse<Void> createOrder(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody OrderRequestVo orderRequestVo) {
 
-        if (orderRequestVo.getCartUuidRequestVoList() != null && !orderRequestVo.getCartUuidRequestVoList().isEmpty()) {
-            List<CartUuidRequestVo> cartUuidRequestVoList = orderRequestVo.getCartUuidRequestVoList();
-            List<CartUuidRequestDto> cartUuidRequestDtoList = cartUuidRequestVoList.stream()
-                    .map(CartUuidRequestVo::toDto)
-                    .toList();
-            // 로직 검사 예정 -> 장바구니에 있는 데이터 주문하면 삭제되게
-            // cartService.deleteCartItems(cartUuidRequestDtoList);
-        }
-
         orderService.createOrder(orderRequestVo.toDto(userDetails.getUsername()),
                 orderRequestVo.getOrderProductRequestVoList().stream()
                         .map(OrderProductRequestVo::toDto)
-                        .toList());
+                        .toList(), orderRequestVo.getCartUuidRequestVoList().stream()
+                        .map(CartUuidRequestVo::toDto).toList());
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @GetMapping
-    public BaseResponse<List<OrderResponseVo>> getOrders(Authentication authentication,
+    public BaseResponse<List<OrderResponseVo>> getOrders(@AuthenticationPrincipal UserDetails userDetails,
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate) {
 
-        List<OrderResponseDto> orderResponseDtoList = orderService.getOrder(authentication.getName(), startDate,
-                endDate);
-
-        List<OrderResponseVo> orderResponseVoList = orderResponseDtoList.stream()
+        return new BaseResponse<>(orderService.getOrder(userDetails.getUsername(), startDate,
+                        endDate).stream()
                 .map(OrderResponseDto::toVo)
-                .toList();
-
-        return new BaseResponse<>(orderResponseVoList);
+                .toList());
     }
 
     @GetMapping("/{orderUuid}")
@@ -81,7 +69,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderUuid}")
-    public BaseResponse<Void> deleteOrder(Authentication authentication, @PathVariable("orderUuid") String orderUuid) {
+    public BaseResponse<Void> deleteOrder(@PathVariable("orderUuid") String orderUuid) {
         orderService.deleteOrder(orderUuid);
         return new BaseResponse<>();
     }

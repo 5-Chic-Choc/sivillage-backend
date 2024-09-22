@@ -1,13 +1,16 @@
 package com.chicchoc.sivillage.domain.order.dto.out;
 
 import com.chicchoc.sivillage.domain.order.domain.DeliveryStatus;
+import com.chicchoc.sivillage.domain.order.domain.OrderProduct;
 import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
 import com.chicchoc.sivillage.domain.order.vo.out.OrderResponseVo;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,6 +47,25 @@ public class OrderResponseDto {
                 .thumbnailUrl(thumbnailUrl)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
+                .build();
+    }
+
+    public static OrderResponseDto fromEntity(OrderProduct orderProduct) {
+        return OrderResponseDto.builder()
+                .orderUuid(orderProduct.getOrderUuid())
+                .productUuid(orderProduct.getProductUuid())
+                .productName(orderProduct.getProductName())
+                .brandName(orderProduct.getBrandName())
+                .productPrice(orderProduct.getProductPrice())
+                .discountedPrice(orderProduct.getDiscountedPrice())
+                .colorValue(orderProduct.getColorValue())
+                .sizeName(orderProduct.getSizeName())
+                .productOption(orderProduct.getProductOption())
+                .deliveryStatus(orderProduct.getDeliveryStatus())
+                .amount(orderProduct.getAmount())
+                .thumbnailUrl(orderProduct.getThumbnailUrl())
+                .createdAt(orderProduct.getCreatedAt())
+                .updatedAt(orderProduct.getUpdatedAt())
                 .build();
     }
 }

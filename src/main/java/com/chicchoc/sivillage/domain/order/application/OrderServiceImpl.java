@@ -1,16 +1,23 @@
 package com.chicchoc.sivillage.domain.order.application;
 
+import com.chicchoc.sivillage.domain.cart.application.CartService;
+import com.chicchoc.sivillage.domain.cart.domain.Cart;
+import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.domain.order.domain.DeliveryStatus;
 import com.chicchoc.sivillage.domain.order.domain.Order;
 import com.chicchoc.sivillage.domain.order.domain.OrderProduct;
 import com.chicchoc.sivillage.domain.order.domain.OrderStatus;
+import com.chicchoc.sivillage.domain.order.dto.in.CartUuidRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderProductRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.in.OrderRequestDto;
 import com.chicchoc.sivillage.domain.order.dto.out.OrderDetailResponseDto;
 import com.chicchoc.sivillage.domain.order.dto.out.OrderResponseDto;
 import com.chicchoc.sivillage.domain.order.infrastructure.OrderProductRepository;
 import com.chicchoc.sivillage.domain.order.infrastructure.OrderRepository;
+import com.chicchoc.sivillage.domain.order.vo.in.CartUuidRequestVo;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,17 +37,23 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
+    private final CartRepository cartRepository;
 
     @Override
-    public void createOrder(OrderRequestDto orderRequestDto, List<OrderProductRequestDto> orderProductRequestDtoList) {
+    public void createOrder(OrderRequestDto orderRequestDto, List<OrderProductRequestDto> orderProductRequestDtoList,
+            List<CartUuidRequestDto> cartUuidRequestDtoList) {
 
+        if (cartUuidRequestDtoList != null && !cartUuidRequestDtoList.isEmpty()) {
+            List<Cart> deleteCart = cartUuidRequestDtoList.stream()
+                    .map(dto -> cartRepository.findByCartUuid(dto.getCartUuid())
+                            .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART_ITEM)))
+                    .toList();
+
+            cartRepository.deleteAll(deleteCart);
+        }
 
         // 주문 정보 저장
-        String paymentUuid = NanoIdGenerator.generateNanoId();
-
-        orderRepository.save(orderRequestDto.toEntity(paymentUuid, LocalDateTime.now()));
-
-        // 주문 제품 정보 저장
+        orderRepository.save(orderRequestDto.toEntity(LocalDateTime.now()));
 
         // 배송 그룹 처리 -> 동일 브랜드끼리 같은 운송장 번호와 택배사 부여
         Map<String, String> brandToTrackingMap = new HashMap<>();
@@ -69,62 +82,30 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderResponseDto> getOrder(String userUuid, String startDate, String endDate) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime start = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime end = LocalDateTime.parse(endDate, formatter);
 
-        List<String> orderUuidList = orderRepository.findOrderUuidByDateRangeWithUserUuid(userUuid, start, end);
+        List<String> orderUuidList = orderRepository.findOrderUuidByDateRangeWithUserUuid(userUuid,
+                LocalDateTime.parse(startDate, formatter), LocalDateTime.parse(endDate, formatter));
 
-        List<OrderProduct> orderProductList = new ArrayList<>();
-
-        for (String orderUuid : orderUuidList) {
-            List<OrderProduct> productsForOrder = orderProductRepository.findByOrderUuid(orderUuid);
-            orderProductList.addAll(productsForOrder);
-        }
-
-        return orderProductList.stream()
+        return orderUuidList.stream()
+                .flatMap(orderUuid -> orderProductRepository.findByOrderUuid(orderUuid).stream())
                 .sorted(Comparator.comparing(OrderProduct::getCreatedAt).reversed())
-                .map(orderProduct -> OrderResponseDto.builder()
-                        .orderUuid(orderProduct.getOrderUuid())
-                        .productUuid(orderProduct.getProductUuid())
-                        .productName(orderProduct.getProductName())
-                        .brandName(orderProduct.getBrandName())
-                        .productPrice(orderProduct.getProductPrice())
-                        .discountedPrice(orderProduct.getDiscountedPrice())
-                        .colorValue(orderProduct.getColorValue())
-                        .sizeName(orderProduct.getSizeName())
-                        .productOption(orderProduct.getProductOption())
-                        .deliveryStatus(orderProduct.getDeliveryStatus())
-                        .amount(orderProduct.getAmount())
-                        .thumbnailUrl(orderProduct.getThumbnailUrl())
-                        .createdAt(orderProduct.getCreatedAt())
-                        .updatedAt(orderProduct.getUpdatedAt())
-                        .build())
+                .map(OrderResponseDto::fromEntity)
                 .toList();
     }
 
     @Override
     public OrderDetailResponseDto getOrderDetail(String orderUuid) {
-
-        Order order = orderRepository.findByOrderUuid(orderUuid);
-
-        return OrderDetailResponseDto.builder()
-                .ordererName(order.getOrdererName())
-                .ordererEmail(order.getOrdererEmail())
-                .ordererPhone(order.getOrdererPhone())
-                .recipientName(order.getRecipientName())
-                .recipientPhone(order.getRecipientPhone())
-                .recipientAddress(order.getRecipientAddress())
-                .deliveryName(order.getDeliveryName())
-                .deliveryRequest(order.getDeliveryRequest())
-                .build();
+        return OrderDetailResponseDto.fromEntity(orderRepository.findByOrderUuid(orderUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ORDER)));
     }
 
     @Override
     public void deleteOrder(String orderUuid) {
 
-        Order order = orderRepository.findByOrderUuid(orderUuid);
+        Order order = orderRepository.findByOrderUuid(orderUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ORDER));
 
-        Order modifiedOrder = Order.builder()
+        orderRepository.save(Order.builder()
                 .id(order.getId())
                 .orderUuid(orderUuid)
                 .userUuid(order.getUserUuid())
@@ -140,37 +121,27 @@ public class OrderServiceImpl implements OrderService {
                 .recipientAddress(order.getRecipientAddress())
                 .deliveryName(order.getDeliveryName())
                 .deliveryRequest(order.getDeliveryRequest())
-                .build();
+                .build());
 
-        orderRepository.save(modifiedOrder);
-
-        List<OrderProduct> orderProductList = orderProductRepository.findByOrderUuid(orderUuid);
-
-        List<OrderProduct> modifiedOrderProductList = new ArrayList<>();
-
-        for (OrderProduct orderProduct : orderProductList) {
-            OrderProduct modifiedOrderProduct = OrderProduct.builder()
-                    .id(orderProduct.getId())
-                    .orderUuid(orderProduct.getOrderUuid())
-                    .productUuid(orderProduct.getProductUuid())
-                    .productName(orderProduct.getProductName())
-                    .brandName(orderProduct.getBrandName())
-                    .productPrice(orderProduct.getProductPrice())
-                    .discountedPrice(orderProduct.getDiscountedPrice())
-                    .colorValue(orderProduct.getColorValue())
-                    .sizeName(orderProduct.getSizeName())
-                    .productOption(orderProduct.getProductOption())
-                    .deliveryStatus(DeliveryStatus.DELIVERY_FAILED)
-                    .amount(orderProduct.getAmount())
-                    .thumbnailUrl(orderProduct.getThumbnailUrl())
-                    .deliveryCompany(orderProduct.getDeliveryCompany())
-                    .trackingNumber(orderProduct.getTrackingNumber())
-                    .build();
-
-            modifiedOrderProductList.add(modifiedOrderProduct);
-        }
-
-        orderProductRepository.saveAll(modifiedOrderProductList);
+        orderProductRepository.saveAll(orderProductRepository.findByOrderUuid(orderUuid).stream()
+                .map(orderProduct -> OrderProduct.builder()
+                        .id(orderProduct.getId())
+                        .orderUuid(orderProduct.getOrderUuid())
+                        .productUuid(orderProduct.getProductUuid())
+                        .productName(orderProduct.getProductName())
+                        .brandName(orderProduct.getBrandName())
+                        .productPrice(orderProduct.getProductPrice())
+                        .discountedPrice(orderProduct.getDiscountedPrice())
+                        .colorValue(orderProduct.getColorValue())
+                        .sizeName(orderProduct.getSizeName())
+                        .productOption(orderProduct.getProductOption())
+                        .deliveryStatus(DeliveryStatus.DELIVERY_FAILED) // 변경된 배송 상태
+                        .amount(orderProduct.getAmount())
+                        .thumbnailUrl(orderProduct.getThumbnailUrl())
+                        .deliveryCompany(orderProduct.getDeliveryCompany())
+                        .trackingNumber(orderProduct.getTrackingNumber())
+                        .build())
+                .collect(Collectors.toList()));
     }
 
     private String assignRandomDeliveryCompany() {

@@ -28,6 +28,7 @@ public class OrderRequestDto {
     private String deliveryName;
     private String deliveryRequest;
     private OrderStatus orderStatus;
+    private String paymentUuid;
     private List<OrderProductRequestDto> orderProductRequestDtoList;
 
     @Builder
@@ -46,9 +47,10 @@ public class OrderRequestDto {
         this.deliveryName = deliveryName;
         this.deliveryRequest = deliveryRequest;
         this.orderStatus = OrderStatus.PENDING;
+        this.paymentUuid = NanoIdGenerator.generateNanoId();
     }
 
-    public Order toEntity(String paymentUuid, LocalDateTime orderedAt) {
+    public Order toEntity(LocalDateTime orderedAt) {
         return Order.builder()
                 .userUuid(userUuid)
                 .orderUuid(orderUuid)
