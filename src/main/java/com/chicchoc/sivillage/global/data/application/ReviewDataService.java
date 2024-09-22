@@ -65,7 +65,7 @@ public class ReviewDataService {
         try {
             // 필수 데이터가 null인 경우
             if (dto.getProductEvalNo() == null || dto.getProductCode() == null || dto.getReviewerName() == null
-                    || dto.getReviewText() == null || dto.getReviewText().isEmpty()) {
+                    || dto.getReviewText() == null || dto.getReviewText().trim().isEmpty()) {
                 return true;
             }
         } catch (Exception e) {

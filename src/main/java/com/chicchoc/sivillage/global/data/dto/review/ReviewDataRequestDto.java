@@ -46,6 +46,10 @@ public class ReviewDataRequestDto {
 
     public Review toEntity() {
 
+        // optionInfo에 콜론(:)이 포함되어 있으면, 콜론을 기준으로 문자열을 나누어 뒷부분을 optionName에 저장
+        // ex) optionInfo = “구매옵션 : 화이트/FR”
+
+
         return Review.builder()
                 .reviewUuid(productEvalNo)
                 .productUuid(productCode)
@@ -56,7 +60,7 @@ public class ReviewDataRequestDto {
                 .likedCnt(likedCnt)
                 .sizeName(null)
                 .colorValue(null)
-                .optionName(optionInfo != null ? optionInfo.split(":")[1].substring(1) : null)
+                .optionName(parseOptionName(optionInfo))
                 .reviewRateType1(reviewRateType1)
                 .reviewRateText1(reviewRateText1)
                 .reviewRateType2(reviewRateType2)
@@ -66,4 +70,14 @@ public class ReviewDataRequestDto {
                 .build();
     }
 
+    private String parseOptionName(String optionInfo) {
+
+        if (optionInfo != null && optionInfo.contains(":")) {
+            String[] parts = optionInfo.split(":");
+            if (parts.length > 1) {
+                return parts[1].trim();  // 공백을 제거
+            }
+        }
+        return null;
+    }
 }
