@@ -1,9 +1,7 @@
 package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartService;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
@@ -11,10 +9,13 @@ import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,72 +35,61 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public BaseResponse<Void> createCart(Authentication authentication,
+    public BaseResponse<Void> createCart(@AuthenticationPrincipal UserDetails userDetails,
             @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid,
             @RequestBody CartRequestVo cartRequestVo
     ) {
-        CartRequestDto cartRequestDto = cartRequestVo.toDto();
 
-        String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
+        cartService.createCart(cartRequestVo.toDto(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)));
 
-        cartService.createCart(cartRequestDto, userIdentifier);
-
-        return new BaseResponse<>();
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @GetMapping
-    public BaseResponse<List<CartResponseVo>> getCart(Authentication authentication,
+    public BaseResponse<List<CartResponseVo>> getCart(@AuthenticationPrincipal UserDetails userDetails,
             @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid) {
-        String userIdentifier = getUserIdentifier(authentication, unsignedUserUuid);
 
-        List<CartResponseVo> cartResponseVoList = cartService.getCart(userIdentifier).stream()
-                .map(CartResponseDto::toVo)
-                .toList();
-
-        return new BaseResponse<>(cartResponseVoList);
+        return new BaseResponse<>(
+                cartService.getCart(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)).stream()
+                        .map(CartResponseDto::toVo).toList()
+        );
     }
 
     @PutMapping("/option/{cartUuid}")
-    public BaseResponse<CartResponseVo> updateCart(@PathVariable String cartUuid,
+    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
             @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
 
-        CartUpdateRequestDto cartUpdateRequestDto = cartUpdateRequestVo.toDto();
-
-        CartResponseVo cartResponseVo = cartService.updateCart(cartUpdateRequestDto, cartUuid).toVo();
-
-        return new BaseResponse<>(cartResponseVo);
+        return new BaseResponse<>(cartService.updateCartItem(cartUpdateRequestVo.toDto(cartUuid)).toVo());
     }
 
-    @PutMapping("/status/{cartUuid}")
-    public BaseResponse<Void> updateCart(@RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
+    @PutMapping("/status")
+    public BaseResponse<Void> updateCartStatus(
+            @RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
 
-        List<CartStatusUpdateRequestDto> cartUpdateStatusRequestDtoList = cartUpdateStatusRequestVoList.stream()
+        cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
                 .map(CartStatusUpdateRequestVo::toDto)
-                .toList();
-
-
-        cartService.updateCart(cartUpdateStatusRequestDtoList);
+                .toList());
 
         return new BaseResponse<>();
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
-        cartService.deleteCartItems(cartDeleteRequestVoList);
-        return new BaseResponse<>();
+        cartService.deleteCartItems(cartDeleteRequestVoList.stream()
+                .map(CartDeleteRequestVo::toDto)
+                .toList());
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @PostMapping("/migrate")
-    public BaseResponse<Void> migrateCart(Authentication authentication,
+    public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,
             @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
     ) {
-        cartService.migrateCart(authentication.getName(), unsignedUserUuid);
+        cartService.migrateCart(CartMigrateRequestDto.builder()
+                .userUuid(userDetails.getUsername())
+                .unsignedUserUuid(unsignedUserUuid)
+                .build());
         return new BaseResponse<>();
     }
-
-
-    private String getUserIdentifier(Authentication authentication, String unsignedUserUuid) {
-        return (authentication != null) ? authentication.getName() : unsignedUserUuid;
-    } // 재사용성이 떨어지므로 Jwtutil에 넣어도 좋음
 
 }

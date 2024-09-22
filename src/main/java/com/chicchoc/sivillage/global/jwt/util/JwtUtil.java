@@ -23,4 +23,10 @@ public class JwtUtil {
         log.error("JwtUtil.getUserUuid() -> 인증되지 않은 사용자입니다.");
         throw new BaseException(BaseResponseStatus.NO_SIGN_IN);
     }
+
+    // 로그인 유저 또는 비회원 판별 후 UUID를 가져오는 메서드
+    public static String getUserIdentifier(UserDetails userDetails, String unsignedUserUuid) {
+        return (userDetails != null) ? userDetails.getUsername() : unsignedUserUuid;
+    }
+
 }

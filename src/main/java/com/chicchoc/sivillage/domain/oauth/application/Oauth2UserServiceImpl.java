@@ -64,6 +64,7 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
     }
 
     // 사용자 ID 추출 메서드
+    @SuppressWarnings("unchecked")
     private String getOauthMemberId(String oauthProvider, OAuth2User oauth2User) {
         if ("kakao".equals(oauthProvider)) {
             return oauth2User.getAttributes().get("id").toString();
@@ -75,6 +76,7 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
     }
 
     // 사용자 이메일 추출 메서드
+    @SuppressWarnings("unchecked")
     private String getOauthMemberEmail(String oauthProvider, OAuth2User oauth2User) {
         if ("kakao".equals(oauthProvider)) {
             Map<String, String> kakaoAccount = (Map<String, String>) oauth2User.getAttributes().get("kakao_account");
