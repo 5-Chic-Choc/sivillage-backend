@@ -12,7 +12,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findByUserUuid(String userUuid);
 
-    Optional<Cart> findByUserUuidAndProductOptionUuid(String userUuid, String productOptionUuid);
+//    Optional<Cart> findByUserUuidAndProductOptionUuid(String userUuid, String productOptionUuid);
 
     Optional<Cart> findByCartUuid(String cartUuid);
 }

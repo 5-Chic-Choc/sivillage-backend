@@ -52,37 +52,8 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART)));
     }
 
-//    @Override
-//    public void createCart(CartRequestDto cartRequestDto) {
-//
-//        Optional<Cart> existCartItem = cartRepository.findByUserUuidAndProductOptionUuid(cartRequestDto.getUserUuid(),
-//                cartRequestDto.getProductOptionUuid());
-//
-//        if (existCartItem.isPresent()) {
-//            cartRepository.save(Cart.builder()
-//                    .id(existCartItem.get().getId())
-//                    .userUuid(existCartItem.get().getUserUuid())
-//                    .cartUuid(existCartItem.get().getCartUuid())
-//                    .productOptionUuid(existCartItem.get().getProductOptionUuid())
-//                    .amount(existCartItem.get().getAmount() + cartRequestDto.getAmount())
-//                    .isSelected(existCartItem.get().getIsSelected())
-//                    .build());
-//        } else {
-//            cartRepository.save(cartRequestDto.toEntity());
-//        }
-//    }
 
-//    @Override
-//    public List<CartResponseDto> getCart(String userUuid) {
-//        return cartRepository.findByUserUuid(userUuid).stream()
-//                .map(cart -> CartResponseDto.builder()
-//                        .cartUuid(cart.getCartUuid())
-//                        .productOptionUuid(cart.getProductOptionUuid())
-//                        .amount(cart.getAmount())
-//                        .isSelected(cart.getIsSelected())
-//                        .build()
-//                ).toList();
-//    }
+
 
 //    @Override
 //    public CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto) {
@@ -125,13 +96,6 @@ public class CartServiceImpl implements CartService {
 //                .forEach(cartRepository::save);
 //    }
 //
-//    @Override
-//    public void deleteCartItems(List<CartDeleteRequestDto> cartDeleteRequestDtoList) {
-//        cartDeleteRequestDtoList.stream()
-//                .map(cartDeleteRequestDto -> cartRepository.findByCartUuid(cartDeleteRequestDto.getCartUuid())
-//                        .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART))
-//                ).forEach(cartRepository::delete);
-//    }
 //
 //    @Override
 //    public void migrateCart(CartMigrateRequestDto cartMigrateRequestDto) {

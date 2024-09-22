@@ -8,5 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CartProductRepository extends JpaRepository<CartProduct, Long> {
     List<CartProduct> findByCartUuid(String cartUuid);
 
+    Optional<CartProduct> findByCartProductUuid(String cartProductUuid);
+
     Optional<CartProduct> findByCartUuidAndProductOptionUuid(String cartUuid, String productOptionUuid);
+
+    void deleteByCartUuid(String cartUuid);
 }

@@ -1,14 +1,17 @@
 package com.chicchoc.sivillage.domain.cart.presentation;
 
 import com.chicchoc.sivillage.domain.cart.application.CartProductService;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartProductRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartProductResponseDto;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartProductDeleteRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartProductOptionUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartProductRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartProductStatusUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartProductResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +41,33 @@ public class CartProductController {
         return new BaseResponse<>(cartProductResponseDtoList.stream().map(CartProductResponseDto::toVo).toList());
     }
 
+    @DeleteMapping
+    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartProductDeleteRequestVo> cartDeleteRequestVoList) {
+        cartProductService.deleteCartItems(cartDeleteRequestVoList.stream()
+                .map(CartProductDeleteRequestVo::toDto)
+                .toList());
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @PutMapping("/productOption/{cartProductUuid}")
+    public BaseResponse<CartProductResponseVo> updateCartProductOption(
+            @PathVariable("cartProductUuid") String cartProductUuid,
+            @RequestBody CartProductOptionUpdateRequestVo cartProductOptionUpdateRequestVo) {
+
+        return new BaseResponse<>(cartProductService.updateCartProductOption(
+                cartProductOptionUpdateRequestVo.toDto(cartProductUuid)).toVo());
+    }
+
+    @PutMapping("/productStatus/{cartProductUuid}")
+    public BaseResponse<CartProductResponseVo> updateCartProductStatus(
+            @PathVariable("cartProductUuid") String cartProductUuid,
+            @RequestBody CartProductStatusUpdateRequestVo cartProductStatusUpdateRequestVo) {
+
+        return new BaseResponse<>(
+                cartProductService.updateCartProductStatus(cartProductStatusUpdateRequestVo.toDto(cartProductUuid))
+                        .toVo());
+    }
+
 //    @PutMapping("/option/{cartUuid}")
 //    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
 //            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
@@ -56,13 +86,6 @@ public class CartProductController {
 //        return new BaseResponse<>();
 //    }
 //
-//    @DeleteMapping
-//    public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
-//        cartService.deleteCartItems(cartDeleteRequestVoList.stream()
-//                .map(CartDeleteRequestVo::toDto)
-//                .toList());
-//        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-//    }
 //
 //    @PostMapping("/migrate")
 //    public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,

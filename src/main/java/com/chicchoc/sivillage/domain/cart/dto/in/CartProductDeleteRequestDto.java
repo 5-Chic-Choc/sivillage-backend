@@ -1,17 +1,18 @@
 package com.chicchoc.sivillage.domain.cart.dto.in;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class CartUpdateRequestDto {
+public class CartProductDeleteRequestDto {
 
     private String cartUuid;
-    private String cartName;
 
+    @Builder
+    public CartProductDeleteRequestDto(String cartUuid) {
+        this.cartUuid = cartUuid;
+    }
 }
