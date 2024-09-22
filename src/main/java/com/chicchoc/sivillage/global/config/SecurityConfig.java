@@ -40,8 +40,8 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration(); //CORS 설정
         config.setAllowCredentials(true); //쿠키를 주고 받을 수 있도록 설정
-        config.addAllowedOrigin("https://sivillage.shop"); //모든 Origin 허용
-        config.addAllowedHeader("Content-Type"); // JSON 데이터만 헤더로 받음
+        config.addAllowedOrigin("https://sivillage.shop");
+        config.addAllowedHeader("*"); // JSON 데이터만 헤더로 받음
         config.addAllowedMethod("*"); //모든 Method 허용
         config.setExposedHeaders(List.of(jwtProperties.getAccessTokenPrefix())); //Authorization 헤더를 노출
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
