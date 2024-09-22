@@ -89,6 +89,10 @@ public class ProductDataService {
         for (ProductDataRequestDto dto : dtos) {
             log.info("dto = " + dto);
 
+            if (checkNull(dto)) {
+                continue;
+            }
+
             // Step 1. 상품 Entity 저장
             String productUuid = dto.getGoodsNo();
             Product product = saveProduct(dto, productUuid);
@@ -162,6 +166,19 @@ public class ProductDataService {
     }
 
     // ==================== 아래는 Private 메서드 =====================
+
+    private boolean checkNull(ProductDataRequestDto dto) {
+        try {
+            // 필수 데이터가 null인 경우
+            if (dto.getGoodsNo() == null || dto.getGoodsNm() == null || dto.getBrandNm() == null
+                    || dto.getDispLctgNm() == null || dto.getNormalPrice() == null) {
+                return true;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+        return false;
+    }
 
     // 브랜드 찾아 상품 저장
     private Product saveProduct(ProductDataRequestDto dto, String productUuid) {
