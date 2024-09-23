@@ -8,16 +8,19 @@ import com.chicchoc.sivillage.domain.brand.dto.out.BrandResponseDto;
 import com.chicchoc.sivillage.domain.brand.vo.in.BrandRequestVo;
 import com.chicchoc.sivillage.domain.brand.vo.out.BrandMediaResponseVo;
 import com.chicchoc.sivillage.domain.brand.vo.out.BrandResponseVo;
-import com.chicchoc.sivillage.global.common.aop.annotation.CheckAuthentication;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -80,40 +83,31 @@ public class BrandController {
                 .toList());
     }
 
-    @CheckAuthentication
     @Operation(summary = "BrandLike API", description = "브랜드 좋아요", tags = {"BrandLike"})
     @PostMapping("/like/{brandUuid}")
     public BaseResponse<Void> likeBrand(@PathVariable String brandUuid, Authentication authentication) {
 
-        String userUuid = ((UserDetails) authentication.getPrincipal()).getUsername();
-
-        brandLikeService.saveAndUpdateBrandLike(brandUuid, userUuid);
+        brandLikeService.saveAndUpdateBrandLike(brandUuid, authentication.getName());
 
         return new BaseResponse<>();
     }
 
-    @CheckAuthentication
     @Operation(summary = "getBrandLike API", description = "브랜드 단건 좋아요 여부 조회", tags = {"BrandLike"})
     @GetMapping("/like/{brandUuid}")
     public BaseResponse<Boolean> isLikedBrand(@PathVariable String brandUuid, Authentication authentication) {
 
-        String userUuid = ((UserDetails) authentication.getPrincipal()).getUsername();
-
-        boolean isLiked = brandLikeService.isLikedBrand(brandUuid, userUuid);
+        boolean isLiked = brandLikeService.isLikedBrand(brandUuid, authentication.getName());
 
         return new BaseResponse<>(isLiked);
     }
 
-    @CheckAuthentication
     @Operation(summary = "getAllBrandLike API",
             description = "내가 좋아요한 브랜드 전체 조회 (최신순)",
             tags = {"BrandLike"})
     @GetMapping("/like/all")
     public BaseResponse<List<String>> getLikedBrandList(Authentication authentication) {
 
-        String userUuid = ((UserDetails) authentication.getPrincipal()).getUsername();
-
-        List<String> likedBrandList = brandLikeService.getLikedBrandList(userUuid);
+        List<String> likedBrandList = brandLikeService.getLikedBrandList(authentication.getName());
 
         return new BaseResponse<>(likedBrandList);
     }
