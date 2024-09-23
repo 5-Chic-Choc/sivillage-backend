@@ -26,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponseDto> getFilteredProducts(ProductRequestDto dto) {
+
         List<Product> products = productRepositoryCustom.findFilteredProducts(dto);
 
         return products.stream()
