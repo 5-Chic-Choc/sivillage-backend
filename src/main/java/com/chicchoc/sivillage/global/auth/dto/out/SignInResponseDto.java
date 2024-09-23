@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class SignInResponseDto implements OauthResponse {
 
@@ -21,5 +19,12 @@ public class SignInResponseDto implements OauthResponse {
         return SignInResponseVo.builder()
                 .uuid(this.getUuid())
                 .build();
+    }
+
+    @Builder
+    public SignInResponseDto(String accessToken, String refreshToken, String uuid) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.uuid = uuid;
     }
 }

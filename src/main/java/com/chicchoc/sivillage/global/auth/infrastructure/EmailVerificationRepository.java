@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmailVerificationRepository extends JpaRepository<EmailVerification, Long> {
 
-    Optional<EmailVerification> findTopByEmailOrderByIdDesc(String email);
+    Optional<EmailVerification> findByEmail(String email);
 
     void deleteByEmail(String email);
 }

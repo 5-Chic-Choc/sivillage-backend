@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.terms.domain;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.global.auth.dto.in.UserTermsRequestDto;
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +46,15 @@ public class UserTermsList extends BaseEntity {
         this.member = member;
         this.termsId = termsId;
         this.isAgree = isAgree;
+    }
+
+    public static List<UserTermsList> of(Member member, List<UserTermsRequestDto> terms) {
+        return terms.stream()
+                .map(term -> UserTermsList.builder()
+                        .member(member)
+                        .termsId(term.getTermsId())
+                        .isAgree(term.getIsAgree())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

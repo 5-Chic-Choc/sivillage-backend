@@ -90,23 +90,20 @@ public class JwtTokenProvider {
 
     // 토큰에서 클레임 파싱하는 메서드
     private Claims parseClaims(String token) {
-
         try {
             if (token == null) {
                 log.error("토큰이 존재하지 않습니다");
                 throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
             }
-            log.error(" 들어온 토큰: {}", token);
-            Claims claims = Jwts.parser()
+            return Jwts.parser()
                     .verifyWith(getSecretKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            log.error("토큰 내용: : {}", claims);
-            return claims;
 
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다");
+            e.printStackTrace();
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 유형의 토큰입니다");
