@@ -1,8 +1,8 @@
 package com.chicchoc.sivillage.global.data.presentation;
 
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import com.chicchoc.sivillage.global.data.application.ProductDataService;
-import com.chicchoc.sivillage.global.data.dto.product.ProductDataRequestDto;
+import com.chicchoc.sivillage.global.data.application.PromotionDataService;
+import com.chicchoc.sivillage.global.data.dto.promotion.PromotionDataRequestDto;
 import com.chicchoc.sivillage.global.data.util.JsonFileUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,20 +19,20 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/data")
-public class ProductDataController {
+public class PromotionDataController {
 
-    private final ProductDataService productDataService;
+    private final PromotionDataService promotionDataService;
 
-    @Operation(summary = "상품 데이터 업로드")
-    @PostMapping(value = "/product/all", consumes = {"multipart/form-data"})
-    public BaseResponse<Void> uploadProductData(@RequestParam("file") MultipartFile file) throws IOException {
+    @Operation(summary = "프로모션 데이터 업로드")
+    @PostMapping(value = "/promotion/all", consumes = {"multipart/form-data"})
+    public BaseResponse<Void> uploadPromotionData(@RequestParam("file") MultipartFile file) throws IOException {
 
-        List<ProductDataRequestDto> productDataRequestDtos = JsonFileUtil.parseFileToDtoList(
+        List<PromotionDataRequestDto> promotionDataRequestDtos = JsonFileUtil.parseFileToDtoList(
                 file,
-                ProductDataRequestDto[].class);
+                PromotionDataRequestDto[].class);
 
         // 변환된 DTO 리스트 저장
-        productDataService.saveProductData(productDataRequestDtos);
+        promotionDataService.savePromotionData(promotionDataRequestDtos);
 
         return new BaseResponse<>();
     }
