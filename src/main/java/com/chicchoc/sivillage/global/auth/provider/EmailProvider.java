@@ -16,7 +16,6 @@ public class EmailProvider {
     private static final String SUBJECT = "[SIVillage] 회원가입 인증 메일입니다.";
 
     public boolean sendVerificationEmail(String email, String verificationCode) {
-
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
@@ -28,7 +27,6 @@ public class EmailProvider {
             messageHelper.setText(htmlContent, true);
 
             javaMailSender.send(message);
-
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
         }

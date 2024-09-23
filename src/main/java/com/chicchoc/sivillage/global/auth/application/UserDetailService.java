@@ -22,7 +22,5 @@ public class UserDetailService implements UserDetailsService {
         return memberRepository.findByUuid(uuid).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
-
     }
-
 }
