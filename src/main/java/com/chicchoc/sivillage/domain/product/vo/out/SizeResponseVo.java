@@ -8,4 +8,5 @@ import lombok.Getter;
 public class SizeResponseVo {
     private Long id;
     private String name;
+    private String value;
 }
