@@ -1,5 +1,7 @@
 package com.chicchoc.sivillage.domain.oauth.dto.in;
 
+import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.domain.oauth.domain.OauthMember;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -35,5 +37,14 @@ public class OauthSignInRequestDto {
         this.oauthId = oauthId;
         this.oauthProvider = oauthProvider;
         this.oauthEmail = oauthEmail;
+    }
+
+    public OauthMember toEntity(Member member) {
+        return OauthMember.builder()
+                .oauthId(oauthId)
+                .oauthProvider(oauthProvider)
+                .oauthEmail(oauthEmail)
+                .member(member)
+                .build();
     }
 }

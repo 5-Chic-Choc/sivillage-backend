@@ -36,7 +36,6 @@ public class SwaggerConfig {
                         .name("Authorization"));
 
         return new OpenAPI()
-                .components(new Components())
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
