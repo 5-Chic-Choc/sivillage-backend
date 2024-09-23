@@ -111,7 +111,7 @@ public class ProductDataService {
             // 하나의 제품에서, 색상 n개, 사이즈 m개를 가지면 n * m개의 제품 옵션을 가짐 => 이중 for문
             for (String color : colors) {
                 for (String size : sizes) {
-                    String productOptUuid = new NanoIdGenerator().generateNanoId();
+                    String productOptUuid = NanoIdGenerator.generateNanoId();
 
                     // Step 4-1. 제품 이미지 저장
                     saveImages(dto.getImages(), productOptUuid);
@@ -190,7 +190,7 @@ public class ProductDataService {
                 // 없으면 새로 저장
                 .orElseGet(() -> {
                     Brand newBrand = brandRepository.save(Brand.builder()
-                            .brandUuid(new NanoIdGenerator().generateNanoId())
+                            .brandUuid(NanoIdGenerator.generateNanoId())
                             .name(dto.getBrandNm() != null ? dto.getBrandNm() : "데이터 넣기 힘듭니다.")
                             .brandIndexLetter(dto.getBrandNm().substring(0, 1))
                             .brandListType("en")

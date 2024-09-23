@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResponseDto signUpAndSignIn(SignUpRequestDto requestDto) {
 
-        String uuid = new NanoIdGenerator().generateNanoId();
+        String uuid =  NanoIdGenerator.generateNanoId();
 
         // 중복된 이름과 전화번호가 존재할 경우 예외 처리
         if (memberRepository.existsByNameAndPhone(requestDto.getName(), requestDto.getPhone())) {

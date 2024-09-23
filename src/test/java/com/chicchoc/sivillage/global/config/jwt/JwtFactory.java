@@ -21,7 +21,7 @@ public class JwtFactory { //토큰 생성 클래스
     // 기본 필드값 설정
     private SecretKey secretKey;
 
-    private String subject = new NanoIdGenerator().generateNanoId();
+    private String subject = NanoIdGenerator.generateNanoId();
 
     private Date issuedAt = new Date();
 

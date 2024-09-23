@@ -56,7 +56,7 @@ class TokenProviderTest {
         Member testUser = memberRepository.save(Member.builder()
                 .email(uniqueEmail)
                 .password("testpassword")
-                .uuid(new NanoIdGenerator().generateNanoId())
+                .uuid(NanoIdGenerator.generateNanoId())
                 .name("TestUser")
                 .phone("010-1234-5678")
                 .isAutoSignIn(true)
@@ -121,7 +121,7 @@ class TokenProviderTest {
     void getAuthentication() {
 
         // given : 토큰 생성
-        String userUuid = new NanoIdGenerator().generateNanoId();
+        String userUuid = NanoIdGenerator.generateNanoId();
         String token = JwtFactory.builder()
                 .subject(userUuid)
                 .build()
@@ -139,7 +139,7 @@ class TokenProviderTest {
     void getUserUuId() {
 
         // given : 토큰 생성
-        String userUuid = new NanoIdGenerator().generateNanoId();
+        String userUuid = NanoIdGenerator.generateNanoId();
         String token = JwtFactory.builder()
                 .subject(userUuid)
                 .build()
