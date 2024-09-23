@@ -3,6 +3,7 @@ package com.chicchoc.sivillage.domain.cart.application;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartDeleteRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.ItemIsSelectedUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.ItemQuantityUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
@@ -16,7 +17,9 @@ public interface CartService {
 
     CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto);
 
-    void updateCartStatus(List<ItemQuantityUpdateRequestDto> cartUpdateAmountRequestDtoList);
+    void updateItemQuantity(List<ItemQuantityUpdateRequestDto> cartUpdateAmountRequestDtoList);
+
+    void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> ItemIsSelectedUpdateRequestDtoList);
 
     void deleteCartItems(List<CartDeleteRequestDto> cartDeleteRequestDtoList);
 
