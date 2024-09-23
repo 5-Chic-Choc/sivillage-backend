@@ -12,24 +12,27 @@ public class CartRequestDto {
 
     private String cartUuid;
     private String userUuid;
+    private String productUuid;
     private String productOptionUuid;
-    private Integer amount;
+    private int quantity;
 
     public Cart toEntity() {
         return Cart.builder()
                 .cartUuid(cartUuid)
                 .userUuid(userUuid)
+                .productUuid(productUuid)
                 .productOptionUuid(productOptionUuid)
-                .amount(amount)
+                .quantity(quantity)
                 .isSelected(false)
                 .build();
     }
 
     @Builder
-    public CartRequestDto(String userUuid, String productOptionUuid, Integer amount) {
+    public CartRequestDto(String userUuid, String productOptionUuid, int quantity, String productUuid) {
         this.cartUuid = NanoIdGenerator.generateNanoId();
         this.userUuid = userUuid;
+        this.productUuid = productUuid;
         this.productOptionUuid = productOptionUuid;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 }

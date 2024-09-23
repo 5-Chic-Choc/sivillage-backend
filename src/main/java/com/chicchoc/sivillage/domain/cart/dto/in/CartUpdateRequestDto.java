@@ -8,14 +8,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CartUpdateRequestDto {
+    private String userUuid;
     private String cartUuid;
     private String productOptionUuid;
-    private Integer amount;
+    private int quantity;
 
     @Builder
-    public CartUpdateRequestDto(String cartUuid, String productOptionUuid, int amount) {
+    public CartUpdateRequestDto(String userUuid, String cartUuid, String productOptionUuid, int quantity) {
+        this.userUuid = userUuid;
         this.cartUuid = cartUuid;
         this.productOptionUuid = productOptionUuid;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 }

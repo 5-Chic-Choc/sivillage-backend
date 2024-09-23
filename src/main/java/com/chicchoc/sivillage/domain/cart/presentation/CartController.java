@@ -5,7 +5,7 @@ import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartStatusUpdateRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.ItemQuantityUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
@@ -56,18 +56,32 @@ public class CartController {
     }
 
     @PutMapping("/option/{cartUuid}")
-    public BaseResponse<CartResponseVo> updateCartItem(@PathVariable String cartUuid,
+    public BaseResponse<CartResponseVo> updateCartItem(@AuthenticationPrincipal UserDetails userDetails,
+            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid,
+            @PathVariable String cartUuid,
             @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
 
-        return new BaseResponse<>(cartService.updateCartItem(cartUpdateRequestVo.toDto(cartUuid)).toVo());
+        return new BaseResponse<>(cartService.updateCartItem(
+                cartUpdateRequestVo.toDto(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid), cartUuid)).toVo());
     }
 
-    @PutMapping("/status")
-    public BaseResponse<Void> updateCartStatus(
-            @RequestBody List<CartStatusUpdateRequestVo> cartUpdateStatusRequestVoList) {
+    @PutMapping("/quantity")
+    public BaseResponse<Void> updateItemQuantity(
+            @RequestBody List<ItemQuantityUpdateRequestVo> cartUpdateStatusRequestVoList) {
 
         cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
-                .map(CartStatusUpdateRequestVo::toDto)
+                .map(ItemQuantityUpdateRequestVo::toDto)
+                .toList());
+
+        return new BaseResponse<>();
+    }
+
+    @PutMapping("/isSelected")
+    public BaseResponse<Void> updateItemIsSelected(
+            @RequestBody List<ItemQuantityUpdateRequestVo> cartUpdateStatusRequestVoList) {
+
+        cartService.updateCartStatus(cartUpdateStatusRequestVoList.stream()
+                .map(ItemQuantityUpdateRequestVo::toDto)
                 .toList());
 
         return new BaseResponse<>();

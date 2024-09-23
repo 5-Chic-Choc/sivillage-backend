@@ -6,16 +6,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CartStatusUpdateRequestDto {
-
+public class ItemIsSelectedUpdateRequestDto {
     private String cartUuid;
-    private Integer amount;
     private Boolean isSelected;
 
     @Builder
-    public CartStatusUpdateRequestDto(String cartUuid, Integer amount, Boolean isSelected) {
+    public ItemIsSelectedUpdateRequestDto(String cartUuid, Boolean isSelected) {
         this.cartUuid = cartUuid;
-        this.amount = amount;
         this.isSelected = isSelected;
     }
 }
