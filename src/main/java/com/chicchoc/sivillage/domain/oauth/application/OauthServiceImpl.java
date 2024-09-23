@@ -5,6 +5,9 @@ import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.domain.oauth.domain.OauthMember;
 import com.chicchoc.sivillage.domain.oauth.dto.in.OauthSignInRequestDto;
 import com.chicchoc.sivillage.domain.oauth.dto.in.OauthSignUpRequestDto;
+import com.chicchoc.sivillage.domain.oauth.dto.in.OauthUserInfoReqestDto;
+import com.chicchoc.sivillage.domain.oauth.dto.out.OauthResponse;
+import com.chicchoc.sivillage.domain.oauth.dto.out.OauthUserInfoResponseDto;
 import com.chicchoc.sivillage.domain.oauth.infrastructure.OauthMemberRepository;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
@@ -12,14 +15,19 @@ import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OauthServiceImpl implements OauthService {
@@ -35,7 +43,7 @@ public class OauthServiceImpl implements OauthService {
     @Override
     public SignInResponseDto oauthSignUp(OauthSignUpRequestDto requestDto) {
 
-        String uuid = new NanoIdGenerator().generateNanoId();
+        String uuid = NanoIdGenerator.generateNanoId();
 
         // 중복된 이름과 전화번호가 존재할 경우 예외 처리
         if (memberRepository.existsByNameAndPhone(requestDto.getName(), requestDto.getPhone())) {
@@ -63,7 +71,7 @@ public class OauthServiceImpl implements OauthService {
         Member member = memberRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
-        Authentication authentication = authenticateMember(member, requestDto.getPassword());
+        Authentication authentication = authenticate(member, requestDto.getPassword());
 
         linkOauthAccount(requestDto.getOauthId(), requestDto.getOauthProvider(), requestDto.getOauthEmail(), member);
 
@@ -73,10 +81,45 @@ public class OauthServiceImpl implements OauthService {
         return new SignInResponseDto(accessToken, refreshToken, member.getUuid());
     }
 
-    private Authentication authenticateMember(Member member, String password) {
+    @Override
+    public OauthResponse returnUserInfoOrSignIn(OauthUserInfoReqestDto requestDto) {
+
+        // 연동된 계정이 있는지 확인
+        OauthMember oauthMember = oauthMemberRepository.findByOauthIdAndOauthProvider(
+                        requestDto.getOauthId(),
+                        requestDto.getOauthProvider())
+                .orElse(null);
+
+        // 연동된 계정이 없는 경우 => 프론트로 OAuth 정보 전달.)
+        if (oauthMember == null) {
+            return OauthUserInfoResponseDto.of(requestDto);
+        }
+
+        Authentication authentication = manualAuthenticate(oauthMember.getMember());
+
+        return SignInResponseDto.builder()
+                .accessToken(jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime()))
+                .refreshToken(jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime()))
+                .uuid(oauthMember.getMember().getUuid())
+                .build();
+    }
+
+    private Authentication authenticate(Member member, String password) {
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(member.getUuid(), password)
         );
+    }
+
+    private Authentication manualAuthenticate(Member member) {
+
+        // todo: 필요시 권한 정보 추가
+        Collection<? extends GrantedAuthority> authorities = member.getAuthorities();
+
+        // Spring Security의 User 객체 생성
+        User principal = new User(member.getUuid(), "", authorities);
+
+        // UsernamePasswordAuthenticationToken 생성
+        return new UsernamePasswordAuthenticationToken(principal, null, authorities);
     }
 
     private void linkOauthAccount(String oauthId, String oauthProvider, String oauthEmail, Member member) {

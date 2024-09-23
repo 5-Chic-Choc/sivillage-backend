@@ -52,7 +52,7 @@ public class ReviewDataRequestDto {
         return Review.builder()
                 .reviewUuid(productEvalNo)
                 .productUuid(productCode)
-                .userUuid(new NanoIdGenerator().generateNanoId())
+                .userUuid(NanoIdGenerator.generateNanoId())
                 .reviewerEmail(reviewerName.isEmpty() ? "anonymous" : reviewerName)
                 .reviewContent(reviewText)
                 .starPoint(starPoint != null ? starPoint : (byte) ThreadLocalRandom.current().nextInt(0, 6))
