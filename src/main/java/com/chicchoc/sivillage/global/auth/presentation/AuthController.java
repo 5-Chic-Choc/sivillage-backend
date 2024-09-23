@@ -10,7 +10,7 @@ import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
-import com.chicchoc.sivillage.global.common.aop.annotation.MethodLoggerAop;
+import com.chicchoc.sivillage.global.auth.vo.SignUpRequestVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,25 +32,20 @@ public class AuthController {
     private final AuthService authService;
     private final JwtProperties jwtProperties;
 
-    @Operation(summary = "회원가입", description = "회원가입 + 로그인(토큰 응답)")
+    @Operation(summary = "회원가입(일반/oAuth)", description = " 회원가입 + 로그인(토큰 응답), (oAuth 연동)")
     @PostMapping("/sign-up")
-    public BaseResponse<SignInResponseVo> signUpAndSignIn(@Valid @RequestBody SignUpRequestDto requestDto,
+    public BaseResponse<SignInResponseVo> signUpAndSignIn(@Valid @RequestBody SignUpRequestVo requestVo,
             HttpServletResponse response) {
 
-        // 회원가입 후 로그인 처리 (SignIn 호출)
-
-        SignInResponseDto responseDto = authService.signUpAndSignIn(requestDto);
-
-        return sendTokens(responseDto, response);
+        return sendTokens(authService.signUpAndSignIn(SignUpRequestDto.toDto(requestVo)), response);
     }
 
-    @Operation(summary = "로그인 ", description = "로그인(토큰 2종 헤더에 발급)")
+    @Operation(summary = "로그인(일반/oAuth) ", description = "로그인(토큰 응답), (oAuth 연동)")
     @PostMapping("/sign-in")
     public BaseResponse<SignInResponseVo> signIn(@Valid @RequestBody SignInRequestDto signInRequestDto,
             HttpServletResponse response) {
 
-        SignInResponseDto responseDto = authService.signIn(signInRequestDto);
-        return sendTokens(responseDto, response);
+        return sendTokens(authService.signIn(signInRequestDto), response);
     }
 
     // 이메일 중복 검사
@@ -77,7 +72,6 @@ public class AuthController {
     public BaseResponse<Void> emailVerification(@Valid @RequestBody EmailVerificationRequestDto requestDto) {
 
         authService.sendVerificationEmail(requestDto);
-
         return new BaseResponse<>();
     }
 
@@ -87,18 +81,16 @@ public class AuthController {
             @Valid @RequestBody CheckEmailVerificationRequestDto requestDto) {
 
         authService.checkEmailVerification(requestDto);
-
         return new BaseResponse<>();
     }
 
-    //로그인 공통 로직
+    // 토큰 발급해 응답
     private BaseResponse<SignInResponseVo> sendTokens(SignInResponseDto responseDto,
             HttpServletResponse response) {
 
         response.setHeader(jwtProperties.getAccessTokenPrefix(), responseDto.getAccessToken());
         response.setHeader(jwtProperties.getRefreshTokenPrefix(), responseDto.getRefreshToken());
 
-        // responseDto -> responseVo 변환해 응답
         return new BaseResponse<>(responseDto.toVo());
     }
 }
