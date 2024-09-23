@@ -28,7 +28,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     public List<Product> findFilteredProducts(ProductRequestDto dto) {
         final QProduct product = QProduct.product;
         final QProductOption productOption = QProductOption.productOption;
-        final QProductCategory productCategory = QProductCategory.productCategory;
 
         BooleanBuilder predicate = createPredicate(dto);
 
@@ -40,7 +39,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         return queryFactory.selectFrom(product)
                 .leftJoin(productOption).on(product.id.eq(productOption.product.id))
-                .leftJoin(productCategory).on(product.id.eq(productCategory.productId))
                 .where(predicate)
                 .groupBy(product.id, productOption.price, productOption.discountRate)
                 .offset(offset)
@@ -130,6 +128,37 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             predicate.and(productOption.price.goe(dto.getMinimumPrice()));
         }
 
+        // 키워드 검색 추가
+        if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {
+            BooleanBuilder keywordPredicate = new BooleanBuilder();
+
+            // 제품 이름에서 검색
+            keywordPredicate.or(product.productName.containsIgnoreCase(dto.getKeywords()));
+
+            // 브랜드 이름에서 검색
+            List<String> brandUuids = queryFactory.select(QBrand.brand.brandUuid)
+                    .from(QBrand.brand)
+                    .where(QBrand.brand.name.containsIgnoreCase(dto.getKeywords()))
+                    .fetch();
+
+            if (!brandUuids.isEmpty()) {
+                keywordPredicate.or(product.brandUuid.in(brandUuids));
+            }
+
+            // 해시태그에서 검색
+            List<String> productUuids = queryFactory.select(QProductHashtag.productHashtag.productUuid)
+                    .from(QProductHashtag.productHashtag)
+                    .where(QProductHashtag.productHashtag.hashtagContent.containsIgnoreCase(dto.getKeywords()))
+                    .fetch();
+
+            if (!productUuids.isEmpty()) {
+                keywordPredicate.or(product.productUuid.in(productUuids));
+            }
+
+            predicate.and(keywordPredicate);
+        }
+
+
         if (dto.getMaximumPrice() != null) {
             predicate.and(productOption.price.loe(dto.getMaximumPrice()));
         }
@@ -169,11 +198,21 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanBuilder productCategoryFilter(Long categoryId) {
-        QProductCategory productCategory = QProductCategory.productCategory;
+        final QProduct product = QProduct.product;
+
         if (categoryId == null) {
             throw new BaseException(BaseResponseStatus.INVALID_CATEGORY_PATH);
         }
 
-        return new BooleanBuilder().and(productCategory.categoryId.eq(categoryId));
+        // 카테고리와 제품이 연관된 테이블을 직접 서브쿼리로 필터링
+        List<Long> productIds = queryFactory
+                .select(QProductCategory.productCategory.productId)
+                .from(QProductCategory.productCategory)
+                .where(QProductCategory.productCategory.categoryId.eq(categoryId))
+                .fetch();
+
+        // 서브쿼리 결과로 필터링
+        return new BooleanBuilder().and(product.id.in(productIds));
     }
+
 }

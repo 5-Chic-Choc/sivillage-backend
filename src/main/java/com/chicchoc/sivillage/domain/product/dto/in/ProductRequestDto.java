@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ProductRequestDto {
+    private String keywords;
     private List<String> categories;
     private Integer depth;
     private List<String> sizes;

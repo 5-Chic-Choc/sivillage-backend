@@ -36,9 +36,11 @@ public class ProductController {
             @RequestParam(defaultValue = "createdAt")
             @Parameter(description = "정렬 기준 (기본값: 'createdAt', 다른 값: 'discount_rate', 'price', 'name')")
             String sortBy,
-            @RequestParam(defaultValue = "true") boolean isAscending) {
+            @RequestParam(defaultValue = "true") boolean isAscending,
+            @RequestParam(required = false) String keywords) {
 
         ProductRequestDto productRequestDto = ProductRequestDto.builder()
+                .keywords(keywords)
                 .categories(categories)
                 .sizes(sizes)
                 .colors(colors)

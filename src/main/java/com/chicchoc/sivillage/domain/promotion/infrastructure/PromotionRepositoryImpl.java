@@ -38,6 +38,7 @@ public class PromotionRepositoryImpl implements PromotionRepositoryCustom {
 
         return queryFactory.selectFrom(promotion)
                 .leftJoin(promotionProduct)
+                .fetchJoin()
                 .on(promotion.promotionUuid.eq(promotionProduct.promotion.promotionUuid))  // PromotionProduct 조인
                 .leftJoin(product)
                 .on(promotionProduct.productUuid.eq(product.productUuid))  // Product 조인
@@ -63,7 +64,6 @@ public class PromotionRepositoryImpl implements PromotionRepositoryCustom {
     }
 
     private BooleanBuilder createPredicate(PromotionFilterRequestDto dto) {
-        QPromotion promotion = QPromotion.promotion;
         QPromotionBenefit promotionBenefit = QPromotionBenefit.promotionBenefit;
         QCategory category = QCategory.category;
         QBrand brand = QBrand.brand;
