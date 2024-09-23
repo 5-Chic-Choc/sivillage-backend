@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -50,17 +51,14 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
             throw new BaseException(BaseResponseStatus.INVALID_OAUTH_INFO);
         }
 
-        // 연동된 계정이 있는지 확인
-        OauthMember oauthMember = oauthMemberRepository.findByOauthIdAndOauthProvider(oauthMemberId, oauthProvider);
+        return oauthMemberRepository.findByOauthIdAndOauthProvider(oauthMemberId, oauthProvider)
+                // 연동된 계정이 있는 경우 => 로그인 처리(토큰 발급)
+                .map(oauthMember -> {
+                    String memberUuid = oauthMember.getMember().getUuid();
+                    return new CustomOauth2User(oauthProvider, oauthMemberId, oauthMemberEmail, memberUuid);
+                }) // 연동된 계정이 없는 경우 => 회원가입 페이지 이동하도록 fail 반환
+                .orElseGet(() -> new CustomOauth2User(oauthProvider, oauthMemberId, oauthMemberEmail, "fail"));
 
-        // 연동된 계정이 없는 경우 => 회원가입 페이지 이동
-        if (oauthMember == null) {
-            return new CustomOauth2User(oauthProvider, oauthMemberId, oauthMemberEmail, "fail");
-        }
-
-        // 연동된 계정이 있는 경우 => 로그인 처리(토큰 발급)
-        String memberUuid = oauthMember.getMember().getUuid();
-        return new CustomOauth2User(oauthProvider, oauthMemberId, oauthMemberEmail, memberUuid);
     }
 
     // 사용자 ID 추출 메서드
