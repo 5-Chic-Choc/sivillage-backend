@@ -10,11 +10,13 @@ import lombok.Getter;
 public class SizeResponseDto {
     private Long id;
     private String name;
+    private String value;
 
     public static SizeResponseDto fromEntity(Size size) {
         return SizeResponseDto.builder()
                 .id(size.getId())
                 .name(size.getName())
+                .value(size.getValue())
                 .build();
     }
 
@@ -22,6 +24,7 @@ public class SizeResponseDto {
         return SizeResponseVo.builder()
                 .id(this.id)
                 .name(this.name)
+                .value(this.value)
                 .build();
     }
 }
