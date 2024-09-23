@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.global.auth.dto.out;
 
+import com.chicchoc.sivillage.domain.oauth.dto.out.OauthResponse;
 import com.chicchoc.sivillage.global.auth.vo.SignInResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInResponseDto {
+public class SignInResponseDto implements OauthResponse {
 
     private String accessToken;
     private String refreshToken;
