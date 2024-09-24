@@ -107,23 +107,23 @@ public class JwtTokenProvider {
                     .getPayload();
 
         } catch (ExpiredJwtException e) {
-            e.getStackTrace();
+            e.printStackTrace();
             log.error("만료된 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
-            e.getStackTrace();
+            e.printStackTrace();
             log.error("지원되지 않는 유형의 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (MalformedJwtException | IllegalArgumentException e) {
-            e.getStackTrace();
+            e.printStackTrace();
             log.error("잘못된 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (io.jsonwebtoken.security.SignatureException e) {
-            e.getStackTrace();
+            e.printStackTrace();
             log.error("SecretKey가 일치하지 않습니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
             log.error("토큰이 유효하지 않습니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
