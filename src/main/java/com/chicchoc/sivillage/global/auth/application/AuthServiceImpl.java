@@ -185,7 +185,6 @@ public class AuthServiceImpl implements AuthService {
         String refreshToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime());
         refreshTokenService.saveOrUpdateRefreshToken(uuid, refreshToken);
 
-        log.error("로그인 성공, accessToken : {}", accessToken);
         return new SignInResponseDto(accessToken, refreshToken, uuid);
     }
 
