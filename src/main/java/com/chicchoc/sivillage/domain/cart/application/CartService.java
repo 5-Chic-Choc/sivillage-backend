@@ -17,7 +17,7 @@ public interface CartService {
 
     CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto);
 
-    void updateItemQuantity(List<ItemQuantityUpdateRequestDto> cartUpdateAmountRequestDtoList);
+    void updateItemQuantity(ItemQuantityUpdateRequestDto cartUpdateAmountRequestDtoList);
 
     void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> ItemIsSelectedUpdateRequestDtoList);
 

@@ -96,8 +96,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateItemQuantity(List<ItemQuantityUpdateRequestDto> cartUpdateAmountRequestDtoList) {
+    public void updateItemQuantity(ItemQuantityUpdateRequestDto itemQuantityUpdateRequestDto) {
+        Cart cart = cartRepository.findByCartUuid(itemQuantityUpdateRequestDto.getCartUuid())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
 
+        cartRepository.save(Cart.builder()
+                .id(cart.getId())
+                .userUuid(cart.getUserUuid())
+                .cartUuid(cart.getCartUuid())
+                .productUuid(cart.getProductUuid())
+                .quantity(itemQuantityUpdateRequestDto.getQuantity())
+                .productOptionUuid(cart.getProductOptionUuid())
+                .isSelected(cart.getIsSelected())
+                .build());
     }
 
     @Override

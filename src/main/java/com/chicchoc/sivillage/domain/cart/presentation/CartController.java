@@ -68,11 +68,9 @@ public class CartController {
 
     @PutMapping("/quantity")
     public BaseResponse<Void> updateItemQuantity(
-            @RequestBody List<ItemQuantityUpdateRequestVo> itemQuantityUpdateRequestVoList) {
+            @RequestBody ItemQuantityUpdateRequestVo itemQuantityUpdateRequestVo) {
 
-        cartService.updateItemQuantity(itemQuantityUpdateRequestVoList.stream()
-                .map(ItemQuantityUpdateRequestVo::toDto)
-                .toList());
+        cartService.updateItemQuantity(itemQuantityUpdateRequestVo.toDto());
 
         return new BaseResponse<>();
     }
