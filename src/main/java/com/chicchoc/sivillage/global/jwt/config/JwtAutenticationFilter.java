@@ -32,6 +32,7 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
 
         // 헤더에 토큰이 없거나, 토큰 접두사(Bearer) 가 아닌 경우 필터를 통과
         if (authHeader == null || !authHeader.startsWith(jwtProperties.getTokenPrefix())) {
+            filterChain.doFilter(request, response);
             return;
         }
 
