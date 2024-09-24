@@ -63,7 +63,7 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
         String prefix = jwtProperties.getTokenPrefix();
 
         if (requestHeader != null && requestHeader.startsWith(prefix)) {
-            return requestHeader.substring(prefix.length());
+            return requestHeader.substring(prefix.length()).trim(); //공백까지 제거
         }
         return null;
     }
