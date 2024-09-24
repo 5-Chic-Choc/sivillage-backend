@@ -42,11 +42,15 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
         log.error("필터에서 authHeader 의 값 : {}", authHeader);
 
         String token = getAccessToken(authHeader);
+        log.error("필터에서 token 의 값 : {}", token);
         boolean validToken = jwtTokenProvider.isValidToken(token);
+        log.error("필터에서 validToken 의 값 : {}", validToken);
         boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null;
+        log.error("필터에서 isAuthenticated 의 값 : {}", isAuthenticated);
 
         // 토큰이 유효하고 인증되어 있지 않다면, 토큰을 이용해 인증 객체 생성 => SecurityContext에 저장
         if (validToken && !isAuthenticated) {
+            log.error("SecurityContext 에 인증 객체 저장");
             Authentication authentication = jwtTokenProvider.createAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
