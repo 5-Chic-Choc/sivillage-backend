@@ -13,7 +13,10 @@ import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -147,35 +150,42 @@ public class CartServiceImpl implements CartService {
         List<Cart> unsignedMemberCartList = cartRepository.findByUserUuid(cartMigrateRequestDto.getUnsignedUserUuid());
         List<Cart> signedMemberCartList = cartRepository.findByUserUuid(cartMigrateRequestDto.getUserUuid());
 
-        List<Cart> updatedCartList = new ArrayList<>();
+        Map<String, Cart> signedCartMap = signedMemberCartList.stream()
+                .collect(Collectors.toMap(Cart::getProductOptionUuid, Function.identity()));
 
-        if (!unsignedMemberCartList.isEmpty()) {
-            unsignedMemberCartList.forEach(cart ->
-                    signedMemberCartList.stream()
-                            .filter(userCart -> userCart.getProductOptionUuid().equals(cart.getProductOptionUuid()))
-                            .findFirst()
-                            .ifPresentOrElse(existCart -> {
-                                cartRepository.save(Cart.builder()
-                                        .id(existCart.getId())
-                                        .cartUuid(existCart.getCartUuid())
-                                        .userUuid(existCart.getUserUuid())
-                                        .productOptionUuid(existCart.getProductOptionUuid())
-                                        .quantity(existCart.getQuantity() + cart.getQuantity())
-                                        .isSelected(cart.getIsSelected())
-                                        .build());
-                                cartRepository.delete(cart);
-                            }, () -> {
-                                updatedCartList.add(Cart.builder()
-                                        .id(cart.getId())
-                                        .cartUuid(cart.getCartUuid())
-                                        .userUuid(cartMigrateRequestDto.getUserUuid())
-                                        .productOptionUuid(cart.getProductOptionUuid())
-                                        .quantity(cart.getQuantity())
-                                        .isSelected(cart.getIsSelected())
-                                        .build());
-                            })
-            );
+        List<Cart> updatedCartList = unsignedMemberCartList.stream()
+                .map(unsignedCart -> {
+                    Cart existCart = signedCartMap.get(unsignedCart.getProductOptionUuid());
+
+                    if (existCart != null) {
+
+                        cartRepository.delete(unsignedCart);
+                        return Cart.builder()
+                                .id(existCart.getId())
+                                .cartUuid(existCart.getCartUuid())
+                                .userUuid(existCart.getUserUuid())
+                                .productUuid(existCart.getProductUuid())
+                                .productOptionUuid(existCart.getProductOptionUuid())
+                                .quantity(existCart.getQuantity() + unsignedCart.getQuantity())
+                                .isSelected(existCart.getIsSelected())
+                                .build();
+                    } else {
+                        return Cart.builder()
+                                .id(unsignedCart.getId())
+                                .cartUuid(unsignedCart.getCartUuid())
+                                .userUuid(cartMigrateRequestDto.getUserUuid())
+                                .productUuid(unsignedCart.getProductUuid())
+                                .productOptionUuid(unsignedCart.getProductOptionUuid())
+                                .quantity(unsignedCart.getQuantity())
+                                .isSelected(unsignedCart.getIsSelected())
+                                .build();
+                    }
+                })
+                .collect(Collectors.toList());
+
+        if (!updatedCartList.isEmpty()) {
             cartRepository.saveAll(updatedCartList);
         }
+
     }
 }
