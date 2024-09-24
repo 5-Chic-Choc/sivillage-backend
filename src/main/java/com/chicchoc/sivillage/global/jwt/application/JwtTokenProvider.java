@@ -70,6 +70,7 @@ public class JwtTokenProvider {
     //토큰 유효성 체크 메서드
     public boolean isValidToken(String token) {
         try {
+            log.error("parseClaims(token) in JwtTokenProvider : {}", parseClaims(token));
             parseClaims(token);
             return true;
         } catch (Exception e) {
