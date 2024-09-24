@@ -32,6 +32,7 @@ public class JwtTokenProvider {
     // jwtProperties가 초기화 된 후 secretKey를 생성
     private SecretKey getSecretKey() {
 
+        log.error("jwtProperties.getSecretKey() in Jwt : {}", jwtProperties.getSecretKey());
         if (secretKey == null) {
             secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
         }
@@ -44,6 +45,8 @@ public class JwtTokenProvider {
         Date expiry = new Date(now.getTime() + expiredAt);
         Claims claims = Jwts.claims().subject(authentication.getName()).build();
 
+        log.error("토큰 생성 중, getIssuer() : {}", jwtProperties.getIssuer());
+        log.error("토큰 생성 중, getSecretKey() : {}", getSecretKey());
         return Jwts.builder()
                 .header().add("typ", "JWT").and()
                 .issuer(jwtProperties.getIssuer()) //토큰 발급자
@@ -70,7 +73,7 @@ public class JwtTokenProvider {
     //토큰 유효성 체크 메서드
     public boolean isValidToken(String token) {
         try {
-            log.error("parseClaims(token) in JwtTokenProvider : {}", parseClaims(token));
+            log.error("parseClaims(token) in JwtTokenProvider.isValidToken() : {}", parseClaims(token));
             parseClaims(token);
             return true;
         } catch (Exception e) {
@@ -92,6 +95,7 @@ public class JwtTokenProvider {
     // 토큰에서 클레임 파싱하는 메서드
     private Claims parseClaims(String token) {
         try {
+
             if (token == null) {
                 log.error("토큰이 존재하지 않습니다");
                 throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
@@ -103,18 +107,23 @@ public class JwtTokenProvider {
                     .getPayload();
 
         } catch (ExpiredJwtException e) {
+            e.getStackTrace();
             log.error("만료된 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
+            e.getStackTrace();
             log.error("지원되지 않는 유형의 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (MalformedJwtException | IllegalArgumentException e) {
+            e.getStackTrace();
             log.error("잘못된 토큰입니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (io.jsonwebtoken.security.SignatureException e) {
+            e.getStackTrace();
             log.error("SecretKey가 일치하지 않습니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (Exception e) {
+            e.getStackTrace();
             log.error("토큰이 유효하지 않습니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
