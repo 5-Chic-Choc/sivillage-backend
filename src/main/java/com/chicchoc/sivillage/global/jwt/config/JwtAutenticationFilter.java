@@ -32,25 +32,17 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
 
         // 헤더에 토큰이 없거나, 토큰 접두사(Bearer) 가 아닌 경우 필터를 통과
         if (authHeader == null || !authHeader.startsWith(jwtProperties.getTokenPrefix())) {
-            log.error("헤더에 토큰이 없거나, 토큰 접두사(Bearer) 가 아닌 경우입니다. authHeader : {}", authHeader);
-            filterChain.doFilter(request, response);
             return;
         }
 
         // 요청에서 토큰이 잘 들어오는지 로그
-        log.error("필터에서 request 의 값 : {}", request);
-        log.error("필터에서 authHeader 의 값 : {}", authHeader);
 
         String token = getAccessToken(authHeader);
-        log.error("필터에서 token 의 값 : {}", token);
         boolean validToken = jwtTokenProvider.isValidToken(token);
-        log.error("필터에서 validToken 의 값 : {}", validToken);
         boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null;
-        log.error("필터에서 isAuthenticated 의 값 : {}", isAuthenticated);
 
         // 토큰이 유효하고 인증되어 있지 않다면, 토큰을 이용해 인증 객체 생성 => SecurityContext에 저장
         if (validToken && !isAuthenticated) {
-            log.error("SecurityContext 에 인증 객체 저장");
             Authentication authentication = jwtTokenProvider.createAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
