@@ -8,6 +8,7 @@ import com.chicchoc.sivillage.domain.brand.dto.out.BrandResponseDto;
 import com.chicchoc.sivillage.domain.brand.vo.in.BrandRequestVo;
 import com.chicchoc.sivillage.domain.brand.vo.out.BrandMediaResponseVo;
 import com.chicchoc.sivillage.domain.brand.vo.out.BrandResponseVo;
+import com.chicchoc.sivillage.global.common.aop.annotation.CheckAuthentication;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
@@ -83,6 +84,7 @@ public class BrandController {
                 .toList());
     }
 
+    @CheckAuthentication
     @Operation(summary = "BrandLike API", description = "브랜드 좋아요", tags = {"BrandLike"})
     @PostMapping("/like/{brandUuid}")
     public BaseResponse<Void> likeBrand(@PathVariable String brandUuid, Authentication authentication) {
@@ -92,6 +94,7 @@ public class BrandController {
         return new BaseResponse<>();
     }
 
+    @CheckAuthentication
     @Operation(summary = "getBrandLike API", description = "브랜드 단건 좋아요 여부 조회", tags = {"BrandLike"})
     @GetMapping("/like/{brandUuid}")
     public BaseResponse<Boolean> isLikedBrand(@PathVariable String brandUuid, Authentication authentication) {
@@ -101,6 +104,7 @@ public class BrandController {
         return new BaseResponse<>(isLiked);
     }
 
+    @CheckAuthentication
     @Operation(summary = "getAllBrandLike API",
             description = "내가 좋아요한 브랜드 전체 조회 (최신순)",
             tags = {"BrandLike"})
