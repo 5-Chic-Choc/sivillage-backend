@@ -40,10 +40,12 @@ public class OrderController {
     public BaseResponse<Void> createOrder(@AuthenticationPrincipal UserDetails userDetails,
             @RequestBody OrderRequestVo orderRequestVo) {
 
-        orderService.createOrder(orderRequestVo.toDto(userDetails.getUsername()),
+        orderService.createOrder(
+                orderRequestVo.toDto(userDetails.getUsername()),
                 orderRequestVo.getOrderProductRequestVoList().stream()
                         .map(OrderProductRequestVo::toDto)
-                        .toList(), orderRequestVo.getCartUuidRequestVoList().stream()
+                        .toList(),
+                orderRequestVo.getCartUuidRequestVoList().stream()
                         .map(CartUuidRequestVo::toDto).toList());
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
