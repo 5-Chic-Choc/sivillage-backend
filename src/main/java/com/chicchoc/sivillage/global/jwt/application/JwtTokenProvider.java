@@ -74,7 +74,7 @@ public class JwtTokenProvider {
     public boolean isValidToken(String token) {
         try {
             log.error("parseClaims(token) in JwtTokenProvider.isValidToken() : {}", parseClaims(token));
-            parseClaims(token);
+            parseClaims(token.trim()); //토큰 공백 제거
             return true;
         } catch (Exception e) {
             return false;
