@@ -24,10 +24,10 @@ public class BaseExceptionHandler {
      * 발생한 예외 처리.
      */
     @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<BaseResponse<String>> baseError(BaseException e) {
+    protected ResponseEntity<BaseResponse<String>> handleBaseException(BaseException e) {
 
         // 예외 메시지를 로그에 기록
-        log.error("RuntimeException: ", e.getMessage());
+        log.error("BaseException 발생 : {}", e.getMessage());
 
         // 예외 스택을 로그에 기록
         for (StackTraceElement s : e.getStackTrace()) {
@@ -49,7 +49,7 @@ public class BaseExceptionHandler {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN, e.getMessage());
 
-        log.error("BadCredentialsException: ", e.getMessage());
+        log.error("BadCredentialsException 발생 : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
     }
@@ -59,7 +59,7 @@ public class BaseExceptionHandler {
     protected ResponseEntity<BaseResponse<String>> handleIoException(RuntimeException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        log.error("IOException: ", e.getMessage());
+        log.error("IOException 발생 : {}", e.getMessage());
 
         for (StackTraceElement s : e.getStackTrace()) {
             System.out.println(s);
@@ -73,7 +73,7 @@ public class BaseExceptionHandler {
     protected ResponseEntity<BaseResponse<String>> handleRuntimeException(RuntimeException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        log.error("RuntimeException: ", e.getMessage());
+        log.error("RuntimeException 발생 : {}", e.getMessage());
 
         for (StackTraceElement s : e.getStackTrace()) {
             System.out.println(s);
@@ -88,7 +88,7 @@ public class BaseExceptionHandler {
             IllegalArgumentException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.ILLEGAL_ARGUMENT, e.getMessage());
-        log.error("IllegalArgumentException : {}", e.getMessage());
+        log.error("IllegalArgumentException 발생 : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
     }
@@ -98,7 +98,7 @@ public class BaseExceptionHandler {
     public ResponseEntity<BaseResponse<String>> handleDatabaseException(DataAccessException e) {
 
         BaseResponse<String> response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        log.error("DataAccessException : {}", e.getMessage());
+        log.error("DataAccessException 발생 : {}", e.getMessage());
 
         return new ResponseEntity<>(response, response.httpStatus());
     }
@@ -107,7 +107,7 @@ public class BaseExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse<String>> handleMethodArgsNotValidException(MethodArgumentNotValidException e) {
 
-        log.error("MethodArgumentNotValidException 발생: {}", e.getMessage());
+        log.error("MethodArgumentNotValidException 발생 : {}", e.getMessage());
 
         // DTO단 에서 지정한 message 값을 가져옴(없을 경우 기본 메시지)
         BaseResponseStatus defaultStatus = BaseResponseStatus.INVALID_INPUT_VALUE;
