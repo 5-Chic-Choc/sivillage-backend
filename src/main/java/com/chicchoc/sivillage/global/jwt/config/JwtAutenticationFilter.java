@@ -37,18 +37,15 @@ public class JwtAutenticationFilter extends OncePerRequestFilter {
         }
 
         String token = getAccessToken(authHeader);
-
         boolean validToken = jwtTokenProvider.isValidToken(token);
-        boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() == null;
+        boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null;
 
         // 토큰이 유효하고 인증되어 있지 않다면, 토큰을 이용해 인증 객체 생성 => SecurityContext에 저장
-        if (validToken && isAuthenticated) {
+        if (validToken && !isAuthenticated) {
             Authentication authentication = jwtTokenProvider.createAuthentication(token);
-            log.error("authentication: {}", authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
-
     }
 
     // 헤더에서 토큰을 가져오는 메서드

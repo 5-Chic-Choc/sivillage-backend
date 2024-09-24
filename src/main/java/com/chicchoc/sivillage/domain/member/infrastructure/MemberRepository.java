@@ -21,6 +21,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m.email FROM Member m WHERE m.name = :name AND m.phone = :phoneNumber")
     Optional<String> findEmailByNameAndPhoneNumber(@Param("name") String name,
             @Param("phoneNumber") String phoneNumber);
-
-
 }

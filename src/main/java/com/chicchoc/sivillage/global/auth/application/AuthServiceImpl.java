@@ -2,6 +2,7 @@ package com.chicchoc.sivillage.global.auth.application;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
 import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
+import com.chicchoc.sivillage.domain.oauth.infrastructure.OauthMemberRepository;
 import com.chicchoc.sivillage.domain.terms.domain.UserTermsList;
 import com.chicchoc.sivillage.domain.terms.infrastructure.UserTermsListRepository;
 import com.chicchoc.sivillage.global.auth.domain.EmailVerification;
@@ -11,19 +12,18 @@ import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.FindEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
-import com.chicchoc.sivillage.global.auth.dto.in.UserTermsRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
 import com.chicchoc.sivillage.global.auth.infrastructure.EmailVerificationRepository;
 import com.chicchoc.sivillage.global.auth.provider.EmailProvider;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
-import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import com.chicchoc.sivillage.global.common.generator.VerificationCode;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,52 +38,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtProperties jwtProperties;
-    private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenService refreshTokenService;
-    private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
-    private final EmailProvider emailProvider;
     private final EmailVerificationRepository emailVerificationRepository;
     private final UserTermsListRepository userTermsListRepository;
+    private final OauthMemberRepository oauthMemberRepository;
+
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProperties jwtProperties;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailProvider emailProvider;
+    private final RefreshTokenService refreshTokenService;
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public SignInResponseDto signUpAndSignIn(SignUpRequestDto requestDto) {
 
-        String uuid =  NanoIdGenerator.generateNanoId();
-
+        // 정책상 이메일 중복 검사는 이미 진행됨
         // 중복된 이름과 전화번호가 존재할 경우 예외 처리
         if (memberRepository.existsByNameAndPhone(requestDto.getName(), requestDto.getPhone())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_NAME_AND_PHONE);
         }
 
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-        Member member = requestDto.toEntity(uuid, encodedPassword);
-
-        memberRepository.save(member);
+        // 회원 정보 저장
+        Member member = memberRepository.save(requestDto.toEntity(passwordEncoder));
 
         // 약관 정보 추가
-        if (requestDto.getTerms() != null && !requestDto.getTerms().isEmpty()) {
-            for (UserTermsRequestDto termsRequestDto : requestDto.getTerms()) {
-                UserTermsList userTerms = UserTermsList.builder()
-                        .member(member)
-                        .termsId(termsRequestDto.getTermsId())
-                        .isAgree(termsRequestDto.getIsAgree())
-                        .build();
-                userTermsListRepository.save(userTerms);
-            }
+        userTermsListRepository.saveAll(UserTermsList.of(member, requestDto.getTerms()));
+
+        // oAuth 연동(oauth 정보가 있는 경우)
+        if (validOauth(requestDto.getOauthId(), requestDto.getOauthProvider())) {
+            oauthMemberRepository.save(requestDto.toOauthEntity(member));
         }
 
-        return signIn(SignInRequestDto.builder()
-                .email(requestDto.getEmail())
-                .password(requestDto.getPassword())
-                .isAutoSignIn(false)
-                .build());
+        return respondSignIn(member, requestDto.getPassword());
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional()
     @Override
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
 
@@ -91,15 +83,12 @@ public class AuthServiceImpl implements AuthService {
         Member member = memberRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
-        //인증 객체 생성
-        Authentication authentication = authenticateMember(member, requestDto.getPassword());
+        // oAuth 연동
+        if (validOauth(requestDto.getOauthId(), requestDto.getOauthProvider())) {
+            oauthMemberRepository.save(requestDto.toOauthEntity(member));
+        }
 
-        //토큰 생성
-        String accessToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime());
-        String refreshToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime());
-        refreshTokenService.saveOrUpdateRefreshToken(member.getUuid(), refreshToken);
-
-        return new SignInResponseDto(accessToken, refreshToken, member.getUuid());
+        return respondSignIn(member, requestDto.getPassword());
     }
 
     @Transactional(readOnly = true)
@@ -119,52 +108,41 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         return new FindEmailResponseDto(maskEmail(email));
-
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto requestDto) {
 
+        //todo : Redis로 변경
+
         String userEmail = requestDto.getEmail();
         String verificationCode = VerificationCode.generateCode();
-
-        // 이메일 중복 확인
-        checkEmail(CheckEmailRequestDto.builder().email(userEmail).build());
-
-        // 전송, 실패시 예외처리
+        // 이메일 전송, 실패시 예외처리
         boolean isSent = emailProvider.sendVerificationEmail(userEmail, verificationCode);
+
         if (!isSent) {
             log.error("이메일 전송에 실패했습니다.");
             throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
         }
 
-        //기존 내용은 삭제
+        // 기존 이메일 인증 정보 삭제
         emailVerificationRepository.deleteByEmail(userEmail);
 
-        // 이메일 인증 정보 DB 저장
-        EmailVerification emailVerification = EmailVerification.builder()
-                .email(userEmail)
-                .verificationCode(verificationCode)
-                .expiresAt(LocalDateTime.now().plusMinutes(10))
-                .build();
-
-        emailVerificationRepository.save(emailVerification);
+        // 이메일 인증 정보 저장
+        emailVerificationRepository.save(new EmailVerification(userEmail, verificationCode));
     }
 
     @Override
     public void checkEmailVerification(
             CheckEmailVerificationRequestDto requestDto) {
 
-        String email = requestDto.getEmail();
-        String verificationCode = requestDto.getVerificationCode();
-
-        // 이메일 인증 정보 조회(여러개라면 마지막 것)
-        EmailVerification emailVerification = emailVerificationRepository.findTopByEmailOrderByIdDesc(email)
+        // 이메일 인증 정보 조회
+        EmailVerification emailVerification = emailVerificationRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_EMAIL_ADDRESS));
 
-        boolean isMatched = emailVerification.getVerificationCode().equals(verificationCode)
-                && emailVerification.getEmail().equals(email);
+        boolean isMatched = emailVerification.getVerificationCode().equals(requestDto.getVerificationCode())
+                && emailVerification.getEmail().equals(requestDto.getEmail());
         boolean isExpired = emailVerification.getExpiresAt().isBefore(LocalDateTime.now());
 
         if (!isMatched) { // 인증코드 불일치
@@ -175,12 +153,39 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private Authentication authenticateMember(Member member, String password) {
-        return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        member.getUuid(), password
-                )
-        );
+    private boolean validOauth(String oauthId, String oauthProvider) {
+        // oAuth 정보가 없는 경우(일반 회원가입/로그인)
+        if (oauthId == null || oauthProvider == null || oauthId.isBlank() || oauthProvider.isBlank()
+                || oauthId.equals("string")) { // Swagger 테스트시 String으로 넘어오므로
+            return false;
+        }
+
+        // 지원하는 oAuth 플랫폼인지 확인
+        final Set<String> SupportedProviders = Set.of("kakao", "naver");
+        if (!SupportedProviders.contains(oauthProvider)) {
+            throw new BaseException(BaseResponseStatus.NO_SUPPORTED_PROVIDER);
+        }
+
+        // 이미 연동된 계정이 있는지 확인
+        if (oauthMemberRepository.existsByOauthIdAndOauthProvider(oauthId, oauthProvider)) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_SOCIAL_USER);
+        }
+
+        return true;
+    }
+
+    private SignInResponseDto respondSignIn(Member member, String password) {
+
+        String uuid = member.getUuid();
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(uuid, password));
+
+        //토큰 생성, 리프레쉬 토큰 저장, 응답
+        String accessToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getAccessExpireTime());
+        String refreshToken = jwtTokenProvider.generateToken(authentication, jwtProperties.getRefreshExpireTime());
+        refreshTokenService.saveOrUpdateRefreshToken(uuid, refreshToken);
+
+        return new SignInResponseDto(accessToken, refreshToken, uuid);
     }
 
     private String maskEmail(String email) {

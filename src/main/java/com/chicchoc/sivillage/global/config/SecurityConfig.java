@@ -104,6 +104,4 @@ public class SecurityConfig {
                 .addFilter(corsFilter());
         return http.build();
     }
-
-
 }

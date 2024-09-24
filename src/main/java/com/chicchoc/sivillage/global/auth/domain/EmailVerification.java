@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.global.auth.domain;
 
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
+import com.chicchoc.sivillage.global.common.generator.VerificationCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,10 +33,9 @@ public class EmailVerification {
     private LocalDateTime expiresAt;
 
     @Builder
-    public EmailVerification(Long id, String email, String verificationCode, LocalDateTime expiresAt) {
-        this.id = id;
+    public EmailVerification(String email, String verificationCode) {
         this.email = email;
         this.verificationCode = verificationCode;
-        this.expiresAt = expiresAt;
+        this.expiresAt = LocalDateTime.now().plusMinutes(10);
     }
 }

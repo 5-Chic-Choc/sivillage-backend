@@ -1,7 +1,5 @@
 package com.chicchoc.sivillage.global.jwt.application;
 
-import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
-import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
 import com.chicchoc.sivillage.global.jwt.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,24 +14,13 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public RefreshToken findByRefreshToken(String refreshToken) {
-
-        return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN));
-    }
-
     @Transactional
     public void saveOrUpdateRefreshToken(String uuid, String newRefreshToken) {
-        RefreshToken existingToken = refreshTokenRepository.findByUuid(uuid)
-                .orElse(null);
 
-        if (existingToken != null) {
-            // 토큰이 존재하면 수정
-            existingToken.update(newRefreshToken);
-        } else {
-            // 없으면 새로 저장
-            RefreshToken newToken = new RefreshToken(uuid, newRefreshToken);
-            refreshTokenRepository.save(newToken);
-        }
+        refreshTokenRepository.findByUuid(uuid)
+            .ifPresentOrElse(
+                    existingToken -> existingToken.update(newRefreshToken), // 토큰이 존재하면 수정
+                    () -> refreshTokenRepository.save(new RefreshToken(uuid, newRefreshToken)) // 없으면 새로 저장
+            );
     }
 }

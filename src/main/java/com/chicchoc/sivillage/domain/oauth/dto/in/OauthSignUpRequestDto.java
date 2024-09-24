@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.oauth.dto.in;
 
 import com.chicchoc.sivillage.domain.member.domain.Member;
+import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
@@ -40,11 +42,11 @@ public class OauthSignUpRequestDto {
 
     private String oauthEmail;
 
-    public Member toEntity(String encodedPassword, String uuid) {
+    public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .uuid(uuid)
+                .uuid(NanoIdGenerator.generateNanoId())
                 .email(email)
-                .password(encodedPassword)
+                .password(passwordEncoder.encode(password))
                 .name(name)
                 .phone(phone)
                 .postalCode(postalCode)

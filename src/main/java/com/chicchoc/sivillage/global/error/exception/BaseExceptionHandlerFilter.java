@@ -36,7 +36,8 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        BaseResponse baseResponse = new BaseResponse(be.getStatus());
+        BaseResponse<Object> baseResponse = new BaseResponse<>(be.getStatus());
+
         try {
             response.getWriter().write(objectMapper.writeValueAsString(baseResponse));
         } catch (IOException e) {

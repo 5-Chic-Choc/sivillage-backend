@@ -13,13 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "member_oauth_connection",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"oauth_id", "oauth_provider"})
@@ -48,6 +48,7 @@ public class OauthMember extends BaseEntity {
     @Column(nullable = true)
     private String oauthEmail;
 
+    @Builder
     public OauthMember(String oauthId, String oauthProvider, String oauthEmail, Member member) {
         super();
         this.oauthId = oauthId;
