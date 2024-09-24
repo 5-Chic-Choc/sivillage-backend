@@ -4,14 +4,13 @@ import com.chicchoc.sivillage.domain.cart.domain.Cart;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartDeleteRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.ItemIsSelectedUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.ItemQuantityUpdateRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -115,8 +114,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> ItemIsSelectedUpdateRequestDtoList) {
-        ItemIsSelectedUpdateRequestDtoList.stream().map(itemIsSelectedUpdateRequestDto -> {
+    public void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> itemIsSelectedUpdateRequestDtoList) {
+        itemIsSelectedUpdateRequestDtoList.stream().map(itemIsSelectedUpdateRequestDto -> {
 
             Cart cart = cartRepository.findByCartUuid(itemIsSelectedUpdateRequestDto.getCartUuid())
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
@@ -181,7 +180,7 @@ public class CartServiceImpl implements CartService {
                                 .build();
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         if (!updatedCartList.isEmpty()) {
             cartRepository.saveAll(updatedCartList);

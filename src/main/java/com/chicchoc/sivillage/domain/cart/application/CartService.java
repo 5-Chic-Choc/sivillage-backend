@@ -19,7 +19,7 @@ public interface CartService {
 
     void updateItemQuantity(ItemQuantityUpdateRequestDto cartUpdateAmountRequestDtoList);
 
-    void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> ItemIsSelectedUpdateRequestDtoList);
+    void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> itemIsSelectedUpdateRequestDtoList);
 
     void deleteCartItems(List<CartDeleteRequestDto> cartDeleteRequestDtoList);
 

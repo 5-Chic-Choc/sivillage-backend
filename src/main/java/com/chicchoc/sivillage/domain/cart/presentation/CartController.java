@@ -5,9 +5,9 @@ import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.ItemIsSelectedUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.in.ItemQuantityUpdateRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
@@ -72,18 +72,18 @@ public class CartController {
 
         cartService.updateItemQuantity(itemQuantityUpdateRequestVo.toDto());
 
-        return new BaseResponse<>();
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @PutMapping("/isSelected")
     public BaseResponse<Void> updateItemIsSelected(
-            @RequestBody List<ItemIsSelectedUpdateRequestVo> ItemIsSelectedUpdateRequestVoList) {
+            @RequestBody List<ItemIsSelectedUpdateRequestVo> itemIsSelectedUpdateRequestVoList) {
 
-        cartService.updateItemIsSelected(ItemIsSelectedUpdateRequestVoList.stream().map(
+        cartService.updateItemIsSelected(itemIsSelectedUpdateRequestVoList.stream().map(
                 ItemIsSelectedUpdateRequestVo::toDto
         ).toList());
 
-        return new BaseResponse<>();
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @DeleteMapping
@@ -102,7 +102,7 @@ public class CartController {
                 .userUuid(userDetails.getUsername())
                 .unsignedUserUuid(unsignedUserUuid)
                 .build());
-        return new BaseResponse<>();
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
 }
