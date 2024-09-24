@@ -103,7 +103,6 @@ public class JwtTokenProvider {
 
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다");
-            e.printStackTrace();
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 유형의 토큰입니다");
@@ -113,6 +112,9 @@ public class JwtTokenProvider {
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         } catch (io.jsonwebtoken.security.SignatureException e) {
             log.error("SecretKey가 일치하지 않습니다");
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+        } catch (Exception e) {
+            log.error("토큰이 유효하지 않습니다");
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
     }
