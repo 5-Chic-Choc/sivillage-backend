@@ -42,7 +42,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true); //쿠키를 주고 받을 수 있도록 설정
         // config.addAllowedOrigin("https://sivillage.shop");
         // config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOrigin("*"); //모든 Origin 허용(for 테스트)
+        config.addAllowedOriginPattern("*"); //모든 Origin 허용(for 테스트)
         config.addAllowedHeader("*"); // 모든 Header 허용
         config.addAllowedMethod("*"); //모든 Method 허용
         config.setExposedHeaders(List.of(jwtProperties.getAccessTokenPrefix())); //Authorization 헤더를 노출
