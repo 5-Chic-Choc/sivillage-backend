@@ -43,7 +43,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi AllApi() {
+    public GroupedOpenApi allApi() {
         return GroupedOpenApi.builder()
                 .group("All")
                 .pathsToMatch("/**")
@@ -51,7 +51,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi MemberApi() {
+    public GroupedOpenApi memberApi() {
         return GroupedOpenApi.builder()
                 .group("Auth-인증")
                 .pathsToMatch("/api/v1/auth/**")
@@ -59,7 +59,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi BatchApi() {
+    public GroupedOpenApi batchApi() {
         return GroupedOpenApi.builder()
                 .group("batch-배치")
                 .pathsToMatch("/batch/**")
@@ -67,119 +67,135 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi TermsApi() {
+    public GroupedOpenApi termsApi() {
         return GroupedOpenApi.builder()
                 .group("terms-약관")
                 .pathsToMatch("/api/v1/terms/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi PromotionApi() {
+    @Bean
+    GroupedOpenApi promotionApi() {
         return GroupedOpenApi.builder()
                 .group("promotion-프로모션")
                 .pathsToMatch("/api/v1/promotion/**", "/api/promotion/like/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi OauthApi() {
+    @Bean
+    GroupedOpenApi oauthApi() {
         return GroupedOpenApi.builder()
                 .group("Oauth-인증")
                 .pathsToMatch("/api/v1/oauth/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi ProductsApi() {
+    @Bean
+    GroupedOpenApi productsApi() {
         return GroupedOpenApi.builder()
                 .group("Product-상품")
                 .pathsToMatch("/api/v1/products/**", "/api/v1/product/like/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi DataApi() {
+    @Bean
+    GroupedOpenApi dataApi() {
         return GroupedOpenApi.builder()
                 .group("Data-데이터 삽입")
                 .pathsToMatch("/data/")
                 .build();
     }
 
-    @Bean GroupedOpenApi DeliveryApi(){
+    @Bean
+    GroupedOpenApi deliveryApi() {
         return GroupedOpenApi.builder()
                 .group("DeliveryTemplate-배송지")
                 .pathsToMatch("/api/v1/deliveryTemplate/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi CartApi(){
+    @Bean
+    GroupedOpenApi cartApi() {
         return GroupedOpenApi.builder()
                 .group("Cart-장바구니")
                 .pathsToMatch("/api/v1/cart/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi BrandApi(){
+    @Bean
+    GroupedOpenApi brandApi() {
         return GroupedOpenApi.builder()
                 .group("Brand-브랜드")
                 .pathsToMatch("/api/v1/brand/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi S3Api(){
+    @Bean
+    GroupedOpenApi s3Api() {
         return GroupedOpenApi.builder()
                 .group("S3-이미지업로드")
                 .pathsToMatch("/api/v1/s3/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi ReviewApi(){
+    @Bean
+    GroupedOpenApi reviewApi() {
         return GroupedOpenApi.builder()
                 .group("Review-리뷰")
                 .pathsToMatch("/api/v1/review/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi OrderApi(){
+    @Bean
+    GroupedOpenApi orderApi() {
         return GroupedOpenApi.builder()
                 .group("Order-주문")
                 .pathsToMatch("/api/v1/order/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi UnsignedMemberApi(){
+    @Bean
+    GroupedOpenApi unsignedMemberApi() {
         return GroupedOpenApi.builder()
                 .group("UnsignedMember-비회원")
                 .pathsToMatch("/api/v1/unsignedMember/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi SizeApi(){
+    @Bean
+    GroupedOpenApi sizeApi() {
         return GroupedOpenApi.builder()
                 .group("Size-사이즈")
                 .pathsToMatch("/api/v1/sizes/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi EtcOptionApi(){
+    @Bean
+    GroupedOpenApi etcOptionApi() {
         return GroupedOpenApi.builder()
                 .group("EtcOption-기타옵션")
                 .pathsToMatch("/api/v1/etcoptions/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi ColorsApi(){
+    @Bean
+    GroupedOpenApi colorsApi() {
         return GroupedOpenApi.builder()
                 .group("Colors-색깔")
                 .pathsToMatch("/api/v1/colors/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi CategoryApi(){
+    @Bean
+    GroupedOpenApi categoryApi() {
         return GroupedOpenApi.builder()
                 .group("Category-카테고리")
                 .pathsToMatch("/api/v1/category/**")
                 .build();
     }
 
-    @Bean GroupedOpenApi MediaApi(){
+    @Bean
+    GroupedOpenApi mediaApi() {
         return GroupedOpenApi.builder()
                 .group("Media-미디어")
                 .pathsToMatch("/api/v1/media/**", "/api/v1/product-media/**")
