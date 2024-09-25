@@ -35,6 +35,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductResponseDto> getTopBestProductsByCategory(ProductRequestDto dto) {
+
+        List<Product> products = productRepositoryCustom.findTopBestProductsByCategory(dto);
+
+        return products.stream()
+                .map(ProductResponseDto::fromEntity)
+                .toList();
+    }
+
+
+    @Override
     public List<ProductOptionResponseDto> getProductOptions(String productUuid) {
         List<ProductOption> productOptions = productOptionRepository.findByProductUuid(productUuid);
         if (productOptions.isEmpty()) {

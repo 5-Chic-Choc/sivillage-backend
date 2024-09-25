@@ -9,4 +9,6 @@ public interface ProductRepositoryCustom {
 
     // 필터링된 제품 목록을 가져오는 메서드
     List<Product> findFilteredProducts(ProductRequestDto dto);
+
+    List<Product> findTopBestProductsByCategory(ProductRequestDto dto);
 }

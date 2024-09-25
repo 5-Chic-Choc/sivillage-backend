@@ -81,6 +81,32 @@ public class ProductController {
         return new BaseResponse<>(productResponseVos);
     }
 
+    @Operation(summary = "getTop100BestProducts API", description = "카테고리별 상위 100개 베스트 상품 조회", tags = {"Product"})
+    @GetMapping("/best")
+    public BaseResponse<List<ProductResponseVo>> getTop100BestProducts(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "100") Integer perPage) {
+
+        // 카테고리 필터링을 위한 DTO 생성
+        ProductRequestDto productRequestDto = ProductRequestDto.builder()
+                .categories(categories)
+                .page(page)
+                .perPage(perPage)
+                .build();
+
+        // 상위 100개의 베스트 상품 가져오기
+        List<ProductResponseDto> bestProducts = productService.getTopBestProductsByCategory(productRequestDto);
+
+        // DTO를 VO로 변환
+        List<ProductResponseVo> productResponseVos = bestProducts.stream()
+                .map(ProductResponseDto::toResponseVo)
+                .toList();
+
+        return new BaseResponse<>(productResponseVos);
+    }
+
+
     @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"Product"})
     @GetMapping("/{productUuid}")
     public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid,

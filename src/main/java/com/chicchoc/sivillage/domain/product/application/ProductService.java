@@ -9,6 +9,8 @@ public interface ProductService {
 
     List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto);
 
+    List<ProductResponseDto> getTopBestProductsByCategory(ProductRequestDto productRequestDto);
+
     List<ProductOptionResponseDto> getProductOptions(String productUuid);
 
     List<ProductDetailResponseDto> getProductDetails(String productOptionUuid);

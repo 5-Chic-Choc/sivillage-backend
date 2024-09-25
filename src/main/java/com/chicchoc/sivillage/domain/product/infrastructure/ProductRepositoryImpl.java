@@ -1,5 +1,6 @@
 package com.chicchoc.sivillage.domain.product.infrastructure;
 
+import com.chicchoc.sivillage.domain.best.domain.QProductScore;
 import com.chicchoc.sivillage.domain.brand.domain.QBrand;
 import com.chicchoc.sivillage.domain.category.domain.Category;
 import com.chicchoc.sivillage.domain.category.domain.QCategory;
@@ -24,10 +25,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    private static final QProduct product = QProduct.product;
+    private static final QProductOption productOption = QProductOption.productOption;
+    private static final QCategory qcategory = QCategory.category;
+    private static final QProductCategory productCategory = QProductCategory.productCategory;
+    private static final QProductScore productScore = QProductScore.productScore;
+
     @Override
     public List<Product> findFilteredProducts(ProductRequestDto dto) {
-        final QProduct product = QProduct.product;
-        final QProductOption productOption = QProductOption.productOption;
 
         BooleanBuilder predicate = createPredicate(dto);
 
@@ -48,8 +53,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAscending) {
-        final QProduct product = QProduct.product;
-        final QProductOption productOption = QProductOption.productOption;
 
         Map<String, OrderSpecifier<?>> orderMap = new HashMap<>();
         orderMap.put(
@@ -69,8 +72,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 
     private BooleanBuilder createPredicate(ProductRequestDto dto) {
-        final QProduct product = QProduct.product;
-        final QProductOption productOption = QProductOption.productOption;
+
         BooleanBuilder predicate = new BooleanBuilder(); // BooleanBuilder 사용
 
         if (dto.getCategories() != null) {
@@ -171,14 +173,16 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private Long findCategoryIdFromPath(List<String> categories) {
-        QCategory qcategory = QCategory.category;
+
         Category parentCategory = null;
 
         for (String categoryName : categories) {
             Category currentCategory = queryFactory
-                    .selectFrom(qcategory)
-                    .where(qcategory.name.eq(categoryName))
-                    .fetchOne();
+                    .selectFrom(QCategory.category)
+                    .where(QCategory.category.name.eq(categoryName)
+                            .and(parentCategory == null ? QCategory.category.parent.isNull()
+                                    : QCategory.category.parent.eq(parentCategory)))
+                    .fetchFirst();
 
             if (currentCategory == null) {
                 throw new BaseException(BaseResponseStatus.CATEGORY_NOT_FOUND);
@@ -198,7 +202,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanBuilder productCategoryFilter(Long categoryId) {
-        final QProduct product = QProduct.product;
 
         if (categoryId == null) {
             throw new BaseException(BaseResponseStatus.INVALID_CATEGORY_PATH);
@@ -215,4 +218,33 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return new BooleanBuilder().and(product.id.in(productIds));
     }
 
+    @Override
+    public List<Product> findTopBestProductsByCategory(ProductRequestDto dto) {
+
+        BooleanBuilder predicate = new BooleanBuilder();
+
+        int page = dto.getPage() != null ? dto.getPage() : 1;
+        int perPage = dto.getPerPage() != null ? dto.getPerPage() : 100;
+        int offset = (page - 1) * perPage;
+
+        // 카테고리 필터링
+        if (dto.getCategories() != null && !dto.getCategories().isEmpty()) {
+            List<Long> categoryIds = queryFactory.select(QCategory.category.id)
+                    .from(QCategory.category)
+                    .where(QCategory.category.name.in(dto.getCategories()))
+                    .fetch();
+            if (!categoryIds.isEmpty()) {
+                predicate.and(productCategory.categoryId.in(categoryIds));
+            }
+        }
+
+        return queryFactory.selectFrom(product)
+                .leftJoin(productCategory).on(product.id.eq(productCategory.productId))
+                .leftJoin(productScore).on(product.productUuid.eq(productScore.productUuid)) // 스코어 조인
+                .where(predicate)
+                .orderBy(productScore.totalScore.desc()) // totalScore 내림차순
+                .offset(offset)
+                .limit(perPage)
+                .fetch();
+    }
 }
