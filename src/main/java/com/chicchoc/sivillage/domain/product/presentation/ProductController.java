@@ -88,6 +88,34 @@ public class ProductController {
         return new BaseResponse<>(productResponseVos);
     }
 
+    @Operation(summary = "getFilteredProductsCount API", description = "필터링 상품 목록 개수 조회", tags = {"Product"})
+    @GetMapping("/count")
+    public BaseResponse<ProductCountAndPageVo> getFilteredProductCount(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> brands,
+            @RequestParam(required = false) Integer minimumPrice,
+            @RequestParam(required = false) Integer maximumPrice,
+            @RequestParam(defaultValue = "20") Integer perPage,
+            @RequestParam(required = false) String keywords) {
+
+        ProductRequestDto productRequestDto = ProductRequestDto.builder()
+                .keywords(keywords)
+                .categories(categories)
+                .sizes(sizes)
+                .colors(colors)
+                .brands(brands)
+                .minimumPrice(Optional.ofNullable(minimumPrice).orElse(0))  // 기본값 처리
+                .maximumPrice(Optional.ofNullable(maximumPrice).orElse(Integer.MAX_VALUE))  // 기본값 처리
+                .perPage(perPage)
+                .build();
+
+        ProductCountAndPageDto count = productService.getFilteredProductsCount(productRequestDto);
+
+        return new BaseResponse<>(count.toVo());
+    }
+
     @Operation(summary = "getTop100BestProducts API", description = "카테고리별 상위 100개 베스트 상품 조회", tags = {"Product"})
     @GetMapping("/best")
     public BaseResponse<List<ProductResponseVo>> getTop100BestProducts(
