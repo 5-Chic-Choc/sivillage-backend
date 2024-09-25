@@ -4,11 +4,14 @@ import com.chicchoc.sivillage.domain.product.application.ProductService;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.out.*;
 import com.chicchoc.sivillage.domain.product.vo.out.*;
+import com.chicchoc.sivillage.domain.redis.application.RedisServiceImpl;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final RedisServiceImpl redisServiceImpl;
 
     @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"Product"})
     @GetMapping()
@@ -37,7 +41,22 @@ public class ProductController {
             @Parameter(description = "정렬 기준 (기본값: 'createdAt', 다른 값: 'discount_rate', 'price', 'name')")
             String sortBy,
             @RequestParam(defaultValue = "true") boolean isAscending,
-            @RequestParam(required = false) String keywords) {
+            @RequestParam(required = false) String keywords,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid) {
+
+        log.info("UserDetails: {}", userDetails);
+
+        // keywords가 존재하면 Redis에 저장
+        if (keywords != null && !keywords.isEmpty()) {
+            if (userDetails != null) {
+                // 로그인한 경우
+                redisServiceImpl.addRecentSearch(userDetails.getUsername(), keywords);
+            } else if (unsignedUserUuid != null) {
+                // 비로그인 사용자 처리
+                redisServiceImpl.addRecentSearch(unsignedUserUuid, keywords);
+            }
+        }
 
         ProductRequestDto productRequestDto = ProductRequestDto.builder()
                 .keywords(keywords)
@@ -64,7 +83,18 @@ public class ProductController {
 
     @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"Product"})
     @GetMapping("/{productUuid}")
-    public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid) {
+    public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid,
+                                                                  @AuthenticationPrincipal UserDetails userDetails,
+                                                                  @RequestHeader(value = "X-Unsigned-User-UUID",
+                                                                          required = false) String unsignedUserUuid) {
+
+        log.info("UserDetails: {}", userDetails);
+        // 로그인 여부에 따른 최근 본 상품 추가
+        if (userDetails != null) {
+            redisServiceImpl.addRecentViewedProduct(userDetails.getUsername(), productUuid);
+        } else if (unsignedUserUuid != null) {
+            redisServiceImpl.addRecentViewedProduct(unsignedUserUuid, productUuid);
+        }
 
         List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productUuid);
 
