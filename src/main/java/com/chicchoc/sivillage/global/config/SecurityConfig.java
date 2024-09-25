@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,9 +41,10 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration(); //CORS 설정
         config.setAllowCredentials(true); //쿠키를 주고 받을 수 있도록 설정
-        // config.addAllowedOrigin("https://sivillage.shop");
-        // config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOriginPattern("*"); //모든 Origin 허용(for 테스트)
+        config.addAllowedOrigin("https://sivillage.shop");
+        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("http://43.201.30.206:8080");
+        //config.addAllowedOriginPattern("*"); //모든 Origin 허용(for 테스트)
         config.addAllowedHeader("*"); // 모든 Header 허용
         config.addAllowedMethod("*"); //모든 Method 허용
         config.setExposedHeaders(List.of(jwtProperties.getAccessTokenPrefix())); //Authorization 헤더를 노출
@@ -62,19 +64,25 @@ public class SecurityConfig {
                 // 인증되지 않은 사용자가 접근할 수 있는 URL 설정
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                // 인증이 필요한 URL 설정 todo: 회원만 할 수 있는 작업은 추가 필요(ex:리뷰 작성)
+                                // 인증 없이 가능한 URL + 메서드
+                                .requestMatchers(HttpMethod.GET, "/api/v1/review").permitAll()
+                                // 인증이 필요한 URL + 메서드
+                                .requestMatchers(HttpMethod.POST, "/api/v1/review").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/review").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/review").authenticated()
+                                // 인증이 필요한 URL 설정
                                 .requestMatchers(
                                         "/api/v1/mypage/**",
                                         "/api/v1/order/**",
                                         "/api/v1/payment/**",
-                                        "/api/v1/product/like",
-                                        "/api/v1/promotion/like",
-                                        "/api/v1/brand/like"
+                                        "/api/v1/deliveryTemplate/*",
+                                        "/api/v1/product/like/*",
+                                        "/api/v1/promotion/like/*",
+                                        "/api/v1/brand/like/*",
+                                        "/api/v1/data/*"
                                 )
                                 .authenticated()
-                                // 위 URL 외의 요청은 인증 없이 접근 가능함
-                                .anyRequest()
-                                .permitAll()
+                                .anyRequest().permitAll()
                 )
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
