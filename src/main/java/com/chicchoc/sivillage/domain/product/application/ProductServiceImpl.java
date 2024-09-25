@@ -65,6 +65,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductOptionResponseDto getOneProductOption(String productOptionUuid) {
+
+        ProductOption productOption = productOptionRepository.findByProductOptionUuid(productOptionUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        return ProductOptionResponseDto.fromEntity(productOption);
+    }
+
+    @Override
     public List<ProductDetailResponseDto> getProductDetails(String productOptionUuid) {
 
         if (productOptionRepository.findByProductOptionUuid(productOptionUuid).isEmpty()) {
