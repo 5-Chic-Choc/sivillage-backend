@@ -10,10 +10,12 @@ import com.chicchoc.sivillage.domain.review.dto.in.ReviewMediaRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewMediaResponseDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
+import com.chicchoc.sivillage.domain.review.infrastructure.ReviewListRepositoryCustom;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewMediaRepository;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.common.utils.CursorPage;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.infra.application.S3Service;
 import java.util.Comparator;
@@ -36,6 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final MediaRepository mediaRepository;
     private final NanoIdGenerator nanoIdGenerator;
     private final MemberRepository memberRepository;
+    private final ReviewListRepositoryCustom reviewListRepository;
     private final S3Service s3Service;
 
     @Override
@@ -45,7 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         Review savedReview = reviewRepository.save(
-                reviewRequestDto.toEntity(nanoIdGenerator.generateNanoId(), userUuid, member.getEmail()));
+                reviewRequestDto.toEntity(NanoIdGenerator.generateNanoId(), userUuid, member.getEmail()));
 
         if (!fileList.isEmpty()) {
             int imgOrder = 1;
@@ -66,6 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
             }
         }
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -96,6 +100,13 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_REVIEW)));
 
         reviewMediaRepository.deleteAll(reviewMediaRepository.findByReviewUuid(reviewUuid));
+    }
+
+    @Override
+    public CursorPage<String> getAllReviews(String productUuid, String userUuid, Long lastId, Integer pageSize,
+            Integer page) {
+
+        return reviewListRepository.getReviewList(productUuid, userUuid, lastId, pageSize, page);
     }
 
     private Map<String, List<ReviewMediaResponseDto>> getReviews(List<Review> reviewList) {
