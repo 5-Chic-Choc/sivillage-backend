@@ -1,8 +1,11 @@
 package com.chicchoc.sivillage.domain.category.application;
 
 import com.chicchoc.sivillage.domain.category.domain.Category;
+import com.chicchoc.sivillage.domain.category.domain.ProductCategory;
 import com.chicchoc.sivillage.domain.category.dto.out.CategoryResponseDto;
+import com.chicchoc.sivillage.domain.category.dto.out.ProductCategoryResponseDto;
 import com.chicchoc.sivillage.domain.category.infrastructure.CategoryRepository;
+import com.chicchoc.sivillage.domain.category.infrastructure.ProductCategoryRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -43,5 +47,35 @@ public class CategoryServiceImpl implements CategoryService {
                         .depth(category.getDepth())
                         .build())
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProductCategoryResponseDto> getProductCategories(Long productId) {
+        List<ProductCategory> productCategories = productCategoryRepository.findByProductId(productId);
+
+        // ProductCategory 엔티티를 ProductCategoryResponseDto로 변환 (fromEntity 사용)
+        return productCategories.stream()
+                .map(ProductCategoryResponseDto::fromEntity)
+                .toList();
+
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CategoryResponseDto getCategoryByPath(List<String> path) {
+        Category category = categoryRepository.findRootCategoryByName(path.get(0))
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY));
+
+        for (int i = 1; i < path.size(); i++) {
+            category = categoryRepository.findByNameAndParent(path.get(i), category)
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY));
+        }
+
+        return CategoryResponseDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .depth(category.getDepth())
+                .build();
     }
 }

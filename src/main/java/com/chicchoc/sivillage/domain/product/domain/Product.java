@@ -2,7 +2,6 @@ package com.chicchoc.sivillage.domain.product.domain;
 
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

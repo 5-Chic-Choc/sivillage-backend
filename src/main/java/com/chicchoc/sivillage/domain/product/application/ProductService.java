@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ProductService {
 
+    ProductResponseDto getProduct(String productUuid);
+
     List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto);
 
     List<ProductResponseDto> getTopBestProductsByCategory(ProductRequestDto productRequestDto);
