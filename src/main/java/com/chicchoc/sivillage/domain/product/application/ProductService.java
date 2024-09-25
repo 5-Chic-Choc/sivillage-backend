@@ -15,6 +15,8 @@ public interface ProductService {
 
     List<ProductOptionResponseDto> getProductOptions(String productUuid);
 
+    ProductOptionResponseDto getOneProductOption(String productOptionUuid);
+
     List<ProductDetailResponseDto> getProductDetails(String productOptionUuid);
 
     List<ProductInfoResponseDto> getProductInfos(String productUuid);

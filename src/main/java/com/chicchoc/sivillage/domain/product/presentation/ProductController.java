@@ -136,6 +136,15 @@ public class ProductController {
         return new BaseResponse<>(productOptionResponseVos);
     }
 
+    @Operation(summary = "getOneProductOption API", description = "상품 단일 옵션 조회", tags = {"Product"})
+    @GetMapping("/option/{productOptionUuid}")
+    public BaseResponse<ProductOptionResponseVo> getOneProductOption(@PathVariable String productOptionUuid) {
+
+        ProductOptionResponseDto productOptionResponseDto = productService.getOneProductOption(productOptionUuid);
+
+        return new BaseResponse<>(productOptionResponseDto.toResponseVo());
+    }
+
     @Operation(summary = "getProductDetails API", description = "상품 상세 조회", tags = {"Product"})
     @GetMapping("/details/{productOptionUuid}")
     public BaseResponse<List<ProductDetailResponseVo>> getProductDetails(@PathVariable String productOptionUuid) {
