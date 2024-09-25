@@ -26,6 +26,13 @@ public class ProductController {
     private final ProductService productService;
     private final RedisServiceImpl redisServiceImpl;
 
+    @Operation(summary = "getProduct API", description = "상품 단품 조회", tags = {"Product"})
+    @GetMapping("/one/{productUuid}")
+    public BaseResponse<ProductResponseVo> getProduct(@PathVariable String productUuid) {
+        ProductResponseDto productResponseDto = productService.getProduct(productUuid);
+        return new BaseResponse<>(productResponseDto.toResponseVo());
+    }
+
     @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"Product"})
     @GetMapping()
     public BaseResponse<List<ProductResponseVo>> getFilteredProductList(
@@ -106,13 +113,12 @@ public class ProductController {
         return new BaseResponse<>(productResponseVos);
     }
 
-
     @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"Product"})
     @GetMapping("/{productUuid}")
-    public BaseResponse<List<ProductOptionResponseVo>> getProduct(@PathVariable String productUuid,
-                                                                  @AuthenticationPrincipal UserDetails userDetails,
-                                                                  @RequestHeader(value = "X-Unsigned-User-UUID",
-                                                                          required = false) String unsignedUserUuid) {
+    public BaseResponse<List<ProductOptionResponseVo>> getProductOp(@PathVariable String productUuid,
+                                                                    @AuthenticationPrincipal UserDetails userDetails,
+                                                                    @RequestHeader(value = "X-Unsigned-User-UUID",
+                                                                            required = false) String unsignedUserUuid) {
 
         log.info("UserDetails: {}", userDetails);
         // 로그인 여부에 따른 최근 본 상품 추가

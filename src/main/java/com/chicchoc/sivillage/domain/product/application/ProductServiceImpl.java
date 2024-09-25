@@ -25,6 +25,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepositoryCustom productRepositoryCustom;
 
     @Override
+    public ProductResponseDto getProduct(String productUuid) {
+        Product product = productRepository.findByProductUuid(productUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+
+        return ProductResponseDto.fromEntity(product);
+    }
+
+    @Override
     public List<ProductResponseDto> getFilteredProducts(ProductRequestDto dto) {
 
         List<Product> products = productRepositoryCustom.findFilteredProducts(dto);

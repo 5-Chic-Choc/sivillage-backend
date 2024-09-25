@@ -1,12 +1,12 @@
 package com.chicchoc.sivillage.domain.category.infrastructure;
 
 import com.chicchoc.sivillage.domain.category.domain.Category;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     // depth가 0인 최상위 카테고리를 조회하는 메서드
