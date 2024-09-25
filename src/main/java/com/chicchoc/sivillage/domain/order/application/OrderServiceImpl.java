@@ -45,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (cartUuidRequestDtoList != null && !cartUuidRequestDtoList.isEmpty()) {
             List<Cart> deleteCart = cartUuidRequestDtoList.stream()
+                    .filter(dto -> dto.getCartUuid() != null)
                     .map(dto -> cartRepository.findByCartUuid(dto.getCartUuid())
                             .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART_ITEM)))
                     .toList();
