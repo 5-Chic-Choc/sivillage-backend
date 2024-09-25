@@ -43,6 +43,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductCountAndPageDto getFilteredProductsCount(ProductRequestDto dto) {
+        return productRepositoryCustom.findFilteredProductsCount(dto);
+    }
+
+    @Override
     public List<ProductResponseDto> getTopBestProductsByCategory(ProductRequestDto dto) {
 
         List<Product> products = productRepositoryCustom.findTopBestProductsByCategory(dto);

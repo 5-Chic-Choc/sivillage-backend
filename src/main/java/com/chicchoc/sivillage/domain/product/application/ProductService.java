@@ -11,6 +11,8 @@ public interface ProductService {
 
     List<ProductResponseDto> getFilteredProducts(ProductRequestDto productRequestDto);
 
+    ProductCountAndPageDto getFilteredProductsCount(ProductRequestDto productRequestDto);
+
     List<ProductResponseDto> getTopBestProductsByCategory(ProductRequestDto productRequestDto);
 
     List<ProductOptionResponseDto> getProductOptions(String productUuid);

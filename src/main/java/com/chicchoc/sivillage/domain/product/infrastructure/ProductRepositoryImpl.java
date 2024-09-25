@@ -7,6 +7,7 @@ import com.chicchoc.sivillage.domain.category.domain.QCategory;
 import com.chicchoc.sivillage.domain.category.domain.QProductCategory;
 import com.chicchoc.sivillage.domain.product.domain.*;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.out.ProductCountAndPageDto;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.querydsl.core.BooleanBuilder;
@@ -51,6 +52,29 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(orderSpecifier)
                 .fetch();
     }
+
+    @Override
+    public ProductCountAndPageDto findFilteredProductsCount(ProductRequestDto dto) {
+
+        BooleanBuilder predicate = createPredicate(dto);
+
+        // 전체 개수 계산
+        Long totalCount = queryFactory
+                .select(product.countDistinct())
+                .from(product)
+                .leftJoin(productOption).on(product.id.eq(productOption.product.id))
+                .where(predicate)
+                .fetchOne();
+
+        int perPage = dto.getPerPage() != null ? dto.getPerPage() : 20;
+        int totalPages = (int) Math.ceil((double) totalCount / perPage);
+
+        return ProductCountAndPageDto.builder()
+                .totalCount(totalCount)
+                .totalPages(totalPages)
+                .build();
+    }
+
 
     private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAscending) {
 
