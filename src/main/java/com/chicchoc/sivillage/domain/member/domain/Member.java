@@ -3,8 +3,6 @@ package com.chicchoc.sivillage.domain.member.domain;
 import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +11,6 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,25 +84,25 @@ public class Member extends BaseEntity implements UserDetails { //사용자 인�
 
     @Override
     public boolean isAccountNonExpired() {
-        // todo : 계정 만료 확인 로직
+        // 계정 만료 확인 로직
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        // todo : 계정 잠금 확인 로직
+        // 계정 잠금 확인 로직
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // todo : 계정 비밀번호 만료 확인 로직
+        // 계정 비밀번호 만료 확인 로직
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        // todo : 계정 사용 가능 여부 확인 로직
+        // 계정 사용 가능 여부 확인 로직
         return true;
     }
 }

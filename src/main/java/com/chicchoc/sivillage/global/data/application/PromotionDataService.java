@@ -44,7 +44,7 @@ public class PromotionDataService {
     @Transactional
     public void savePromotionData(List<PromotionDataRequestDto> dtos) {
 
-        //todo : FE와 API 연결 후, 가지고 있는 제품 데이터와 promotion 데이터를 비교하여, 존재하는 제품만 저장하도록 수정
+        // todo : FE와 API 연결 후, 가지고 있는 제품 데이터와 promotion 데이터를 비교하여, 존재하는 제품만 저장하도록 수정
 
         for (PromotionDataRequestDto dto : dtos) {
             if (checkNull(dto)) {
