@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CartResponseVo {
     private String cartUuid;
+    private String productUuid;
     private String productOptionUuid;
-    private int amount;
+    private int quantity;
     private Boolean isSelected;
 }

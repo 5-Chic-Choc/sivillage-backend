@@ -35,13 +35,17 @@ public class Cart extends BaseEntity {
     @Column(name = "user_uuid", nullable = false, length = 21)
     private String userUuid;
 
+    @Comment("제품 uuid")
+    @Column(name = "product_uuid", nullable = false, length = 21)
+    private String productUuid;
+
     @Comment("제품 옵션 uuid")
     @Column(name = "product_option_uuid", nullable = false, length = 21)
     private String productOptionUuid;
 
     @Comment("주문 수량")
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @Comment("선택 여부")
     @Builder.Default

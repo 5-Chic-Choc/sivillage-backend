@@ -7,13 +7,14 @@ import lombok.Getter;
 public class CartUpdateRequestVo {
 
     private String productOptionUuid;
-    private Integer amount;
+    private int quantity;
 
-    public CartUpdateRequestDto toDto(String cartUuid) {
+    public CartUpdateRequestDto toDto(String userUuid, String cartUuid) {
         return CartUpdateRequestDto.builder()
+                .userUuid(userUuid)
                 .cartUuid(cartUuid)
                 .productOptionUuid(productOptionUuid)
-                .amount(amount)
+                .quantity(quantity)
                 .build();
     }
 }

@@ -4,16 +4,18 @@ import com.chicchoc.sivillage.domain.cart.domain.Cart;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartDeleteRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartRequestDto;
-import com.chicchoc.sivillage.domain.cart.dto.in.CartStatusUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartUpdateRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.ItemIsSelectedUpdateRequestDto;
+import com.chicchoc.sivillage.domain.cart.dto.in.ItemQuantityUpdateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
 import com.chicchoc.sivillage.domain.cart.infrastructure.CartRepository;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,21 +28,19 @@ public class CartServiceImpl implements CartService {
     @Override
     public void createCart(CartRequestDto cartRequestDto) {
 
-        Optional<Cart> existCartItem = cartRepository.findByUserUuidAndProductOptionUuid(cartRequestDto.getUserUuid(),
-                cartRequestDto.getProductOptionUuid());
+        Optional<Cart> existingCartItem = cartRepository.findByUserUuidAndProductOptionUuid(
+                cartRequestDto.getUserUuid(), cartRequestDto.getProductOptionUuid());
 
-        if (existCartItem.isPresent()) {
-            cartRepository.save(Cart.builder()
-                    .id(existCartItem.get().getId())
-                    .userUuid(existCartItem.get().getUserUuid())
-                    .cartUuid(existCartItem.get().getCartUuid())
-                    .productOptionUuid(existCartItem.get().getProductOptionUuid())
-                    .amount(existCartItem.get().getAmount() + cartRequestDto.getAmount())
-                    .isSelected(existCartItem.get().getIsSelected())
-                    .build());
-        } else {
-            cartRepository.save(cartRequestDto.toEntity());
-        }
+        cartRepository.save(existingCartItem.map(cart -> Cart.builder()
+                        .id(cart.getId())
+                        .userUuid(cart.getUserUuid())
+                        .cartUuid(cart.getCartUuid())
+                        .productUuid(cart.getProductUuid())
+                        .productOptionUuid(cart.getProductOptionUuid())
+                        .quantity(cart.getQuantity() + cartRequestDto.getQuantity()) // 수량 업데이트
+                        .isSelected(cart.getIsSelected())
+                        .build())
+                .orElseGet(cartRequestDto::toEntity));
     }
 
     @Override
@@ -48,8 +48,9 @@ public class CartServiceImpl implements CartService {
         return cartRepository.findByUserUuid(userUuid).stream()
                 .map(cart -> CartResponseDto.builder()
                         .cartUuid(cart.getCartUuid())
+                        .productUuid(cart.getProductUuid())
                         .productOptionUuid(cart.getProductOptionUuid())
-                        .amount(cart.getAmount())
+                        .quantity(cart.getQuantity())
                         .isSelected(cart.getIsSelected())
                         .build()
                 ).toList();
@@ -58,43 +59,81 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartResponseDto updateCartItem(CartUpdateRequestDto cartUpdateRequestDto) {
 
-        Cart existCartItem = cartRepository.findByCartUuid(cartUpdateRequestDto.getCartUuid())
+        Optional<Cart> existingCartItem = cartRepository.findByUserUuidAndProductOptionUuid(
+                cartUpdateRequestDto.getUserUuid(), cartUpdateRequestDto.getProductOptionUuid());
+
+        Cart cartItem = cartRepository.findByCartUuid(cartUpdateRequestDto.getCartUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
 
-        Cart savedData = cartRepository.save(Cart.builder()
-                .id(existCartItem.getId())
-                .userUuid(existCartItem.getUserUuid())
-                .cartUuid(existCartItem.getCartUuid())
-                .productOptionUuid(cartUpdateRequestDto.getProductOptionUuid())
-                .amount(cartUpdateRequestDto.getAmount())
-                .isSelected(existCartItem.getIsSelected())
-                .build());
+        Cart cart;
+        if (existingCartItem.isPresent()) {
 
-        return CartResponseDto.builder()
-                .cartUuid(savedData.getCartUuid())
-                .productOptionUuid(savedData.getProductOptionUuid())
-                .amount(savedData.getAmount())
-                .isSelected(savedData.getIsSelected())
-                .build();
+            Cart item = existingCartItem.get();
+
+            cartRepository.delete(cartItem);
+
+            cart = Cart.builder()
+                    .id(item.getId())
+                    .userUuid(item.getUserUuid())
+                    .cartUuid(item.getCartUuid())
+                    .productUuid(item.getProductUuid())
+                    .productOptionUuid(item.getProductOptionUuid())
+                    .quantity(item.getQuantity() + cartUpdateRequestDto.getQuantity())
+                    .isSelected(item.getIsSelected())
+                    .build();
+        } else {
+
+            cart = Cart.builder()
+                    .id(cartItem.getId())
+                    .userUuid(cartItem.getUserUuid())
+                    .cartUuid(cartItem.getCartUuid())
+                    .productUuid(cartItem.getProductUuid())
+                    .productOptionUuid(cartUpdateRequestDto.getProductOptionUuid())
+                    .quantity(cartUpdateRequestDto.getQuantity())
+                    .isSelected(cartItem.getIsSelected())
+                    .build();
+        }
+
+        return CartResponseDto.fromEntity(cartRepository.save(cart));
     }
 
     @Override
-    public void updateCartStatus(List<CartStatusUpdateRequestDto> cartStatusUpdateRequestDtoList) {
-        cartStatusUpdateRequestDtoList.stream()
-                .map(cartStatusUpdateRequestDto -> cartRepository.findByCartUuid(
-                                cartStatusUpdateRequestDto.getCartUuid())
-                        .map(cart -> Cart.builder()
-                                .id(cart.getId())
-                                .userUuid(cart.getUserUuid())
-                                .cartUuid(cart.getCartUuid())
-                                .productOptionUuid(cart.getProductOptionUuid())
-                                .amount(cartStatusUpdateRequestDto.getAmount())
-                                .isSelected(cartStatusUpdateRequestDto.getIsSelected())
-                                .build())
-                        .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART))
-                )
-                .forEach(cartRepository::save);
+    public void updateItemQuantity(ItemQuantityUpdateRequestDto itemQuantityUpdateRequestDto) {
+        Cart cart = cartRepository.findByCartUuid(itemQuantityUpdateRequestDto.getCartUuid())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
+
+        cartRepository.save(Cart.builder()
+                .id(cart.getId())
+                .userUuid(cart.getUserUuid())
+                .cartUuid(cart.getCartUuid())
+                .productUuid(cart.getProductUuid())
+                .quantity(itemQuantityUpdateRequestDto.getQuantity())
+                .productOptionUuid(cart.getProductOptionUuid())
+                .isSelected(cart.getIsSelected())
+                .build());
     }
+
+    @Override
+    public void updateItemIsSelected(List<ItemIsSelectedUpdateRequestDto> itemIsSelectedUpdateRequestDtoList) {
+        itemIsSelectedUpdateRequestDtoList.stream().map(itemIsSelectedUpdateRequestDto -> {
+
+            Cart cart = cartRepository.findByCartUuid(itemIsSelectedUpdateRequestDto.getCartUuid())
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_CART));
+
+            return Cart.builder()
+                    .id(cart.getId())
+                    .cartUuid(cart.getCartUuid())
+                    .userUuid(cart.getUserUuid())
+                    .productUuid(cart.getProductUuid())
+                    .productOptionUuid(cart.getProductOptionUuid())
+                    .quantity(cart.getQuantity())
+                    .isSelected(itemIsSelectedUpdateRequestDto.getIsSelected())
+                    .build();
+
+        }).forEach(cartRepository::save);
+        // 리턴 값 필요하면 리턴ㄴ하기
+    }
+
 
     @Override
     public void deleteCartItems(List<CartDeleteRequestDto> cartDeleteRequestDtoList) {
@@ -110,35 +149,42 @@ public class CartServiceImpl implements CartService {
         List<Cart> unsignedMemberCartList = cartRepository.findByUserUuid(cartMigrateRequestDto.getUnsignedUserUuid());
         List<Cart> signedMemberCartList = cartRepository.findByUserUuid(cartMigrateRequestDto.getUserUuid());
 
-        List<Cart> updatedCartList = new ArrayList<>();
+        Map<String, Cart> signedCartMap = signedMemberCartList.stream()
+                .collect(Collectors.toMap(Cart::getProductOptionUuid, Function.identity()));
 
-        if (!unsignedMemberCartList.isEmpty()) {
-            unsignedMemberCartList.forEach(cart ->
-                    signedMemberCartList.stream()
-                            .filter(userCart -> userCart.getProductOptionUuid().equals(cart.getProductOptionUuid()))
-                            .findFirst()
-                            .ifPresentOrElse(existCart -> {
-                                cartRepository.save(Cart.builder()
-                                        .id(existCart.getId())
-                                        .cartUuid(existCart.getCartUuid())
-                                        .userUuid(existCart.getUserUuid())
-                                        .productOptionUuid(existCart.getProductOptionUuid())
-                                        .amount(existCart.getAmount() + cart.getAmount())
-                                        .isSelected(cart.getIsSelected())
-                                        .build());
-                                cartRepository.delete(cart);
-                            }, () -> {
-                                updatedCartList.add(Cart.builder()
-                                        .id(cart.getId())
-                                        .cartUuid(cart.getCartUuid())
-                                        .userUuid(cartMigrateRequestDto.getUserUuid())
-                                        .productOptionUuid(cart.getProductOptionUuid())
-                                        .amount(cart.getAmount())
-                                        .isSelected(cart.getIsSelected())
-                                        .build());
-                            })
-            );
+        List<Cart> updatedCartList = unsignedMemberCartList.stream()
+                .map(unsignedCart -> {
+                    Cart existCart = signedCartMap.get(unsignedCart.getProductOptionUuid());
+
+                    if (existCart != null) {
+
+                        cartRepository.delete(unsignedCart);
+                        return Cart.builder()
+                                .id(existCart.getId())
+                                .cartUuid(existCart.getCartUuid())
+                                .userUuid(existCart.getUserUuid())
+                                .productUuid(existCart.getProductUuid())
+                                .productOptionUuid(existCart.getProductOptionUuid())
+                                .quantity(existCart.getQuantity() + unsignedCart.getQuantity())
+                                .isSelected(existCart.getIsSelected())
+                                .build();
+                    } else {
+                        return Cart.builder()
+                                .id(unsignedCart.getId())
+                                .cartUuid(unsignedCart.getCartUuid())
+                                .userUuid(cartMigrateRequestDto.getUserUuid())
+                                .productUuid(unsignedCart.getProductUuid())
+                                .productOptionUuid(unsignedCart.getProductOptionUuid())
+                                .quantity(unsignedCart.getQuantity())
+                                .isSelected(unsignedCart.getIsSelected())
+                                .build();
+                    }
+                })
+                .toList();
+
+        if (!updatedCartList.isEmpty()) {
             cartRepository.saveAll(updatedCartList);
         }
+
     }
 }
