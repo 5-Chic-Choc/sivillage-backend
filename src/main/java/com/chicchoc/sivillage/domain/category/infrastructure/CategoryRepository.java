@@ -15,7 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // 특정 부모 카테고리의 자식 카테고리를 조회하는 메서드
     List<Category> findByParentId(Long parentId);
 
-    // 부모 카테고리와 이름으로 카테고리 찾기
+    // 부모와 이름으로 카테고리 찾기
     Optional<Category> findByNameAndParent(String name, Category parent);
 
     // 이름으로 카테고리 찾기

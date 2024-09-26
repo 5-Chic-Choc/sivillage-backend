@@ -93,12 +93,21 @@ public class ProductDataService {
                 continue;
             }
 
-            // Step 1. 상품 Entity 저장
+            // Step 0. 상품이 이미 존재하는 경우 저장하지 않음
             String productUuid = dto.getGoodsNo();
+
+            if (productRepository.findByProductUuid(productUuid).isPresent()) {
+                continue;
+            }
+
+            // Step 1. 상품 Entity 저장
             Product product = saveProduct(dto, productUuid);
 
-            // Step 22. 제품 카테고리 중간테이블 저장
-            saveCategory(dto, product);
+            // Step 2. 제품 카테고리 중간테이블 저장
+            //saveLeafCategory(dto, product);
+            if (!saveAllCategories(dto, product)) {
+                continue;
+            }
 
             // Step 3. 제품 해시태그 저장
             saveHashtags(dto.getHashtags(), productUuid);
@@ -170,8 +179,8 @@ public class ProductDataService {
     private boolean checkNull(ProductDataRequestDto dto) {
         try {
             // 필수 데이터가 null인 경우
-            if (dto.getGoodsNo() == null || dto.getGoodsNm() == null || dto.getBrandNm() == null
-                    || dto.getDispLctgNm() == null || dto.getNormalPrice() == null) {
+            if (isNullOrEmpty(dto.getGoodsNo()) || isNullOrEmpty(dto.getGoodsNm()) || isNullOrEmpty(dto.getBrandNm())
+                    || isNullOrEmpty(dto.getDispLctgNm()) || dto.getNormalPrice() == null) {
                 return true;
             }
         } catch (Exception e) {
@@ -182,8 +191,6 @@ public class ProductDataService {
 
     // 브랜드 찾아 상품 저장
     private Product saveProduct(ProductDataRequestDto dto, String productUuid) {
-
-        Optional<Product> existingProduct = productRepository.findByProductUuid(productUuid);
 
         // 브랜드 이름이 같고, 브랜드 리스트 타입이 "en"인 브랜드의 UUID를 찾음
         String brandUuid = brandRepository.findTopBrandUuidByNameAndBrandListType(dto.getBrandNm())
@@ -206,19 +213,62 @@ public class ProductDataService {
                 .build());
     }
 
+    private boolean saveAllCategories(ProductDataRequestDto dto, Product product) {
+
+        Long productId = product.getId();
+
+        // 있는 카테고리의 id를 리스트에 담음
+        List<ProductCategory> productCategories = new ArrayList<>();
+
+        // 1. 대분류 카테고리 찾고 add
+        Optional<Category> largeCatOpt = categoryRepository.findRootCategoryByName(dto.getDispLctgNm());
+        if (!largeCatOpt.isPresent()) {
+            return false;  // 카테고리가 없으면 false 반환
+        }
+        Category largeCat = largeCatOpt.get();
+        productCategories.add(new ProductCategory(productId, largeCat.getId()));
+
+        // 2. 중분류 카테고리 찾고 add
+        Optional<Category> middleCatOpt = categoryRepository.findByNameAndParent(dto.getDispMctgNm(), largeCat);
+        if (!middleCatOpt.isPresent()) {
+            return false;
+        }
+        Category middleCat = middleCatOpt.get();
+        productCategories.add(new ProductCategory(productId, middleCat.getId()));
+
+        // 3. 소분류 카테고리 찾고 add
+        Optional<Category> smallCatOpt = categoryRepository.findByNameAndParent(dto.getDispSctgNm(), middleCat);
+        if (!smallCatOpt.isPresent()) {
+            return false;
+        }
+        Category smallCat = smallCatOpt.get();
+        productCategories.add(new ProductCategory(productId, smallCat.getId()));
+
+        // 4. 상세 카테고리 찾고 add
+        Optional<Category> detailCatOpt = categoryRepository.findByNameAndParent(dto.getDispDctgNm(), smallCat);
+        if (!detailCatOpt.isPresent()) {
+            return false;
+        }
+        productCategories.add(new ProductCategory(productId, detailCatOpt.get().getId()));
+
+        // 리스트로 카테고리 저장(DB 호출 최소화)
+        productCategoryRepository.saveAll(productCategories);
+        return true;
+    }
+
     // 카테고리 저장
-    private void saveCategory(ProductDataRequestDto dto, Product product) {
-        Category finalCategory = findFinalCategory(dto.getDispLctgNm(), dto.getDispMctgNm(),
+    private void saveLeafCategory(ProductDataRequestDto dto, Product product) {
+        Category leafCategory = findLeafCategory(dto.getDispLctgNm(), dto.getDispMctgNm(),
                 dto.getDispSctgNm(), dto.getDispDctgNm());
 
         // 종종 데이터에 카테고리가 없는 경우가 있음 => 카테고리가 없으면 저장하지 않음
-        if (finalCategory == null) {
+        if (leafCategory == null) {
             log.error("카테고리가 존재하지 않습니다.");
         }
 
         productCategoryRepository.save(ProductCategory.builder()
                 .productId(product.getId())
-                .categoryId(finalCategory.getId())
+                .categoryId(leafCategory.getId())
                 .build());
 
     }
@@ -324,7 +374,7 @@ public class ProductDataService {
     }
 
     // 부모 카테고리 이름부터 시작해서 최종 카테고리 찾기
-    private Category findFinalCategory(String largeCategoryName, String middleCategoryName, String smallCategoryName,
+    private Category findLeafCategory(String largeCategoryName, String middleCategoryName, String smallCategoryName,
             String detailCategoryName) {
 
         // Step 1: Large Category (루트 카테고리)
@@ -337,7 +387,7 @@ public class ProductDataService {
                 .orElse(null);
 
         // Step 3: Small Category(+null 체크)
-        if (smallCategoryName == null || smallCategoryName.trim().isEmpty()) {
+        if (isNullOrEmpty(smallCategoryName)) {
             return middleCat;
         }
 
@@ -345,7 +395,7 @@ public class ProductDataService {
                 .orElse(null);
 
         // Step 4: Detail Category(+null 체크)
-        if (detailCategoryName == null || detailCategoryName.trim().isEmpty()) {
+        if (isNullOrEmpty(detailCategoryName)) {
             return smallCat;
         }
 
@@ -353,5 +403,10 @@ public class ProductDataService {
                 .orElse(null);
 
         return detailCat;
+    }
+
+    // null 또는 빈 문자열 체크
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
     }
 }
