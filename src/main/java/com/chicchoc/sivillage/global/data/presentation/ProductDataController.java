@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "데이터", description = "데이터 삽입용 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/data")
+@RequestMapping("/api/v1/data")
 public class ProductDataController {
 
     private final ProductDataService productDataService;

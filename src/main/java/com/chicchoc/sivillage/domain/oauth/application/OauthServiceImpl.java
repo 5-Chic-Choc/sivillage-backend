@@ -111,7 +111,7 @@ public class OauthServiceImpl implements OauthService {
 
     private Authentication manualAuthenticate(Member member) {
 
-        // todo: 필요시 권한 정보 추가
+        // 필요시 권한 정보 추가
         Collection<? extends GrantedAuthority> authorities = member.getAuthorities();
 
         // Spring Security의 User 객체 생성

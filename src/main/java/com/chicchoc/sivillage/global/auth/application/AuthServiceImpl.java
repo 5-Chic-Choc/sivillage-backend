@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto requestDto) {
 
-        //todo : Redis로 변경
+        // Redis로 변경
 
         String userEmail = requestDto.getEmail();
         String verificationCode = VerificationCode.generateCode();
