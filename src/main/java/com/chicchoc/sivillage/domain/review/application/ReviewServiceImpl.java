@@ -10,7 +10,7 @@ import com.chicchoc.sivillage.domain.review.dto.in.ReviewMediaRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewMediaResponseDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
-import com.chicchoc.sivillage.domain.review.infrastructure.ReviewListRepositoryCustom;
+import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepositoryCustom;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewMediaRepository;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
@@ -36,9 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMediaRepository reviewMediaRepository;
     private final MediaRepository mediaRepository;
-    private final NanoIdGenerator nanoIdGenerator;
     private final MemberRepository memberRepository;
-    private final ReviewListRepositoryCustom reviewListRepository;
+    private final ReviewRepositoryCustom reviewListRepository;
     private final S3Service s3Service;
 
     @Override
@@ -70,30 +69,6 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewByProductUuid(String productUuid) {
-
-        List<Review> reviewList = reviewRepository.findByProductUuid(productUuid);
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
-
-        return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap).stream()
-                .sorted(Comparator.comparingInt(ReviewResponseDto::getLikedCnt).reversed()).toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewByUserUuid(String userUuid) {
-
-        List<Review> reviewList = reviewRepository.findByUserUuid(userUuid);
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
-
-        return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap);
-    }
-
     @Override
     public void deleteReview(String reviewUuid) {
         reviewRepository.delete(reviewRepository.findByReviewUuid(reviewUuid)
@@ -103,21 +78,27 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public CursorPage<String> getAllReviews(String productUuid, String userUuid, Long lastId, Integer pageSize,
+    public CursorPage<String> getAllReviews(String userUuid, Long lastId, Integer pageSize,
             Integer page) {
 
-        return reviewListRepository.getReviewList(productUuid, userUuid, lastId, pageSize, page);
+        return reviewListRepository.getReviewListByUserUuid(userUuid, lastId, pageSize, page);
     }
 
-    private Map<String, List<ReviewMediaResponseDto>> getReviews(List<Review> reviewList) {
+    @Override
+    public CursorPage<String> getReviewByProductUuid(String productUuid, Long lastId, Integer pageSize, Integer page) {
+        return reviewListRepository.getReviewListByProductUuid(productUuid, lastId, pageSize, page);
+    }
 
-        List<ReviewMedia> reviewMediaList = reviewMediaRepository.findByReviewUuidIn(reviewList.stream()
-                .map(Review::getReviewUuid)
-                .toList());
+    @Override
+    public ReviewResponseDto getReview(String reviewUuid) {
 
-        return reviewMediaList.stream()
-                .map(ReviewMediaResponseDto::fromEntity)
-                .toList().stream()
-                .collect(Collectors.groupingBy(ReviewMediaResponseDto::getReviewUuid));
+        return ReviewResponseDto.fromEntity(reviewRepository.findByReviewUuid(reviewUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_REVIEW)));
+    }
+
+    @Override
+    public List<ReviewMediaResponseDto> getReviewMedia(String reviewUuid) {
+        return reviewMediaRepository.findByReviewUuid(reviewUuid)
+                .stream().map(ReviewMediaResponseDto::fromEntity).toList();
     }
 }

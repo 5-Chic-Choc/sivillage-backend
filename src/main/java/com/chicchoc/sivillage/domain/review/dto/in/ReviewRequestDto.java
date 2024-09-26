@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 public class ReviewRequestDto {
 
     private String productUuid;
-    private String sizeName;
-    private String colorValue;
     private String optionName;
     private String reviewContent;
     private byte starPoint;
@@ -30,9 +28,7 @@ public class ReviewRequestDto {
                 .reviewUuid(reviewUuid)
                 .productUuid(productUuid)
                 .userUuid(userUuid)
-                .sizeName(sizeName)
                 .optionName(optionName)
-                .colorValue(colorValue)
                 .reviewContent(reviewContent)
                 .starPoint(starPoint)
                 .reviewerEmail(reviewerEmail)

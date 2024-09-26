@@ -51,14 +51,6 @@ public class Review extends BaseEntity {
     @Column(name = "liked_cnt")
     private Integer likedCnt;
 
-    @Comment("사이즈명")
-    @Column(name = "size_name")
-    private String sizeName;
-
-    @Comment("색상명")
-    @Column(name = "color_value")
-    private String colorValue;
-
     @Comment("옵션명")
     @Column(name = "option_name")
     private String optionName;
@@ -88,15 +80,13 @@ public class Review extends BaseEntity {
     private String reviewRateText3;
 
     @Builder
-    public Review(String reviewUuid, String productUuid, String userUuid, String sizeName, String colorValue,
+    public Review(String reviewUuid, String productUuid, String userUuid,
             String optionName, String reviewContent, Byte starPoint, Integer likedCnt, String reviewerEmail,
             String reviewRateType1, String reviewRateText1, String reviewRateType2, String reviewRateText2,
             String reviewRateType3, String reviewRateText3) {
         this.reviewUuid = reviewUuid;
         this.productUuid = productUuid;
         this.userUuid = userUuid;
-        this.sizeName = sizeName;
-        this.colorValue = colorValue;
         this.optionName = optionName;
         this.reviewContent = reviewContent;
         this.starPoint = starPoint;

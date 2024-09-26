@@ -1,9 +1,9 @@
 package com.chicchoc.sivillage.domain.review.presentation;
 
 import com.chicchoc.sivillage.domain.review.application.ReviewService;
-import com.chicchoc.sivillage.domain.review.domain.Review;
-import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
+import com.chicchoc.sivillage.domain.review.dto.out.ReviewMediaResponseDto;
 import com.chicchoc.sivillage.domain.review.vo.in.ReviewRequestVo;
+import com.chicchoc.sivillage.domain.review.vo.out.ReviewMediaResponseVo;
 import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
@@ -40,32 +40,35 @@ public class ReviewController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
-    @GetMapping
-    public BaseResponse<CursorPage<String>> getReview(@RequestParam(required = false) String productUuid,
+    @GetMapping("/user")
+    public BaseResponse<CursorPage<String>> getReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(required = false) Long lastId, @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer page) {
 
         return new BaseResponse<>(
-                reviewService.getAllReviews(productUuid, userDetails.getUsername(), lastId, pageSize, page));
+                reviewService.getAllReviews(userDetails.getUsername(), lastId, pageSize, page));
     }
 
-    @GetMapping("/product/{productUuid}")
-    public BaseResponse<List<ReviewResponseVo>> getReviewByProductUuId(
-            @PathVariable("productUuid") String productUuid) {
+    @GetMapping("/productUuid")
+    public BaseResponse<CursorPage<String>> getReviewMediaByProductUuid(
+            @RequestParam(required = false) String productUuid,
+            @RequestParam(required = false) Long lastId, @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) Integer page) {
 
-        return new BaseResponse<>(reviewService.getReviewByProductUuid(productUuid).stream()
-                .map(ReviewResponseDto::toResponseVo)
-                .toList());
+        return new BaseResponse<>(reviewService.getReviewByProductUuid(productUuid, lastId, pageSize, page));
     }
 
-    @GetMapping("/user")
-    public BaseResponse<List<ReviewResponseVo>> getReviewByUserUuid(Authentication authentication) {
+    @GetMapping("/{reviewUuid}")
+    public BaseResponse<ReviewResponseVo> getReviewByReviewUuid(@PathVariable("reviewUuid") String reviewUuid) {
+        return new BaseResponse<>(reviewService.getReview(reviewUuid).toResponseVo());
+    }
 
-        return new BaseResponse<>(reviewService.getReviewByUserUuid(authentication.getName())
-                .stream()
-                .map(ReviewResponseDto::toResponseVo)
-                .toList());
+    @GetMapping("/Media/{reviewUuid}")
+    public BaseResponse<List<ReviewMediaResponseVo>> getReviewMediaByReviewUuid(
+            @PathVariable("reviewUuid") String reviewUuid) {
+        return new BaseResponse<>(
+                reviewService.getReviewMedia(reviewUuid).stream().map(ReviewMediaResponseDto::toVo).toList());
     }
 
     @DeleteMapping("/{reviewUuid}")
