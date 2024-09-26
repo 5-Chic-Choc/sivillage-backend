@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.domain.redis.application;
+package com.chicchoc.sivillage.domain.search.application;
 
 import java.util.List;
 

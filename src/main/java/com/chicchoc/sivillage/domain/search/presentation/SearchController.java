@@ -1,6 +1,6 @@
-package com.chicchoc.sivillage.domain.redis.presentation;
+package com.chicchoc.sivillage.domain.search.presentation;
 
-import com.chicchoc.sivillage.domain.redis.application.RedisService;
+import com.chicchoc.sivillage.domain.search.application.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

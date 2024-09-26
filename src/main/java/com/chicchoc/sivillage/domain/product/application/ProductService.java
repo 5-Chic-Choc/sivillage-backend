@@ -24,4 +24,6 @@ public interface ProductService {
     List<ProductInfoResponseDto> getProductInfos(String productUuid);
 
     List<ProductHashtagResponseDto> getProductHashtags(String productUuid);
+
+    FilteredProductAttributesDto getFilteredProductAttributes(ProductRequestDto productRequestDto);
 }

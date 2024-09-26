@@ -4,7 +4,7 @@ import com.chicchoc.sivillage.domain.product.application.ProductService;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.out.*;
 import com.chicchoc.sivillage.domain.product.vo.out.*;
-import com.chicchoc.sivillage.domain.redis.application.RedisServiceImpl;
+import com.chicchoc.sivillage.domain.search.application.SearchServiceImpl;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
-    private final RedisServiceImpl redisServiceImpl;
+    private final SearchServiceImpl searchServiceImpl;
 
     @Operation(summary = "getProduct API", description = "상품 단품 조회", tags = {"Product"})
     @GetMapping("/one/{productUuid}")
@@ -58,10 +58,10 @@ public class ProductController {
         if (keywords != null && !keywords.isEmpty()) {
             if (userDetails != null) {
                 // 로그인한 경우
-                redisServiceImpl.addRecentSearch(userDetails.getUsername(), keywords);
+                searchServiceImpl.addRecentSearch(userDetails.getUsername(), keywords);
             } else if (unsignedUserUuid != null) {
                 // 비로그인 사용자 처리
-                redisServiceImpl.addRecentSearch(unsignedUserUuid, keywords);
+                searchServiceImpl.addRecentSearch(unsignedUserUuid, keywords);
             }
         }
 
@@ -151,9 +151,9 @@ public class ProductController {
         log.info("UserDetails: {}", userDetails);
         // 로그인 여부에 따른 최근 본 상품 추가
         if (userDetails != null) {
-            redisServiceImpl.addRecentViewedProduct(userDetails.getUsername(), productUuid);
+            searchServiceImpl.addRecentViewedProduct(userDetails.getUsername(), productUuid);
         } else if (unsignedUserUuid != null) {
-            redisServiceImpl.addRecentViewedProduct(unsignedUserUuid, productUuid);
+            searchServiceImpl.addRecentViewedProduct(unsignedUserUuid, productUuid);
         }
 
         List<ProductOptionResponseDto> productOptionResponseDtos = productService.getProductOptions(productUuid);
@@ -210,5 +210,19 @@ public class ProductController {
                 .toList();
 
         return new BaseResponse<>(productHashtagResponseVos);
+    }
+
+    @Operation(summary = "getFilteredProductAttributes API", description = "상품 필터링 속성 조회", tags = {"Product"})
+    @GetMapping("/attributes")
+    public BaseResponse<FilteredProductAttributesVo> getFilteredProductAttributes(
+            @RequestParam(required = false) List<String> categories) {
+
+        ProductRequestDto dto = ProductRequestDto.builder()
+                .categories(categories)
+                .build();
+
+        FilteredProductAttributesDto attributes = productService.getFilteredProductAttributes(dto);
+
+        return new BaseResponse<>(attributes.toVo());
     }
 }
