@@ -44,6 +44,7 @@ public class SecurityConfig {
         config.addAllowedOrigin("https://sivillage.shop");
         config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedOrigin("http://43.201.30.206:8080");
+        config.addAllowedOrigin("http://localhost:3000");
         //config.addAllowedOriginPattern("*"); //모든 Origin 허용(for 테스트)
         config.addAllowedHeader("*"); // 모든 Header 허용
         config.addAllowedMethod("*"); //모든 Method 허용
