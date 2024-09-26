@@ -119,4 +119,9 @@ public class ProductServiceImpl implements ProductService {
                 .map(ProductHashtagResponseDto::fromEntity)
                 .toList();
     }
+
+    @Override
+    public FilteredProductAttributesDto getFilteredProductAttributes(ProductRequestDto dto) {
+        return productRepositoryCustom.findFilteredProductAttributes(dto);
+    }
 }

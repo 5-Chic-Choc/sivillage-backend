@@ -1,8 +1,8 @@
-package com.chicchoc.sivillage.domain.redis.application;
+package com.chicchoc.sivillage.domain.search.application;
 
 import java.util.List;
 
-public interface RedisService {
+public interface SearchService {
     void addRecentSearch(String userUuid, String keyword);
 
     List<Object> getRecentSearches(String userUuid);

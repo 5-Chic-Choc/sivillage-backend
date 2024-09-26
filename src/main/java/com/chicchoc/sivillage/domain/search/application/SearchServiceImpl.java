@@ -1,4 +1,4 @@
-package com.chicchoc.sivillage.domain.redis.application;
+package com.chicchoc.sivillage.domain.search.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RedisServiceImpl implements RedisService {
+public class SearchServiceImpl implements SearchService {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private static final int MAX_RECENT_ITEMS = 30; // 최대 저장할 개수

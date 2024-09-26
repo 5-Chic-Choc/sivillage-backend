@@ -7,6 +7,7 @@ import com.chicchoc.sivillage.domain.category.domain.QCategory;
 import com.chicchoc.sivillage.domain.category.domain.QProductCategory;
 import com.chicchoc.sivillage.domain.product.domain.*;
 import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
+import com.chicchoc.sivillage.domain.product.dto.out.FilteredProductAttributesDto;
 import com.chicchoc.sivillage.domain.product.dto.out.ProductCountAndPageDto;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
@@ -30,7 +31,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final QProductOption productOption = QProductOption.productOption;
     private static final QCategory qcategory = QCategory.category;
     private static final QProductCategory productCategory = QProductCategory.productCategory;
+    private static final QProductHashtag productHashtag = QProductHashtag.productHashtag;
     private static final QProductScore productScore = QProductScore.productScore;
+    private static final QColor qcolor = QColor.color;
+    private static final QSize qsize = QSize.size;
 
     @Override
     public List<Product> findFilteredProducts(ProductRequestDto dto) {
@@ -109,9 +113,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // 사이즈 필터링
         if (dto.getSizes() != null && !dto.getSizes().isEmpty()) {
-            List<Long> sizeIds = queryFactory.select(QSize.size.id)
-                    .from(QSize.size)
-                    .where(QSize.size.name.in(dto.getSizes()))
+            List<Long> sizeIds = queryFactory.select(qsize.id)
+                    .from(qsize)
+                    .where(qsize.name.in(dto.getSizes()))
                     .fetch();
 
             if (sizeIds.isEmpty()) {
@@ -123,9 +127,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // 색상 필터링
         if (dto.getColors() != null && !dto.getColors().isEmpty()) {
-            List<Long> colorIds = queryFactory.select(QColor.color.id)
-                    .from(QColor.color)
-                    .where(QColor.color.name.in(dto.getColors()))
+            List<Long> colorIds = queryFactory.select(qcolor.id)
+                    .from(qcolor)
+                    .where(qcolor.name.in(dto.getColors()))
                     .fetch();
 
             if (colorIds.isEmpty()) {
@@ -172,9 +176,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             }
 
             // 해시태그에서 검색
-            List<String> productUuids = queryFactory.select(QProductHashtag.productHashtag.productUuid)
-                    .from(QProductHashtag.productHashtag)
-                    .where(QProductHashtag.productHashtag.hashtagContent.containsIgnoreCase(dto.getKeywords()))
+            List<String> productUuids = queryFactory.select(productHashtag.productUuid)
+                    .from(productHashtag)
+                    .where(productHashtag.hashtagContent.containsIgnoreCase(dto.getKeywords()))
                     .fetch();
 
             if (!productUuids.isEmpty()) {
@@ -202,10 +206,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         for (String categoryName : categories) {
             Category currentCategory = queryFactory
-                    .selectFrom(QCategory.category)
-                    .where(QCategory.category.name.eq(categoryName)
-                            .and(parentCategory == null ? QCategory.category.parent.isNull()
-                                    : QCategory.category.parent.eq(parentCategory)))
+                    .selectFrom(qcategory)
+                    .where(qcategory.name.eq(categoryName)
+                            .and(parentCategory == null ? qcategory.parent.isNull()
+                                    : qcategory.parent.eq(parentCategory)))
                     .fetchFirst();
 
             if (currentCategory == null) {
@@ -233,9 +237,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // 카테고리와 제품이 연관된 테이블을 직접 서브쿼리로 필터링
         List<Long> productIds = queryFactory
-                .select(QProductCategory.productCategory.productId)
-                .from(QProductCategory.productCategory)
-                .where(QProductCategory.productCategory.categoryId.eq(categoryId))
+                .select(productCategory.productId)
+                .from(productCategory)
+                .where(productCategory.categoryId.eq(categoryId))
                 .fetch();
 
         // 서브쿼리 결과로 필터링
@@ -253,9 +257,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // 카테고리 필터링
         if (dto.getCategories() != null && !dto.getCategories().isEmpty()) {
-            List<Long> categoryIds = queryFactory.select(QCategory.category.id)
-                    .from(QCategory.category)
-                    .where(QCategory.category.name.in(dto.getCategories()))
+            List<Long> categoryIds = queryFactory.select(qcategory.id)
+                    .from(qcategory)
+                    .where(qcategory.name.in(dto.getCategories()))
                     .fetch();
             if (!categoryIds.isEmpty()) {
                 predicate.and(productCategory.categoryId.in(categoryIds));
@@ -270,5 +274,39 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .offset(offset)
                 .limit(perPage)
                 .fetch();
+    }
+
+    public FilteredProductAttributesDto findFilteredProductAttributes(ProductRequestDto dto) {
+        BooleanBuilder predicate = createPredicate(dto);
+
+        List<String> colorNames = queryFactory
+                .select(qcolor.name)
+                .from(productOption)
+                .leftJoin(qcolor).on(productOption.colorId.eq(QColor.color.id))
+                .where(predicate)
+                .distinct()
+                .fetch();
+
+        List<String> sizeNames = queryFactory
+                .select(qsize.name)
+                .from(productOption)
+                .leftJoin(qsize).on(productOption.sizeId.eq(qsize.id))
+                .where(predicate)
+                .distinct()
+                .fetch();
+
+        List<String> brandNames = queryFactory
+                .select(QBrand.brand.name)
+                .from(product)
+                .leftJoin(QBrand.brand).on(product.brandUuid.eq(QBrand.brand.brandUuid))
+                .where(predicate)
+                .distinct()
+                .fetch();
+
+        return FilteredProductAttributesDto.builder()
+                .colorIds(colorNames)
+                .sizeIds(sizeNames)
+                .brandUuids(brandNames)
+                .build();
     }
 }
