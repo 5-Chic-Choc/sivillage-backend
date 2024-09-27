@@ -74,26 +74,4 @@ public class ReviewResponseDto {
                 .createdAt(review.getCreatedAt())
                 .build();
     }
-
-//    public static List<ReviewResponseDto> fromEntity(List<Review> reviewList) {
-//        return reviewList.stream()
-//                .map(review -> ReviewResponseDto.builder()
-//                        .reviewUuid(review.getReviewUuid())
-//                        .productUuid(review.getProductUuid())
-//                        .userUuid(review.getUserUuid())
-//                        .reviewContent(review.getReviewContent())
-//                        .optionName(review.getOptionName())
-//                        .starPoint(review.getStarPoint())
-//                        .likedCnt(review.getLikedCnt())
-//                        .reviewerEmail(review.getReviewerEmail())
-//                        .reviewRateType1(review.getReviewRateType1())
-//                        .reviewRateText1(review.getReviewRateText1())
-//                        .reviewRateType2(review.getReviewRateType2())
-//                        .reviewRateText2(review.getReviewRateText2())
-//                        .reviewRateType3(review.getReviewRateType3())
-//                        .reviewRateText3(review.getReviewRateText3())
-//                        .createdAt(review.getCreatedAt())
-//                        .build())
-//                .toList();
-//    }
 }
