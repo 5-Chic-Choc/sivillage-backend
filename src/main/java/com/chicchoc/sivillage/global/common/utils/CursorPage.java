@@ -7,14 +7,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CursorPage<T>{
+public class CursorPage<T> {
+
     private List<T> content;
     private Long nextCursor;
     private Boolean hasNext;
     private Integer pageSize;
     private Integer page;
 
-    public boolean hasNext(){
+    public boolean hasNext() {
         return nextCursor != null;
     }
 

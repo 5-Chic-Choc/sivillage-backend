@@ -17,7 +17,7 @@ public interface ReviewService {
     CursorPage<String> getAllReviews(String userUuid, Long lastId, Integer pageSize,
             Integer page);
 
-    CursorPage<String> getReviewByProductUuid(String productUuid,Long lastId, Integer pageSize, Integer page);
+    CursorPage<String> getReviewByProductUuid(String productUuid, Long lastId, Integer pageSize, Integer page);
 
     ReviewResponseDto getReview(String reviewUuid);
 
