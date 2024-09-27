@@ -156,7 +156,8 @@ public class PromotionRepositoryImpl implements PromotionRepositoryCustom {
                                                     .where(product.id.in(
                                                             queryFactory.select(productCategory.productId)
                                                                     .from(productCategory)
-                                                                    .where(productCategory.categoryId.eq(dto.getCategoryId()))
+                                                                    .where(productCategory
+                                                                            .categoryId.eq(dto.getCategoryId()))
                                                     ))
                                     ))
                     )
