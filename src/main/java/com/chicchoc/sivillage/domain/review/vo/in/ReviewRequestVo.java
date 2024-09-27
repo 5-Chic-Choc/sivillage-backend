@@ -7,9 +7,8 @@ import lombok.Getter;
 public class ReviewRequestVo {
 
     private String productUuid;
-    private String sizeName;
-    private String colorValue;
     private String reviewContent;
+    private String optionName;
     private byte starPoint;
     private String reviewRateType1;
     private String reviewRateText1;
@@ -21,9 +20,8 @@ public class ReviewRequestVo {
     public ReviewRequestDto toDto() {
         return ReviewRequestDto.builder()
                 .productUuid(productUuid)
-                .sizeName(sizeName)
-                .colorValue(colorValue)
                 .reviewContent(reviewContent)
+                .optionName(optionName)
                 .starPoint(starPoint)
                 .reviewRateType1(reviewRateType1)
                 .reviewRateText1(reviewRateText1)

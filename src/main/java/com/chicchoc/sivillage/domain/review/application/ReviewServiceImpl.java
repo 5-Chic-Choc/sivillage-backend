@@ -10,10 +10,12 @@ import com.chicchoc.sivillage.domain.review.dto.in.ReviewMediaRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.in.ReviewRequestDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewMediaResponseDto;
 import com.chicchoc.sivillage.domain.review.dto.out.ReviewResponseDto;
+import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepositoryCustom;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewMediaRepository;
 import com.chicchoc.sivillage.domain.review.infrastructure.ReviewRepository;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.NanoIdGenerator;
+import com.chicchoc.sivillage.global.common.utils.CursorPage;
 import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.infra.application.S3Service;
 import java.util.Comparator;
@@ -34,8 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMediaRepository reviewMediaRepository;
     private final MediaRepository mediaRepository;
-    private final NanoIdGenerator nanoIdGenerator;
     private final MemberRepository memberRepository;
+    private final ReviewRepositoryCustom reviewListRepository;
     private final S3Service s3Service;
 
     @Override
@@ -45,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         Review savedReview = reviewRepository.save(
-                reviewRequestDto.toEntity(nanoIdGenerator.generateNanoId(), userUuid, member.getEmail()));
+                reviewRequestDto.toEntity(NanoIdGenerator.generateNanoId(), userUuid, member.getEmail()));
 
         if (!fileList.isEmpty()) {
             int imgOrder = 1;
@@ -68,29 +70,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewByProductUuid(String productUuid) {
-
-        List<Review> reviewList = reviewRepository.findByProductUuid(productUuid);
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
-
-        return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap).stream()
-                .sorted(Comparator.comparingInt(ReviewResponseDto::getLikedCnt).reversed()).toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getReviewByUserUuid(String userUuid) {
-
-        List<Review> reviewList = reviewRepository.findByUserUuid(userUuid);
-
-        Map<String, List<ReviewMediaResponseDto>> reviewUuidToMediaMap = getReviews(reviewList);
-
-        return ReviewResponseDto.fromEntity(reviewList, reviewUuidToMediaMap);
-    }
-
-    @Override
     public void deleteReview(String reviewUuid) {
         reviewRepository.delete(reviewRepository.findByReviewUuid(reviewUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_REVIEW)));
@@ -98,15 +77,28 @@ public class ReviewServiceImpl implements ReviewService {
         reviewMediaRepository.deleteAll(reviewMediaRepository.findByReviewUuid(reviewUuid));
     }
 
-    private Map<String, List<ReviewMediaResponseDto>> getReviews(List<Review> reviewList) {
+    @Override
+    public CursorPage<String> getAllReviews(String userUuid, Long lastId, Integer pageSize,
+            Integer page) {
 
-        List<ReviewMedia> reviewMediaList = reviewMediaRepository.findByReviewUuidIn(reviewList.stream()
-                .map(Review::getReviewUuid)
-                .toList());
+        return reviewListRepository.getReviewListByUserUuid(userUuid, lastId, pageSize, page);
+    }
 
-        return reviewMediaList.stream()
-                .map(ReviewMediaResponseDto::fromEntity)
-                .toList().stream()
-                .collect(Collectors.groupingBy(ReviewMediaResponseDto::getReviewUuid));
+    @Override
+    public CursorPage<String> getReviewByProductUuid(String productUuid, Long lastId, Integer pageSize, Integer page) {
+        return reviewListRepository.getReviewListByProductUuid(productUuid, lastId, pageSize, page);
+    }
+
+    @Override
+    public ReviewResponseDto getReview(String reviewUuid) {
+
+        return ReviewResponseDto.fromEntity(reviewRepository.findByReviewUuid(reviewUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_REVIEW)));
+    }
+
+    @Override
+    public List<ReviewMediaResponseDto> getReviewMedia(String reviewUuid) {
+        return reviewMediaRepository.findByReviewUuid(reviewUuid)
+                .stream().map(ReviewMediaResponseDto::fromEntity).toList();
     }
 }

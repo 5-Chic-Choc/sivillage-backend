@@ -16,8 +16,6 @@ public class ReviewResponseVo {
     private String reviewUuid;
     private String productUuid;
     private String userUuid;
-    private String sizeName;
-    private String colorValue;
     private String optionName;
     private String reviewContent;
     private byte starPoint;
@@ -30,5 +28,4 @@ public class ReviewResponseVo {
     private String reviewRateText2;
     private String reviewRateText3;
     private LocalDateTime createdAt;
-    private List<ReviewMediaResponseVo> reviewMediaResponseVoList;
 }
