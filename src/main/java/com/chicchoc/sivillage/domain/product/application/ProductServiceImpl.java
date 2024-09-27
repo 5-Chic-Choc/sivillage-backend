@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,6 +25,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductInfoRepository productInfoRepository;
     private final ProductHashtagRepository productHashtagRepository;
     private final ProductRepositoryCustom productRepositoryCustom;
+    private final ColorRepository colorRepository;
+    private final SizeRepository sizeRepository;
 
     @Override
     public ProductResponseDto getProduct(String productUuid) {
@@ -124,4 +128,49 @@ public class ProductServiceImpl implements ProductService {
     public FilteredProductAttributesDto getFilteredProductAttributes(ProductRequestDto dto) {
         return productRepositoryCustom.findFilteredProductAttributes(dto);
     }
+
+    @Override
+    public Map<ColorResponseDto, List<SizeResponseDto>> getColorSizeMappingByProductUuid(String productUuid) {
+
+        List<ProductOption> productOptions = productOptionRepository.findByProductUuid(productUuid);
+
+        if (productOptions.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
+        }
+
+        List<Long> colorIds = productOptions.stream()
+                .map(ProductOption::getColorId)
+                .distinct()
+                .toList();
+
+        List<Long> sizeIds = productOptions.stream()
+                .map(ProductOption::getSizeId)
+                .distinct()
+                .toList();
+
+        List<Color> colors = colorRepository.findByIdIn(colorIds);
+        List<Size> sizes = sizeRepository.findByIdIn(sizeIds);
+
+        return colors.stream().collect(Collectors.toMap(
+                color -> ColorResponseDto.builder()
+                        .id(color.getId())
+                        .name(color.getName())
+                        .value(color.getValue())
+                        .build(),
+                color -> productOptions.stream()
+                        .filter(po -> po.getColorId().equals(color.getId()))
+                        .map(po -> sizes.stream()
+                                .filter(size -> size.getId().equals(po.getSizeId()))
+                                .findFirst()
+                                .map(size -> SizeResponseDto.builder()
+                                        .id(size.getId())
+                                        .name(size.getName())
+                                        .value(size.getValue())
+                                        .build())
+                                .orElse(null))
+                        .filter(sizeDto -> sizeDto != null)
+                        .toList()
+        ));
+    }
+
 }

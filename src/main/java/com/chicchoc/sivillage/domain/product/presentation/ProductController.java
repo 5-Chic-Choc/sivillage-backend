@@ -15,7 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -224,5 +226,19 @@ public class ProductController {
         FilteredProductAttributesDto attributes = productService.getFilteredProductAttributes(dto);
 
         return new BaseResponse<>(attributes.toVo());
+    }
+
+    @Operation(summary = "getColorSizeMapping API", description = "color별 size 목록 조회", tags = {"Product"})
+    @GetMapping("/colors-sizes/{productUuid}")
+    public BaseResponse<List<ColorSizeResponseDto>> getColorSizeMapping(@PathVariable String productUuid) {
+
+        Map<ColorResponseDto, List<SizeResponseDto>> colorSizeMap = productService
+                .getColorSizeMappingByProductUuid(productUuid);
+
+        List<ColorSizeResponseDto> response = colorSizeMap.entrySet().stream()
+                .map(entry -> new ColorSizeResponseDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return new BaseResponse<>(response);
     }
 }

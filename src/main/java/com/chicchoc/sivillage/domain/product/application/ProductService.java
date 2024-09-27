@@ -4,6 +4,7 @@ import com.chicchoc.sivillage.domain.product.dto.in.ProductRequestDto;
 import com.chicchoc.sivillage.domain.product.dto.out.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
 
@@ -26,4 +27,6 @@ public interface ProductService {
     List<ProductHashtagResponseDto> getProductHashtags(String productUuid);
 
     FilteredProductAttributesDto getFilteredProductAttributes(ProductRequestDto productRequestDto);
+
+    public Map<ColorResponseDto, List<SizeResponseDto>> getColorSizeMappingByProductUuid(String productUuid);
 }
