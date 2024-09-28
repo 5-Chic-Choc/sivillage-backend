@@ -1,11 +1,15 @@
 package com.chicchoc.sivillage.domain.unsignedMember.presentation;
 
 import com.chicchoc.sivillage.domain.unsignedMember.application.UnsignedMemberService;
-import io.swagger.v3.oas.annotations.Operation;
+import com.chicchoc.sivillage.domain.unsignedMember.dto.out.UnsignedMemberResponseDto;
+import com.chicchoc.sivillage.domain.unsignedMember.vo.out.UnsignedMemberResponseVo;
+import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +22,13 @@ public class UnsignedMemberController {
 
     @Operation(summary = "getUnsignedMember API", description = "비회원 조회", tags = {"비회원"})
     @GetMapping
-    public void getUnsignedMember(HttpServletResponse response, HttpServletRequest request) {
-        String uuid = request.getHeader("X-Unsigned-User-UUID");
-        if (uuid == null) { // uuid 존재하지 않는다면
-            String unsignedMemberUuid = unsignedMemberService.createUnsignedMember();
-            response.setHeader("X-Unsigned-User-UUID", unsignedMemberUuid);
-        } else { // uuid 존재한다면
-            unsignedMemberService.updateUnsignedMember(uuid);
-        }
+    public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember() {
+        return new BaseResponse<>(unsignedMemberService.createUnsignedMember().toVo());
     }
+
+    @PutMapping
+    public void updateLastConnectedAt(HttpServletRequest request) {
+        unsignedMemberService.updateUnsignedMember(request.getHeader("X-Unsigned-User-UUID"));
+    }
+
 }
