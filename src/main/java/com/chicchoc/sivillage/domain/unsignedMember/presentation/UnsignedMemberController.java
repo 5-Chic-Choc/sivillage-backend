@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.domain.unsignedMember.presentation;
 
 import com.chicchoc.sivillage.domain.unsignedMember.application.UnsignedMemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class UnsignedMemberController {
 
     private final UnsignedMemberService unsignedMemberService;
 
+    @Operation(summary = "getUnsignedMember API", description = "비회원 조회", tags = {"비회원"})
     @GetMapping
     public void getUnsignedMember(HttpServletResponse response, HttpServletRequest request) {
         String uuid = request.getHeader("X-Unsigned-User-UUID");
