@@ -24,7 +24,7 @@ public class ProductLikeController {
     @PostMapping("/{productUuid}")
     public BaseResponse<Void> likeProduct(@PathVariable String productUuid, Authentication authentication) {
 
-        productLikeService.saveAndUpdateProductLike(productUuid, authentication.getName());
+        productLikeService.toggleProductLike(productUuid, authentication.getName());
 
         return new BaseResponse<>();
     }
