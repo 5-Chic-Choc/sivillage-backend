@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ProductLikeService {
 
-    void saveAndUpdateProductLike(String productUuid, String userUuid);
+    void toggleProductLike(String productUuid, String userUuid);
 
     Boolean isLikedProduct(String productUuid, String userUuid);
 

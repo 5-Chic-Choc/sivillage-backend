@@ -1,6 +1,7 @@
 package com.chicchoc.sivillage.global.data.application;
 
 
+import static com.chicchoc.sivillage.global.data.application.PromotionDataService.isNullOrEmpty;
 import static com.chicchoc.sivillage.global.data.util.SizeOptionClassifier.getMappedSizeName;
 import static com.chicchoc.sivillage.global.data.util.SizeOptionClassifier.isFreeSize;
 import static com.chicchoc.sivillage.global.data.util.SizeOptionClassifier.isValidSize;
@@ -220,16 +221,20 @@ public class ProductDataService {
         // 있는 카테고리의 id를 리스트에 담음
         List<ProductCategory> productCategories = new ArrayList<>();
 
-        // 1. 대분류 카테고리 찾고 add
-        Optional<Category> largeCatOpt = categoryRepository.findRootCategoryByName(dto.getDispLctgNm());
-        if (!largeCatOpt.isPresent()) {
-            return false;  // 카테고리가 없으면 false 반환
+        // 1. 대분류 카테고리 찾고 add ( 없으면 부모 카테고리 찾아서 add)
+        Category largeCatOpt = categoryRepository.findRootCategoryByName(dto.getDispLctgNm()).orElse(null);
+
+        if (largeCatOpt == null) {
+            largeCatOpt = categoryRepository.findByNameAndDepth(dto.getDispLctgNm(), 1).orElse(null).getParent();
         }
-        Category largeCat = largeCatOpt.get();
-        productCategories.add(new ProductCategory(productId, largeCat.getId()));
+
+        if (largeCatOpt == null) {
+            return false;
+        }
+        productCategories.add(new ProductCategory(productId, largeCatOpt.getId()));
 
         // 2. 중분류 카테고리 찾고 add
-        Optional<Category> middleCatOpt = categoryRepository.findByNameAndParent(dto.getDispMctgNm(), largeCat);
+        Optional<Category> middleCatOpt = categoryRepository.findByNameAndParent(dto.getDispMctgNm(), largeCatOpt);
         if (!middleCatOpt.isPresent()) {
             return false;
         }
@@ -238,18 +243,17 @@ public class ProductDataService {
 
         // 3. 소분류 카테고리 찾고 add
         Optional<Category> smallCatOpt = categoryRepository.findByNameAndParent(dto.getDispSctgNm(), middleCat);
-        if (!smallCatOpt.isPresent()) {
-            return false;
+        Category smallCat = null;
+        if (smallCatOpt.isPresent()) {
+            smallCat = smallCatOpt.get();
+            productCategories.add(new ProductCategory(productId, smallCat.getId()));
         }
-        Category smallCat = smallCatOpt.get();
-        productCategories.add(new ProductCategory(productId, smallCat.getId()));
 
         // 4. 상세 카테고리 찾고 add
         Optional<Category> detailCatOpt = categoryRepository.findByNameAndParent(dto.getDispDctgNm(), smallCat);
-        if (!detailCatOpt.isPresent()) {
-            return false;
+        if (detailCatOpt.isPresent()) {
+            productCategories.add(new ProductCategory(productId, detailCatOpt.get().getId()));
         }
-        productCategories.add(new ProductCategory(productId, detailCatOpt.get().getId()));
 
         // 리스트로 카테고리 저장(DB 호출 최소화)
         productCategoryRepository.saveAll(productCategories);
@@ -405,8 +409,4 @@ public class ProductDataService {
         return detailCat;
     }
 
-    // null 또는 빈 문자열 체크
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
-    }
 }

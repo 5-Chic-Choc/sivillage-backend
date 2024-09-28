@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Size {
 
     @Id
@@ -26,4 +24,10 @@ public class Size {
     @Comment("사이즈 이름")
     @Column(nullable = false, length = 20)
     private String value;
+
+    @Builder
+    public Size(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 }

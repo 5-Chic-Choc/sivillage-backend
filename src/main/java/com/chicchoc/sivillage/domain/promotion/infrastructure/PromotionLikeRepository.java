@@ -10,6 +10,8 @@ public interface PromotionLikeRepository extends JpaRepository<PromotionLike, Lo
     Optional<PromotionLike> findTopByPromotionUuidAndUserUuidAndIsLiked(String promotionUuid, String userUuid,
             Boolean liked);
 
+    Optional<PromotionLike> findTopByPromotionUuidAndUserUuid(String promotionUuid, String userUuid);
+
     List<PromotionLike> findByUserUuidAndIsLiked(String userUuid, Boolean liked);
 
 }

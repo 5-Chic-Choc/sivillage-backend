@@ -15,14 +15,12 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     private final PromotionLikeRepository promotionLikeRepository;
 
     //제품 좋아요와 달리, 이벤트 좋아요는 데이터 활용성이 떨어지므로 좋아요 데이터를 삭제하는 로직으로 결정
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveAndDeletePromotionLike(String promotionUuid, String userUuid) {
         //1. 좋아요가 있는지 확인
-        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuidAndIsLiked(
+        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuid(
                         promotionUuid,
-                        userUuid,
-                        true)
+                        userUuid)
                 .orElse(null);
 
         //2. 좋아요가 없으면 좋아요 추가
@@ -35,7 +33,6 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     }
 
     // 좋아요 여부 확인
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean isLikedPromotion(String promotionUuid, String userUuid) {
 
@@ -49,7 +46,6 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     }
 
     // 좋아요한 이벤트 전체 조회
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public List<String> getLikedPromotionList(String userUuid) {
 

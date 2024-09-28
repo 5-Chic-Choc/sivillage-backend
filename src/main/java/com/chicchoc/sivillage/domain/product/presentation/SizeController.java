@@ -20,7 +20,7 @@ public class SizeController {
 
     private final SizeService sizeService;
 
-    @Operation(summary = "getAllSizes API", description = "사이즈 전체 조회", tags = {"Size"})
+    @Operation(summary = "getAllSizes API", description = "사이즈 전체 조회", tags = {"사이즈"})
     @GetMapping
     public BaseResponse<List<SizeResponseVo>> getAllSizes() {
         List<SizeResponseDto> sizeDtos = sizeService.getAllSizes();
@@ -30,7 +30,7 @@ public class SizeController {
         return new BaseResponse<>(sizeVos);
     }
 
-    @Operation(summary = "getSizeById API", description = "사이즈 상세 조회", tags = {"Size"})
+    @Operation(summary = "getSizeById API", description = "사이즈 상세 조회", tags = {"사이즈"})
     @GetMapping("/{id}")
     public BaseResponse<SizeResponseVo> getSizeById(@PathVariable Long id) {
         SizeResponseDto sizeDto = sizeService.getSizeById(id);
