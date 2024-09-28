@@ -5,14 +5,11 @@ import com.chicchoc.sivillage.global.common.aop.annotation.CheckAuthentication;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "상품 좋아요", description = "상품 좋아요 API")
 @RestController
@@ -23,7 +20,7 @@ public class ProductLikeController {
     private final ProductLikeService productLikeService;
 
     @CheckAuthentication
-    @Operation(summary = "상품 좋아요", description = "@return : Void")
+    @Operation(summary = "상품 좋아요", description = "@return : Void", tags = {"상품 좋아요"})
     @PostMapping("/{productUuid}")
     public BaseResponse<Void> likeProduct(@PathVariable String productUuid, Authentication authentication) {
 
@@ -33,7 +30,7 @@ public class ProductLikeController {
     }
 
     @CheckAuthentication
-    @Operation(summary = " 상품 단건 좋아요 여부 조회", description = "@return : Boolean isLiked")
+    @Operation(summary = " 상품 단건 좋아요 여부 조회", description = "@return : Boolean isLiked", tags = {"상품 좋아요"})
     @GetMapping("/{productUuid}")
     public BaseResponse<Boolean> isLikedProduct(@PathVariable String productUuid, Authentication authentication) {
 
@@ -43,7 +40,9 @@ public class ProductLikeController {
     }
 
     @CheckAuthentication
-    @Operation(summary = "내가 좋아요한 상품 전체 조회", description = "@return : List<String productUuid>, 최근 좋아요한 순으로 정렬")
+    @Operation(summary = "내가 좋아요한 상품 전체 조회",
+            description = "@return : List<String productUuid>, 최근 좋아요한 순으로 정렬",
+            tags = {"상품 좋아요"})
     @GetMapping("/all")
     public BaseResponse<List<String>> isLikedProduct(Authentication authentication) {
 

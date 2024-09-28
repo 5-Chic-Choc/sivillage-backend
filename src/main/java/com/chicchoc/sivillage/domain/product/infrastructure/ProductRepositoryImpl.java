@@ -59,7 +59,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     private BooleanBuilder createPredicate(ProductRequestDto dto) {
 
-        BooleanBuilder predicate = new BooleanBuilder(); // BooleanBuilder 사용
+        BooleanBuilder predicate = new BooleanBuilder();
 
         if (dto.getCategories() != null) {
             Long categoryId = findCategoryIdFromPath(dto.getCategories());
@@ -171,15 +171,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     //        // 모든 조인을 쿼리 내에서 처리
     //        return queryFactory.selectFrom(product)
     //                .leftJoin(productOption).on(product.id.eq(productOption.product.id))
-    // //Product와 ProductOption 조인
-    //                .leftJoin(QBrand.brand).on(product.brandUuid.eq(QBrand.brand.brandUuid))  // Product와 Brand 조인
+    //                .leftJoin(QBrand.brand).on(product.brandUuid.eq(QBrand.brand.brandUuid))
     //                .leftJoin(productCategory).on(product.id.eq(productCategory.productId))
-    // //Product와 ProductCategory 조인
     //                .leftJoin(qcategory).on(productCategory.categoryId.eq(qcategory.id))
-    // //ProductCategory와 Category 조인
     //                .leftJoin(QColor.color).on(productOption.colorId.eq(QColor.color.id))
-    // //ProductOption과 Color 조인
-    //                .leftJoin(QSize.size).on(productOption.sizeId.eq(QSize.size.id))  // ProductOption과 Size 조인
+    //                .leftJoin(QSize.size).on(productOption.sizeId.eq(QSize.size.id))
     //                .where(predicate)
     //                .groupBy(product.id, productOption.price, productOption.discountRate)
     //                .offset(offset)

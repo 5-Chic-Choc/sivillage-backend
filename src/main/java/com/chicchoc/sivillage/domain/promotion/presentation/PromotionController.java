@@ -28,7 +28,7 @@ public class PromotionController {
 
     private final PromotionService promotionService;
 
-    @Operation(summary = "createPromotion API", description = "프로모션 생성", tags = {"Promotion"})
+    @Operation(summary = "createPromotion API", description = "프로모션 생성", tags = {"프로모션"})
     @PostMapping
     public BaseResponse<Void> createPromotion(@RequestBody PromotionRequestVo promotionRequestVo) {
         PromotionRequestDto promotionRequestDto = promotionRequestVo.toDto();
@@ -38,7 +38,7 @@ public class PromotionController {
         return new BaseResponse<>();
     }
 
-    @Operation(summary = "getAllPromotions API", description = "전체 프로모션 조회", tags = {"Promotion"})
+    @Operation(summary = "getAllPromotions API", description = "전체 프로모션 조회", tags = {"프로모션"})
     @GetMapping
     public BaseResponse<List<PromotionResponseVo>> getPromotions() {
         List<PromotionResponseDto> promotionResponseDtos = promotionService.findAllPromotions();
@@ -50,7 +50,7 @@ public class PromotionController {
         return new BaseResponse<>(promotionResponseVos);
     }
 
-    @Operation(summary = "updatePromotion API", description = "프로모션 수정", tags = {"Promotion"})
+    @Operation(summary = "updatePromotion API", description = "프로모션 수정", tags = {"프로모션"})
     @PutMapping({"/{promotionUuid}"})
     public BaseResponse<Void> updatePromotion(
             @PathVariable String promotionUuid,
@@ -63,7 +63,7 @@ public class PromotionController {
         return new BaseResponse<>();
     }
 
-    @Operation(summary = "getPromotion API", description = "프로모션 한 건 조회", tags = {"Promotion"})
+    @Operation(summary = "getPromotion API", description = "프로모션 한 건 조회", tags = {"프로모션"})
     @GetMapping("/{promotionUuid}")
     public BaseResponse<PromotionResponseVo> getPromotion(@PathVariable String promotionUuid) {
         PromotionResponseDto promotionResponseDto = promotionService.findPromotion(promotionUuid);
@@ -73,7 +73,7 @@ public class PromotionController {
         return new BaseResponse<>(promotionResponseVo);
     }
 
-    @Operation(summary = "getPromotionBenefits API", description = "프로모션 혜택 조회", tags = {"Promotion"})
+    @Operation(summary = "getPromotionBenefits API", description = "프로모션 혜택 조회", tags = {"프로모션"})
     @GetMapping("/promotionBenefit/{promotionUuid}")
     public BaseResponse<List<PromotionBenefitResponseVo>> getPromotionBenefits(
             @PathVariable String promotionUuid) {
@@ -88,7 +88,7 @@ public class PromotionController {
         return new BaseResponse<>(promotionBenefitResponseVos);
     }
 
-    @Operation(summary = "getPromotionMedias API", description = "프로모션 미디어 조회", tags = {"Promotion"})
+    @Operation(summary = "getPromotionMedias API", description = "프로모션 미디어 조회", tags = {"프로모션"})
     @GetMapping("/promotionMedia/{promotionUuid}")
     public BaseResponse<List<PromotionMediaResponseVo>> getPromotionMedias(
             @PathVariable String promotionUuid) {
@@ -103,7 +103,7 @@ public class PromotionController {
         return new BaseResponse<>(promotionMediaResponseVos);
     }
 
-    @Operation(summary = "getFilteredPromotions API", description = "필터링 된 프로모션 목록 조회", tags = {"Promotion"})
+    @Operation(summary = "getFilteredPromotions API", description = "필터링 된 프로모션 목록 조회", tags = {"프로모션"})
     @GetMapping("/filtered")
     public BaseResponse<List<PromotionResponseVo>> getFilteredPromotions(
             @RequestParam(required = false) Long categoryId,
@@ -130,7 +130,7 @@ public class PromotionController {
         return new BaseResponse<>(promotionResponseVos);
     }
 
-    @Operation(summary = "getPromotionProducts API", description = "프로모션 상품 조회", tags = {"Promotion"})
+    @Operation(summary = "getPromotionProducts API", description = "프로모션 상품 조회", tags = {"프로모션"})
     @GetMapping("/promotionProduct/{promotionUuid}")
     public BaseResponse<List<PromotionProductResponseVo>> getPromotionProducts(
             @PathVariable String promotionUuid) {

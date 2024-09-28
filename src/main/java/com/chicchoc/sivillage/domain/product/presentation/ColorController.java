@@ -20,7 +20,7 @@ public class ColorController {
 
     private final ColorService colorService;
 
-    @Operation(summary = "getAllColors API", description = "모든 색상 조회", tags = {"Color"})
+    @Operation(summary = "getAllColors API", description = "모든 색상 조회", tags = {"색상"})
     @GetMapping
     public BaseResponse<List<ColorResponseVo>> getAllColors() {
         List<ColorResponseDto> colorDtos = colorService.getAllColors();
@@ -30,7 +30,7 @@ public class ColorController {
         return new BaseResponse<>(colorVos);
     }
 
-    @Operation(summary = "getColorById API", description = "색상 상세 조회", tags = {"Color"})
+    @Operation(summary = "getColorById API", description = "색상 상세 조회", tags = {"색상"})
     @GetMapping("/{id}")
     public BaseResponse<ColorResponseVo> getColorById(@PathVariable Long id) {
         ColorResponseDto colorDto = colorService.getColorById(id);
