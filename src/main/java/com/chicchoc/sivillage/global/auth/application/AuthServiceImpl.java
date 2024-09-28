@@ -5,7 +5,6 @@ import com.chicchoc.sivillage.domain.member.infrastructure.MemberRepository;
 import com.chicchoc.sivillage.domain.oauth.infrastructure.OauthMemberRepository;
 import com.chicchoc.sivillage.domain.terms.domain.UserTermsList;
 import com.chicchoc.sivillage.domain.terms.infrastructure.UserTermsListRepository;
-import com.chicchoc.sivillage.global.auth.domain.EmailVerification;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.CheckEmailVerificationRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.EmailVerificationRequestDto;
@@ -14,7 +13,6 @@ import com.chicchoc.sivillage.global.auth.dto.in.SignInRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.in.SignUpRequestDto;
 import com.chicchoc.sivillage.global.auth.dto.out.FindEmailResponseDto;
 import com.chicchoc.sivillage.global.auth.dto.out.SignInResponseDto;
-import com.chicchoc.sivillage.global.auth.infrastructure.EmailVerificationRepository;
 import com.chicchoc.sivillage.global.auth.provider.EmailProvider;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.generator.VerificationCode;
@@ -22,10 +20,11 @@ import com.chicchoc.sivillage.global.error.exception.BaseException;
 import com.chicchoc.sivillage.global.jwt.application.JwtTokenProvider;
 import com.chicchoc.sivillage.global.jwt.application.RefreshTokenService;
 import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
-import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
-    private final EmailVerificationRepository emailVerificationRepository;
     private final UserTermsListRepository userTermsListRepository;
     private final OauthMemberRepository oauthMemberRepository;
 
@@ -48,8 +46,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final EmailProvider emailProvider;
-    private final RefreshTokenService refreshTokenService;
 
+    private final RefreshTokenService refreshTokenService;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    private static final String EMAIL_VERIFICATION_PREFIX = "emailVerification:";
+    private static final long VERIFICATION_CODE_EXPIRATION = 10 * 60; // 10분 (초 단위)
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -114,8 +116,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto requestDto) {
 
-        // Redis로 변경
-
         String userEmail = requestDto.getEmail();
         String verificationCode = VerificationCode.generateCode();
         // 이메일 전송, 실패시 예외처리
@@ -126,30 +126,24 @@ public class AuthServiceImpl implements AuthService {
             throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
         }
 
-        // 기존 이메일 인증 정보 삭제
-        emailVerificationRepository.deleteByEmail(userEmail);
-
-        // 이메일 인증 정보 저장
-        emailVerificationRepository.save(new EmailVerification(userEmail, verificationCode));
+        // Redis에 이메일 인증 정보 저장 (10분 유효)
+        String redisKey = EMAIL_VERIFICATION_PREFIX + userEmail;
+        redisTemplate.opsForValue().set(redisKey, verificationCode, VERIFICATION_CODE_EXPIRATION, TimeUnit.SECONDS);
+        log.info("이메일 인증코드 저장: {} - {}", userEmail, verificationCode);
     }
 
     @Override
     public void checkEmailVerification(
             CheckEmailVerificationRequestDto requestDto) {
 
-        // 이메일 인증 정보 조회
-        EmailVerification emailVerification = emailVerificationRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_EMAIL_ADDRESS));
+        String redisKey = EMAIL_VERIFICATION_PREFIX + requestDto.getEmail();
+        String storedCode = (String) redisTemplate.opsForValue().get(redisKey);
 
-        boolean isMatched = emailVerification.getVerificationCode().equals(requestDto.getVerificationCode())
-                && emailVerification.getEmail().equals(requestDto.getEmail());
-        boolean isExpired = emailVerification.getExpiresAt().isBefore(LocalDateTime.now());
-
-        if (!isMatched) { // 인증코드 불일치
-            throw new BaseException(BaseResponseStatus.INVALID_EMAIL_CODE_NOT_MATCH);
-        }
-        if (isExpired) { // 인증코드 만료
+        if (storedCode == null) {
             throw new BaseException(BaseResponseStatus.INVALID_EMAIL_CODE_EXPIRED);
+        }
+        if (!storedCode.equals(requestDto.getVerificationCode())) { // 인증코드 불일치
+            throw new BaseException(BaseResponseStatus.INVALID_EMAIL_CODE_NOT_MATCH);
         }
     }
 

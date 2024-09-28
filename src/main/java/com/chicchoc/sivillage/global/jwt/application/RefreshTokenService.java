@@ -17,10 +17,11 @@ public class RefreshTokenService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private static final String TOKEN_PREFIX = "refreshToken:";  // Redis에서 사용할 키의 Prefix
 
     // Redis에 Refresh Token 저장/업데이트
     public void saveOrUpdateRefreshToken(String uuid, String refreshToken) {
-        String key = jwtProperties.getRefreshTokenPrefix() + uuid;
+        String key = TOKEN_PREFIX + uuid;
 
         // Redis에 토큰 저장, 유효기간 설정
         redisTemplate.opsForValue().set(key, refreshToken, jwtProperties.getRefreshExpireTime(), TimeUnit.MILLISECONDS);
@@ -30,7 +31,7 @@ public class RefreshTokenService {
 
     // Redis에서 Refresh Token 조회
     public Optional<String> findRefreshTokenByUuid(String uuid) {
-        String key = jwtProperties.getRefreshTokenPrefix() + uuid;
+        String key = TOKEN_PREFIX + uuid;
 
         String refreshToken = (String) redisTemplate.opsForValue().get(key);
 
