@@ -6,18 +6,12 @@ import com.chicchoc.sivillage.domain.delievery.dto.out.DeliveryResponseDto;
 import com.chicchoc.sivillage.domain.delievery.vo.in.DeliveryRequestVo;
 import com.chicchoc.sivillage.domain.delievery.vo.out.DeliveryResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import com.fasterxml.jackson.databind.ser.Serializers.Base;
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/deliveryTemplate")
@@ -26,9 +20,10 @@ public class DeliveryTemplateController {
 
     private final DeliveryTemplateService deliveryTemplateService;
 
+    @Operation(summary = "createTemplate API", description = "배송 템플릿 생성", tags = {"배송 템플릿"})
     @PostMapping
     public BaseResponse<Void> createTemplate(Authentication authentication,
-            @RequestBody DeliveryRequestVo deliveryRequestVo) {
+                                             @RequestBody DeliveryRequestVo deliveryRequestVo) {
 
         DeliveryRequestDto deliveryRequestDto = deliveryRequestVo.toDto();
 
@@ -37,6 +32,7 @@ public class DeliveryTemplateController {
         return new BaseResponse<>();
     }
 
+    @Operation(summary = "getTemplate API", description = "배송 템플릿 조회", tags = {"배송 템플릿"})
     @GetMapping
     public BaseResponse<List<DeliveryResponseVo>> getTemplate(Authentication authentication) {
 
@@ -49,9 +45,10 @@ public class DeliveryTemplateController {
         return new BaseResponse<>(deliveryResponseVoList);
     }
 
+    @Operation(summary = "updateTemplate API", description = "배송 템플릿 수정", tags = {"배송 템플릿"})
     @PutMapping("/{templateUuid}")
     public BaseResponse<DeliveryResponseVo> updateTemplate(@PathVariable("templateUuid") String templateUuid,
-            @RequestBody DeliveryRequestVo deliveryRequestVo) {
+                                                           @RequestBody DeliveryRequestVo deliveryRequestVo) {
         DeliveryRequestDto deliveryRequestDto = deliveryRequestVo.toDto();
 
         deliveryTemplateService.updateTemplate(templateUuid, deliveryRequestDto);
@@ -59,6 +56,7 @@ public class DeliveryTemplateController {
         return new BaseResponse<>();
     }
 
+    @Operation(summary = "deleteTemplate API", description = "배송 템플릿 삭제", tags = {"배송 템플릿"})
     @DeleteMapping("/{templateUuid}")
     public BaseResponse<Void> deleteTemplate(@PathVariable("templateUuid") String templateUuid) {
         deliveryTemplateService.deleteTemplate(templateUuid);
