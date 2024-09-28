@@ -8,20 +8,15 @@ import com.chicchoc.sivillage.domain.review.vo.out.ReviewResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.common.utils.CursorPage;
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,16 +25,19 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @Operation(summary = "createReview API", description = "리뷰 생성", tags = {"리뷰"})
     @PostMapping
     public BaseResponse<Void> createReview(Authentication authentication,
-            @RequestPart ReviewRequestVo reviewRequestVo,
-            @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+                                           @RequestPart ReviewRequestVo reviewRequestVo,
+                                           @RequestPart(value = "file", required = false)
+                                           List<MultipartFile> fileList) {
 
         reviewService.addReview(authentication.getName(), reviewRequestVo.toDto(), fileList);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "getReview API", description = "리뷰 조회", tags = {"리뷰"})
     @GetMapping("/user")
     public BaseResponse<CursorPage<String>> getReview(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -50,6 +48,7 @@ public class ReviewController {
                 reviewService.getAllReviews(userDetails.getUsername(), lastId, pageSize, page));
     }
 
+    @Operation(summary = "getReviewMedia API", description = "리뷰 미디어 조회", tags = {"리뷰"})
     @GetMapping("/productUuid")
     public BaseResponse<CursorPage<String>> getReviewMediaByProductUuid(
             @RequestParam(required = false) String productUuid,
@@ -59,11 +58,13 @@ public class ReviewController {
         return new BaseResponse<>(reviewService.getReviewByProductUuid(productUuid, lastId, pageSize, page));
     }
 
+    @Operation(summary = "getReview API", description = "리뷰 단 건 조회", tags = {"리뷰"})
     @GetMapping("/{reviewUuid}")
     public BaseResponse<ReviewResponseVo> getReviewByReviewUuid(@PathVariable("reviewUuid") String reviewUuid) {
         return new BaseResponse<>(reviewService.getReview(reviewUuid).toResponseVo());
     }
 
+    @Operation(summary = "getReviewMedia API", description = "리뷰 미디어 조회", tags = {"리뷰"})
     @GetMapping("/Media/{reviewUuid}")
     public BaseResponse<List<ReviewMediaResponseVo>> getReviewMediaByReviewUuid(
             @PathVariable("reviewUuid") String reviewUuid) {
@@ -71,6 +72,7 @@ public class ReviewController {
                 reviewService.getReviewMedia(reviewUuid).stream().map(ReviewMediaResponseDto::toVo).toList());
     }
 
+    @Operation(summary = "deleteReview API", description = "리뷰 삭제", tags = {"리뷰"})
     @DeleteMapping("/{reviewUuid}")
     public BaseResponse<Void> deleteReview(@PathVariable("reviewUuid") String reviewUuid) {
         reviewService.deleteReview(reviewUuid);
