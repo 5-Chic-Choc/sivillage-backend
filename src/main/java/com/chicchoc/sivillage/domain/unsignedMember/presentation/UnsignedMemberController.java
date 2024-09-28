@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,21 +21,13 @@ public class UnsignedMemberController {
     private final UnsignedMemberService unsignedMemberService;
 
     @GetMapping
-    public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember(HttpServletResponse response,
-            HttpServletRequest request) {
-        String uuid = request.getHeader("X-Unsigned-User-UUID");
+    public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember() {
+        return new BaseResponse<>(unsignedMemberService.createUnsignedMember().toVo());
+    }
 
-        if (uuid == null || uuid.isEmpty()) {
-            UnsignedMemberResponseDto unsignedMemberDto = unsignedMemberService.createUnsignedMember();
-            String newUuid = unsignedMemberDto.getUserUuid(); // 생성된 UUID 가져오기
-            response.setHeader("X-Unsigned-User-UUID", newUuid);
-
-            return new BaseResponse<>(unsignedMemberDto.toVo());
-        }
-
-        unsignedMemberService.updateUnsignedMember(uuid);
-
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    @PutMapping
+    public void updateLastConnectedAt(HttpServletRequest request) {
+        unsignedMemberService.updateUnsignedMember(request.getHeader("X-Unsigned-User-UUID"));
     }
 
 }
