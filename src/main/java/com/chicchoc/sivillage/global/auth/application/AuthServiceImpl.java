@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
         return respondSignIn(member, requestDto.getPassword());
     }
 
-    @Transactional()
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
 
