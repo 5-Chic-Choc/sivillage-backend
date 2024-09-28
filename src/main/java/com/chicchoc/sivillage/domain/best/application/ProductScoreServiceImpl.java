@@ -2,8 +2,11 @@ package com.chicchoc.sivillage.domain.best.application;
 
 import com.chicchoc.sivillage.domain.best.domain.ProductScore;
 import com.chicchoc.sivillage.domain.best.dto.ProductScoreDto;
+import com.chicchoc.sivillage.domain.best.dto.ProductScoreResponseDto;
 import com.chicchoc.sivillage.domain.best.infrastructure.ProductScoreRepository;
 import com.chicchoc.sivillage.domain.product.infrastructure.ProductRepository;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import com.chicchoc.sivillage.global.error.exception.BaseException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -82,5 +85,14 @@ public class ProductScoreServiceImpl implements ProductScoreService {
         starPointAverage = (starPointAverage != null) ? starPointAverage : 0.0f;
 
         return (0.5f * salesCount) + (0.3f * likeCount) + (0.2f * reviewCount) + starPointAverage;
+    }
+
+    @Override
+    public ProductScoreResponseDto getProductScore(String productUuid) {
+
+        ProductScore productScore = productScoreRepository.findByProductUuid(productUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT_SCORE));
+
+        return ProductScoreResponseDto.fromEntity(productScore);
     }
 }
