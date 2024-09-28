@@ -1,12 +1,10 @@
 package com.chicchoc.sivillage.domain.unsignedMember.presentation;
 
 import com.chicchoc.sivillage.domain.unsignedMember.application.UnsignedMemberService;
-import com.chicchoc.sivillage.domain.unsignedMember.dto.out.UnsignedMemberResponseDto;
 import com.chicchoc.sivillage.domain.unsignedMember.vo.out.UnsignedMemberResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
-import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
