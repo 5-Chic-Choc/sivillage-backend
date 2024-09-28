@@ -48,7 +48,7 @@ public class PromotionDataService {
 
         for (PromotionDataRequestDto dto : dtos) {
             if (checkNull(dto)) {
-                log.error("dto is null : {}", dto);
+                log.error("dto is nullOrEmpty : {}", dto);
                 continue;
             }
 
@@ -84,7 +84,7 @@ public class PromotionDataService {
             for (CategoryProductDto categoryProductDto : dto.getCategoryProducts()) {
                 for (ProductDto productDto : categoryProductDto.getProducts()) {
                     promotionProductRepository.save(
-                            productDto.toPromotionProductEntity(promotionUuid, categoryProductDto.getCategoryName()));
+                            productDto.toPromotionProductEntity(promotion, categoryProductDto.getCategoryName()));
                 }
             }
         }
@@ -93,10 +93,10 @@ public class PromotionDataService {
     private boolean checkNull(PromotionDataRequestDto dto) {
         try {
             // 어차피 데이터는 많으니, 유효한 데이터만 저장하면 됨
-            if (dto.getId() == null || dto.getThumbnailImg() == null || dto.getBrand() == null || dto.getTitle() == null
-                    || dto.getDescription() == null || dto.getDescription().trim().isEmpty() || dto.getTags() == null
-                    || dto.getPromotionImages() == null
-                    || dto.getPromotionImages().isEmpty() || dto.getCategoryProducts() == null) {
+            if (isNullOrEmpty(dto.getId()) || isNullOrEmpty(dto.getThumbnailImg()) || dto.getBrand() == null
+                    || isNullOrEmpty(dto.getTitle())
+                    || dto.getDescription() == null || dto.getTags() == null
+                    || isNullOrEmpty(dto.getPromotionImages()) || dto.getCategoryProducts() == null) {
                 return true;
             }
         } catch (Exception e) {
@@ -120,6 +120,7 @@ public class PromotionDataService {
             mediaList.add(media);
             imageMediaMap.put(image, media);
         }
+
         mediaRepository.saveAll(mediaList);
 
         // Step 2-2. 프로모션 미디어 저장
@@ -128,8 +129,26 @@ public class PromotionDataService {
             promotionMediaList.add(PromotionMedia.builder()
                     .promotionUuid(promotionUuid)
                     .mediaId(entry.getValue().getId())
+                    .mediaOrder(dto.indexOf(entry.getKey()))
                     .build());
         }
+
         promotionMediaRepository.saveAll(promotionMediaList);
+    }
+
+    protected static boolean isNullOrEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+
+        if (obj instanceof String) {
+            return ((String) obj).trim().isEmpty();
+        }
+
+        if (obj instanceof Object[]) {
+            return ((Object[]) obj).length == 0;
+        }
+
+        return false;
     }
 }

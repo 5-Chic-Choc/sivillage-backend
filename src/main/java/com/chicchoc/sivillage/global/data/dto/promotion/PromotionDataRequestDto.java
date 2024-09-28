@@ -59,9 +59,10 @@ public class PromotionDataRequestDto {
         private String goodsNo;
         private String name;
 
-        public PromotionProduct toPromotionProductEntity(String promotionUuid, String promotionType) {
+        public PromotionProduct toPromotionProductEntity(Promotion promotion, String promotionType) {
             return PromotionProduct.builder()
-                    .promotionUuid(promotionUuid)
+                    .promotion(promotion)
+                    .promotionUuid(promotion.getPromotionUuid())
                     .productUuid(goodsNo)
                     .promotionType(promotionType == null ? "" : promotionType)
                     .build();
