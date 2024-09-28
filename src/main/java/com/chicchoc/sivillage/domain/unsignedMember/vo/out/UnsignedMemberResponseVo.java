@@ -1,5 +1,16 @@
 package com.chicchoc.sivillage.domain.unsignedMember.vo.out;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class UnsignedMemberResponseVo {
-    // response 데이터 필요 없을 것 같음 -> 리턴 값 없음
+    String userUuid;
+
+    @Builder
+    public UnsignedMemberResponseVo(String userUuid) {
+        this.userUuid = userUuid;
+    }
 }

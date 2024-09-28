@@ -1,6 +1,5 @@
 package com.chicchoc.sivillage.domain.unsignedMember.domain;
 
-import com.chicchoc.sivillage.global.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

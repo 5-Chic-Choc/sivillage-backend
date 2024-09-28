@@ -1,6 +1,10 @@
 package com.chicchoc.sivillage.domain.unsignedMember.presentation;
 
 import com.chicchoc.sivillage.domain.unsignedMember.application.UnsignedMemberService;
+import com.chicchoc.sivillage.domain.unsignedMember.dto.out.UnsignedMemberResponseDto;
+import com.chicchoc.sivillage.domain.unsignedMember.vo.out.UnsignedMemberResponseVo;
+import com.chicchoc.sivillage.global.common.entity.BaseResponse;
+import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +20,21 @@ public class UnsignedMemberController {
     private final UnsignedMemberService unsignedMemberService;
 
     @GetMapping
-    public void getUnsignedMember(HttpServletResponse response, HttpServletRequest request) {
+    public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember(HttpServletResponse response,
+            HttpServletRequest request) {
         String uuid = request.getHeader("X-Unsigned-User-UUID");
-        if (uuid == null) { // uuid 존재하지 않는다면
-            String unsignedMemberUuid = unsignedMemberService.createUnsignedMember();
-            response.setHeader("X-Unsigned-User-UUID", unsignedMemberUuid);
-        } else { // uuid 존재한다면
-            unsignedMemberService.updateUnsignedMember(uuid);
+
+        if (uuid == null || uuid.isEmpty()) {
+            UnsignedMemberResponseDto unsignedMemberDto = unsignedMemberService.createUnsignedMember();
+            String newUuid = unsignedMemberDto.getUserUuid(); // 생성된 UUID 가져오기
+            response.setHeader("X-Unsigned-User-UUID", newUuid);
+
+            return new BaseResponse<>(unsignedMemberDto.toVo());
         }
+
+        unsignedMemberService.updateUnsignedMember(uuid);
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
+
 }
