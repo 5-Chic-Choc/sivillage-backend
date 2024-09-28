@@ -85,6 +85,7 @@ public enum BaseResponseStatus {
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다."),
     INVALID_SORT_BY_PARAMETER(HttpStatus.BAD_REQUEST, false, 3003, "잘못된 정렬 기준 파라미터입니다."),
     INVALID_FILTER_CRITERIA(HttpStatus.BAD_REQUEST, false, 3004, "잘못된 필터 조건입니다."),
+    NO_EXIST_PRODUCT_SCORE(HttpStatus.NOT_FOUND, false, 3005, "존재하지 않는 상품 점수입니다."),
 
     // Size
     NO_EXIST_SIZE(HttpStatus.NOT_FOUND, false, 3101, "존재하지 않는 사이즈입니다."),
