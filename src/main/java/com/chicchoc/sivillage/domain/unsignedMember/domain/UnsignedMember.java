@@ -20,7 +20,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "unsignedMember")
 @Builder
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
