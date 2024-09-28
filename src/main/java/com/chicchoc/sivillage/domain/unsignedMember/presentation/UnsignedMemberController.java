@@ -37,13 +37,13 @@ public class UnsignedMemberController {
     @PutMapping
     public void updateLastConnectedAt(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        String unsignedUserUUID = null;
+        String unsignedUserUuid = null;
 
         for (Cookie cookie : cookies) {
             if ("X-Unsigned-User-UUID".equals(cookie.getName())) {
-                unsignedUserUUID = cookie.getValue();
+                unsignedUserUuid = cookie.getValue();
 
-                Cookie updatedCookie = new Cookie("X-Unsigned-User-UUID", unsignedUserUUID);
+                Cookie updatedCookie = new Cookie("X-Unsigned-User-UUID", unsignedUserUuid);
                 updatedCookie.setHttpOnly(true);
                 updatedCookie.setPath("/");
                 updatedCookie.setMaxAge(60 * 60 * 24 * 30);
@@ -52,6 +52,6 @@ public class UnsignedMemberController {
             }
         }
 
-        unsignedMemberService.updateUnsignedMember(unsignedUserUUID);
+        unsignedMemberService.updateUnsignedMember(unsignedUserUuid);
     }
 }
