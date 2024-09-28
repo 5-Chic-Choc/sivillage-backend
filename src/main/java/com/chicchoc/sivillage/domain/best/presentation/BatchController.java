@@ -16,7 +16,7 @@ public class BatchController {
     private final ProductScoreService productScoreService;
 
     @PostMapping("/run")
-    @Operation(summary = "runBatch API", description = "배치 실행", tags = {"Batch"})
+    @Operation(summary = "runBatch API", description = "배치 실행", tags = {"스프링 스케줄러"})
     public BaseResponse<String> runBatch() {
         productScoreService.updateProductScores();
         return new BaseResponse<>();

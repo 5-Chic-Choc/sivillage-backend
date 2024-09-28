@@ -20,6 +20,7 @@ public class UnsignedMemberController {
 
     private final UnsignedMemberService unsignedMemberService;
 
+    @Operation(summary = "getUnsignedMember API", description = "비회원 조회", tags = {"비회원"})
     @GetMapping
     public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember() {
         return new BaseResponse<>(unsignedMemberService.createUnsignedMember().toVo());

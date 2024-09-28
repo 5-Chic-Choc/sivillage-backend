@@ -20,7 +20,7 @@ public class EtcOptionController {
 
     private final EtcOptionService etcOptionService;
 
-    @Operation(summary = "getAllEtcOptions API", description = "모든 기타 옵션 조회", tags = {"EtcOption"})
+    @Operation(summary = "getAllEtcOptions API", description = "모든 기타 옵션 조회", tags = {"기타옵션"})
     @GetMapping
     public BaseResponse<List<EtcOptionResponseVo>> getAllEtcOptions() {
         List<EtcOptionResponseDto> etcOptionDtos = etcOptionService.getAllEtcOptions();
@@ -30,7 +30,7 @@ public class EtcOptionController {
         return new BaseResponse<>(etcOptionVos);
     }
 
-    @Operation(summary = "getEtcOptionById API", description = "기타 옵션 상세 조회", tags = {"EtcOption"})
+    @Operation(summary = "getEtcOptionById API", description = "기타 옵션 상세 조회", tags = {"기타옵션"})
     @GetMapping("/{id}")
     public BaseResponse<EtcOptionResponseVo> getEtcOptionById(@PathVariable Long id) {
         EtcOptionResponseDto etcOptionDto = etcOptionService.getEtcOptionById(id);

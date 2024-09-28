@@ -3,29 +3,19 @@ package com.chicchoc.sivillage.domain.cart.presentation;
 import com.chicchoc.sivillage.domain.cart.application.CartService;
 import com.chicchoc.sivillage.domain.cart.dto.in.CartMigrateRequestDto;
 import com.chicchoc.sivillage.domain.cart.dto.out.CartResponseDto;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartDeleteRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.CartUpdateRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.ItemIsSelectedUpdateRequestVo;
-import com.chicchoc.sivillage.domain.cart.vo.in.ItemQuantityUpdateRequestVo;
+import com.chicchoc.sivillage.domain.cart.vo.in.*;
 import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,10 +25,12 @@ public class CartController {
 
     private final CartService cartService;
 
+    @Operation(summary = "createCart API", description = "장바구니 생성", tags = {"장바구니"})
     @PostMapping
     public BaseResponse<Void> createCart(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid,
-            @RequestBody CartRequestVo cartRequestVo
+                                         @RequestHeader(value = "X-Unsigned-User-UUID", required = false)
+                                         String unsignedUserUuid,
+                                         @RequestBody CartRequestVo cartRequestVo
     ) {
 
         cartService.createCart(cartRequestVo.toDto(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)));
@@ -46,9 +38,11 @@ public class CartController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "getCart API", description = "장바구니 조회", tags = {"장바구니"})
     @GetMapping
     public BaseResponse<List<CartResponseVo>> getCart(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid) {
+                                                      @RequestHeader(value = "X-Unsigned-User-UUID", required = false)
+                                                      String unsignedUserUuid) {
 
         return new BaseResponse<>(
                 cartService.getCart(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)).stream()
@@ -56,16 +50,19 @@ public class CartController {
         );
     }
 
+    @Operation(summary = "updateCartItem API", description = "장바구니 상품 수정", tags = {"장바구니"})
     @PutMapping("/option/{cartUuid}")
     public BaseResponse<CartResponseVo> updateCartItem(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid,
-            @PathVariable String cartUuid,
-            @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
+                                                       @RequestHeader(value = "X-Unsigned-User-UUID", required = false)
+                                                       String unsignedUserUuid,
+                                                       @PathVariable String cartUuid,
+                                                       @RequestBody CartUpdateRequestVo cartUpdateRequestVo) {
 
         return new BaseResponse<>(cartService.updateCartItem(
                 cartUpdateRequestVo.toDto(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid), cartUuid)).toVo());
     }
 
+    @Operation(summary = "updateItemQuantity API", description = "장바구니 상품 수량 수정", tags = {"장바구니"})
     @PutMapping("/quantity")
     public BaseResponse<Void> updateItemQuantity(
             @RequestBody ItemQuantityUpdateRequestVo itemQuantityUpdateRequestVo) {
@@ -75,6 +72,7 @@ public class CartController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "updateItemIsSelected API", description = "장바구니 상품 선택 여부 수정", tags = {"장바구니"})
     @PutMapping("/isSelected")
     public BaseResponse<Void> updateItemIsSelected(
             @RequestBody List<ItemIsSelectedUpdateRequestVo> itemIsSelectedUpdateRequestVoList) {
@@ -86,6 +84,7 @@ public class CartController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "deleteCartItems API", description = "장바구니 상품 삭제", tags = {"장바구니"})
     @DeleteMapping
     public BaseResponse<Void> deleteCartItems(@RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList) {
         cartService.deleteCartItems(cartDeleteRequestVoList.stream()
@@ -94,9 +93,11 @@ public class CartController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "migrateCart API", description = "장바구니 이전", tags = {"장바구니"})
     @PostMapping("/migrate")
     public BaseResponse<Void> migrateCart(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "X-Unsigned-User-UUID", required = false) String unsignedUserUuid
+                                          @RequestHeader(value = "X-Unsigned-User-UUID", required = false)
+                                          String unsignedUserUuid
     ) {
         cartService.migrateCart(CartMigrateRequestDto.builder()
                 .userUuid(userDetails.getUsername())
