@@ -15,7 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,14 +28,14 @@ public class ProductController {
     private final ProductService productService;
     private final SearchServiceImpl searchServiceImpl;
 
-    @Operation(summary = "getProduct API", description = "상품 단품 조회", tags = {"Product"})
+    @Operation(summary = "getProduct API", description = "상품 단품 조회", tags = {"상품"})
     @GetMapping("/one/{productUuid}")
     public BaseResponse<ProductResponseVo> getProduct(@PathVariable String productUuid) {
         ProductResponseDto productResponseDto = productService.getProduct(productUuid);
         return new BaseResponse<>(productResponseDto.toResponseVo());
     }
 
-    @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"Product"})
+    @Operation(summary = "getProducts API", description = "상품 목록 조회", tags = {"상품"})
     @GetMapping()
     public BaseResponse<List<ProductResponseVo>> getFilteredProductList(
             @RequestParam(required = false) List<String> categories,
@@ -88,7 +90,7 @@ public class ProductController {
         return new BaseResponse<>(productResponseVos);
     }
 
-    @Operation(summary = "getFilteredProductsCount API", description = "필터링 상품 목록 개수 조회", tags = {"Product"})
+    @Operation(summary = "getFilteredProductsCount API", description = "필터링 상품 목록 개수 조회", tags = {"상품"})
     @GetMapping("/count")
     public BaseResponse<ProductCountAndPageVo> getFilteredProductCount(
             @RequestParam(required = false) List<String> categories,
@@ -116,7 +118,7 @@ public class ProductController {
         return new BaseResponse<>(count.toVo());
     }
 
-    @Operation(summary = "getTop100BestProducts API", description = "카테고리별 상위 100개 베스트 상품 조회", tags = {"Product"})
+    @Operation(summary = "getTop100BestProducts API", description = "카테고리별 상위 100개 베스트 상품 조회", tags = {"상품"})
     @GetMapping("/best")
     public BaseResponse<List<ProductResponseVo>> getTop100BestProducts(
             @RequestParam(required = false) List<String> categories,
@@ -141,7 +143,7 @@ public class ProductController {
         return new BaseResponse<>(productResponseVos);
     }
 
-    @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"Product"})
+    @Operation(summary = "getProductOptions API", description = "상품 옵션 조회", tags = {"상품"})
     @GetMapping("/{productUuid}")
     public BaseResponse<List<ProductOptionResponseVo>> getProductOp(@PathVariable String productUuid,
                                                                     @AuthenticationPrincipal UserDetails userDetails,
@@ -164,7 +166,7 @@ public class ProductController {
         return new BaseResponse<>(productOptionResponseVos);
     }
 
-    @Operation(summary = "getOneProductOption API", description = "상품 단일 옵션 조회", tags = {"Product"})
+    @Operation(summary = "getOneProductOption API", description = "상품 단일 옵션 조회", tags = {"상품"})
     @GetMapping("/option/{productOptionUuid}")
     public BaseResponse<ProductOptionResponseVo> getOneProductOption(@PathVariable String productOptionUuid) {
 
@@ -173,7 +175,7 @@ public class ProductController {
         return new BaseResponse<>(productOptionResponseDto.toResponseVo());
     }
 
-    @Operation(summary = "getProductDetails API", description = "상품 상세 조회", tags = {"Product"})
+    @Operation(summary = "getProductDetails API", description = "상품 상세 조회", tags = {"상품"})
     @GetMapping("/details/{productOptionUuid}")
     public BaseResponse<List<ProductDetailResponseVo>> getProductDetails(@PathVariable String productOptionUuid) {
 
@@ -186,7 +188,7 @@ public class ProductController {
         return new BaseResponse<>(productDetailResponseVos);
     }
 
-    @Operation(summary = "getProductInfos API", description = "상품 정보 조회", tags = {"Product"})
+    @Operation(summary = "getProductInfos API", description = "상품 정보 조회", tags = {"상품"})
     @GetMapping("/infos/{productUuid}")
     public BaseResponse<List<ProductInfoResponseVo>> getProductInfos(@PathVariable String productUuid) {
 
@@ -199,7 +201,7 @@ public class ProductController {
         return new BaseResponse<>(productInfoResponseVos);
     }
 
-    @Operation(summary = "getProductHashtags API", description = "상품 해시태그 조회", tags = {"Product"})
+    @Operation(summary = "getProductHashtags API", description = "상품 해시태그 조회", tags = {"상품"})
     @GetMapping("/hashtags/{productUuid}")
     public BaseResponse<List<ProductHashtagResponseVo>> getProductHashtags(@PathVariable String productUuid) {
 
@@ -212,7 +214,7 @@ public class ProductController {
         return new BaseResponse<>(productHashtagResponseVos);
     }
 
-    @Operation(summary = "getFilteredProductAttributes API", description = "상품 필터링 속성 조회", tags = {"Product"})
+    @Operation(summary = "getFilteredProductAttributes API", description = "상품 필터링 속성 조회", tags = {"상품"})
     @GetMapping("/attributes")
     public BaseResponse<FilteredProductAttributesVo> getFilteredProductAttributes(
             @RequestParam(required = false) List<String> categories) {
@@ -224,5 +226,19 @@ public class ProductController {
         FilteredProductAttributesDto attributes = productService.getFilteredProductAttributes(dto);
 
         return new BaseResponse<>(attributes.toVo());
+    }
+
+    @Operation(summary = "getColorSizeMapping API", description = "color별 size 목록 조회", tags = {"상품"})
+    @GetMapping("/colors-sizes/{productUuid}")
+    public BaseResponse<List<ColorSizeResponseDto>> getColorSizeMapping(@PathVariable String productUuid) {
+
+        Map<ColorResponseDto, List<SizeResponseDto>> colorSizeMap = productService
+                .getColorSizeMappingByProductUuid(productUuid);
+
+        List<ColorSizeResponseDto> response = colorSizeMap.entrySet().stream()
+                .map(entry -> new ColorSizeResponseDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return new BaseResponse<>(response);
     }
 }

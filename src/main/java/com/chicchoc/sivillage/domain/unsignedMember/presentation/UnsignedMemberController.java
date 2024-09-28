@@ -5,6 +5,7 @@ import com.chicchoc.sivillage.domain.unsignedMember.dto.out.UnsignedMemberRespon
 import com.chicchoc.sivillage.domain.unsignedMember.vo.out.UnsignedMemberResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import jakarta.servlet.http.Cookie;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +21,7 @@ public class UnsignedMemberController {
 
     private final UnsignedMemberService unsignedMemberService;
 
+    @Operation(summary = "getUnsignedMember API", description = "비회원 조회", tags = {"비회원"})
     @GetMapping
     public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember(HttpServletResponse response) {
 

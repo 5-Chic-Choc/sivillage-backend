@@ -57,8 +57,6 @@ public class ReviewDataRequestDto {
                 .reviewContent(reviewText)
                 .starPoint(starPoint != null ? starPoint : (byte) ThreadLocalRandom.current().nextInt(0, 6))
                 .likedCnt(likedCnt)
-                .sizeName(null)
-                .colorValue(null)
                 .optionName(parseOptionName(optionInfo))
                 .reviewRateType1(reviewRateType1)
                 .reviewRateText1(reviewRateText1)

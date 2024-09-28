@@ -21,7 +21,7 @@ public class ProductMediaController {
 
     private final ProductMediaService productMediaService;
 
-    @Operation(summary = "getMediasByUuid API", description = "옵션 별 미디어 조회", tags = {"Product Media"})
+    @Operation(summary = "getMediasByUuid API", description = "옵션 별 미디어 조회", tags = {"상품 미디어"})
     @GetMapping("/{productOptionUuid}")
     public BaseResponse<List<ProductMediaResponseVo>> getProductMediaByOptionUuid(
             @PathVariable String productOptionUuid) {
