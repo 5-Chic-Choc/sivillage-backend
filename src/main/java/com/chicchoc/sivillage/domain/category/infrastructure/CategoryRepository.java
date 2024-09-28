@@ -24,4 +24,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // 부모 없이 루트 카테고리 찾기
     @Query("SELECT c FROM Category c WHERE c.name = :name AND c.parent IS NULL")
     Optional<Category> findRootCategoryByName(@Param("name") String name);
+
+    Optional<Category> findByName(String name);
+
+    Optional<Category> findByNameAndDepth(String name, int depth);
 }
