@@ -5,13 +5,13 @@ import com.chicchoc.sivillage.domain.unsignedMember.dto.out.UnsignedMemberRespon
 import com.chicchoc.sivillage.domain.unsignedMember.vo.out.UnsignedMemberResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @RestController
