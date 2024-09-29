@@ -83,7 +83,7 @@ public class JwtTokenProvider {
     }
 
     //토큰에서 사용자의 uuid를 가져오는 메서드
-    public String getUserUuid(String token) {
+    public String getUserUuidByToken(String token) {
 
         return parseClaims(token).getSubject();
     }

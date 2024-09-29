@@ -146,7 +146,7 @@ class TokenProviderTest {
                 .createToken(jwtProperties);
 
         // when : 토큰으로 유저 ID 가져오기
-        String uuid = jwtTokenProvider.getUserUuid(token);
+        String uuid = jwtTokenProvider.getUserUuidByToken(token);
 
         // then :  유저 ID가 일치하는지 확인
         assertThat(uuid).isEqualTo(userUuid);

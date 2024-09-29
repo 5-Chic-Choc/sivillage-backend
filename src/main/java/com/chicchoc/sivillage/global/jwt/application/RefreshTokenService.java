@@ -1,26 +1,40 @@
 package com.chicchoc.sivillage.global.jwt.application;
 
-import com.chicchoc.sivillage.global.jwt.domain.RefreshToken;
-import com.chicchoc.sivillage.global.jwt.infrastructure.RefreshTokenRepository;
+import com.chicchoc.sivillage.global.jwt.config.JwtProperties;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class RefreshTokenService {
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtProperties jwtProperties;
 
-    @Transactional
-    public void saveOrUpdateRefreshToken(String uuid, String newRefreshToken) {
+    private final RedisTemplate<String, Object> redisTemplate;
 
-        refreshTokenRepository.findByUuid(uuid)
-            .ifPresentOrElse(
-                    existingToken -> existingToken.update(newRefreshToken), // 토큰이 존재하면 수정
-                    () -> refreshTokenRepository.save(new RefreshToken(uuid, newRefreshToken)) // 없으면 새로 저장
-            );
+    private static final String TOKEN_PREFIX = "refreshToken:";  // Redis에서 사용할 키의 Prefix
+
+    // Redis에 Refresh Token 저장/업데이트
+    public void saveOrUpdateRefreshToken(String uuid, String refreshToken) {
+        String key = TOKEN_PREFIX + uuid;
+
+        // Redis에 토큰 저장, 유효기간 설정
+        redisTemplate.opsForValue().set(key, refreshToken, jwtProperties.getRefreshExpireTime(), TimeUnit.MILLISECONDS);
+
+        log.info("Refresh Token 저장됨: {} - {}", uuid, refreshToken);
+    }
+
+    // Redis에서 Refresh Token 조회
+    public Optional<String> findRefreshTokenByUuid(String uuid) {
+        String key = TOKEN_PREFIX + uuid;
+
+        String refreshToken = (String) redisTemplate.opsForValue().get(key);
+
+        return Optional.ofNullable(refreshToken);
     }
 }
