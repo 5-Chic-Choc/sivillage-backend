@@ -39,9 +39,10 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     @Override
     public Boolean isLikedPromotion(String promotionUuid, String userUuid) {
 
-        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuid(
+        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuidAndIsLiked(
                         promotionUuid,
-                        userUuid)
+                        userUuid,
+                        true)
                 .orElse(null);
 
         return promotionLike != null; // 좋아요가 있으면 true, 없으면 false
