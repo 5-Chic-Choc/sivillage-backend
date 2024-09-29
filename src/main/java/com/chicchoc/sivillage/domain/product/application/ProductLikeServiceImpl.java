@@ -15,6 +15,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
     private final ProductLikeRepository productLikeRepository;
 
+    @Transactional
     @Override
     public void toggleProductLike(String productUuid, String userUuid) {
         // 1. 좋아요가 있는지 확인
@@ -34,6 +35,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     }
 
     // 좋아요 여부 확인
+    @Transactional
     @Override
     public Boolean isLikedProduct(String productUuid, String userUuid) {
 
@@ -47,6 +49,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     }
 
     // 좋아요한 상품 전체 조회
+    @Transactional
     @Override
     public List<String> getLikedProductList(String userUuid) {
 
