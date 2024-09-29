@@ -10,7 +10,8 @@ public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> 
 
     Optional<ProductLike> findTopByProductUuidAndUserUuid(String productUuid, String userUuid);
 
-    Optional<ProductLike> findTopByProductUuidAndUserUuid(String productUuid, String userUuid);
+    Optional<ProductLike> findTopByProductUuidAndUserUuidAndIsLiked(String productUuid, String userUuid,
+                                                                    Boolean liked);
 
     List<ProductLike> findByUserUuidAndIsLiked(String userUuid, Boolean liked);
 }
