@@ -37,9 +37,10 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Override
     public Boolean isLikedProduct(String productUuid, String userUuid) {
 
-        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuid(
+        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuidAndIsLiked(
                         productUuid,
-                        userUuid)
+                        userUuid,
+                        true)
                 .orElse(null);
 
         return productLike != null; // 좋아요가 있으면 true, 없으면 false
