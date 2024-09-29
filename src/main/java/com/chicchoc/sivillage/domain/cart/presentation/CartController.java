@@ -28,7 +28,6 @@ public class CartController {
     @Operation(summary = "createCart API", description = "장바구니 생성", tags = {"장바구니"})
     @PostMapping
     public BaseResponse<Void> createCart(@AuthenticationPrincipal UserDetails userDetails,
-
             @RequestBody CartRequestVo cartRequestVo
     ) {
 
