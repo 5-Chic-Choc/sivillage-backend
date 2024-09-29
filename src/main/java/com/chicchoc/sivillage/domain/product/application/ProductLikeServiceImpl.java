@@ -2,11 +2,12 @@ package com.chicchoc.sivillage.domain.product.application;
 
 import com.chicchoc.sivillage.domain.product.domain.ProductLike;
 import com.chicchoc.sivillage.domain.product.infrastructure.ProductLikeRepository;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +37,9 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Override
     public Boolean isLikedProduct(String productUuid, String userUuid) {
 
-        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuidAndIsLiked(
+        ProductLike productLike = productLikeRepository.findTopByProductUuidAndUserUuid(
                         productUuid,
-                        userUuid,
-                        true)
+                        userUuid)
                 .orElse(null);
 
         return productLike != null; // 좋아요가 있으면 true, 없으면 false

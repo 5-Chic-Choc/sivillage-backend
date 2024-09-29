@@ -2,11 +2,12 @@ package com.chicchoc.sivillage.domain.promotion.application;
 
 import com.chicchoc.sivillage.domain.promotion.domain.PromotionLike;
 import com.chicchoc.sivillage.domain.promotion.infrastructure.PromotionLikeRepository;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +37,9 @@ public class PromotionLikeServiceImpl implements PromotionLikeService {
     @Override
     public Boolean isLikedPromotion(String promotionUuid, String userUuid) {
 
-        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuidAndIsLiked(
+        PromotionLike promotionLike = promotionLikeRepository.findTopByPromotionUuidAndUserUuid(
                         promotionUuid,
-                        userUuid,
-                        true)
+                        userUuid)
                 .orElse(null);
 
         return promotionLike != null; // 좋아요가 있으면 true, 없으면 false
