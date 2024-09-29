@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> {
 
-    Optional<ProductLike> findTopByProductUuidAndUserUuidAndIsLiked(String productUuid, String userUuid, Boolean liked);
+    Optional<ProductLike> findTopByProductUuidAndUserUuid(String productUuid, String userUuid);
 
     List<ProductLike> findByUserUuidAndIsLiked(String userUuid, Boolean liked);
 }
