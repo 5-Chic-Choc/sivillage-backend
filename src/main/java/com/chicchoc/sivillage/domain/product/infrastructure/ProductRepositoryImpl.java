@@ -151,9 +151,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             predicate.and(productOption.price.loe(dto.getMaximumPrice()));
         }
 
-        if (!predicate.hasValue()) {
-            throw new BaseException(BaseResponseStatus.INVALID_FILTER_CRITERIA);
-        }
+        //        if (!predicate.hasValue()) {
+        //            throw new BaseException(BaseResponseStatus.INVALID_FILTER_CRITERIA);
+        //        }
 
         return predicate;
     }

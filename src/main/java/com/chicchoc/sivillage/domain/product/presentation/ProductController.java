@@ -217,10 +217,12 @@ public class ProductController {
     @Operation(summary = "getFilteredProductAttributes API", description = "상품 필터링 속성 조회", tags = {"상품"})
     @GetMapping("/attributes")
     public BaseResponse<FilteredProductAttributesVo> getFilteredProductAttributes(
-            @RequestParam(required = false) List<String> categories) {
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> brands) {
 
         ProductRequestDto dto = ProductRequestDto.builder()
                 .categories(categories)
+                .brands(brands)
                 .build();
 
         FilteredProductAttributesDto attributes = productService.getFilteredProductAttributes(dto);
