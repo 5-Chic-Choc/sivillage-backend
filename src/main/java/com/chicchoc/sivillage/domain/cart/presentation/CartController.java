@@ -8,6 +8,8 @@ import com.chicchoc.sivillage.domain.cart.vo.out.CartResponseVo;
 import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import com.chicchoc.sivillage.global.common.entity.BaseResponseStatus;
 import com.chicchoc.sivillage.global.jwt.util.JwtUtil;
+import com.nimbusds.jwt.JWT;
+import io.jsonwebtoken.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,22 +30,23 @@ public class CartController {
     @Operation(summary = "createCart API", description = "장바구니 생성", tags = {"장바구니"})
     @PostMapping
     public BaseResponse<Void> createCart(@AuthenticationPrincipal UserDetails userDetails,
-
+            @RequestHeader("X-Unsigned-User-UUID") String unsignedUserUuid,
             @RequestBody CartRequestVo cartRequestVo
     ) {
 
-        cartService.createCart(cartRequestVo.toDto(userDetails.getUsername()));
+        cartService.createCart(cartRequestVo.toDto(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)));
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "getCart API", description = "장바구니 조회", tags = {"장바구니"})
     @GetMapping
-    public BaseResponse<List<CartResponseVo>> getCart(@AuthenticationPrincipal UserDetails userDetails
+    public BaseResponse<List<CartResponseVo>> getCart(@AuthenticationPrincipal UserDetails userDetails,
+            @RequestHeader("X-Unsigned-User-UUID") String unsignedUserUuid
     ) {
 
         return new BaseResponse<>(
-                cartService.getCart(userDetails.getUsername()).stream()
+                cartService.getCart(JwtUtil.getUserIdentifier(userDetails, unsignedUserUuid)).stream()
                         .map(CartResponseDto::toVo).toList()
         );
     }
