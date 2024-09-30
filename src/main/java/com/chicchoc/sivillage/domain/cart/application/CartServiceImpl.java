@@ -157,7 +157,6 @@ public class CartServiceImpl implements CartService {
                     Cart existCart = signedCartMap.get(unsignedCart.getProductOptionUuid());
 
                     if (existCart != null) {
-
                         cartRepository.delete(unsignedCart);
                         return Cart.builder()
                                 .id(existCart.getId())

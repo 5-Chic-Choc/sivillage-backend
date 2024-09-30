@@ -7,8 +7,13 @@ import com.chicchoc.sivillage.global.common.entity.BaseResponse;
 import jakarta.servlet.http.Cookie;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,23 +22,29 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/unsignedMember")
+@Slf4j
 public class UnsignedMemberController {
 
     private final UnsignedMemberService unsignedMemberService;
 
     @Operation(summary = "getUnsignedMember API", description = "비회원 조회", tags = {"비회원"})
     @GetMapping
-    public BaseResponse<UnsignedMemberResponseVo> getUnsignedMember(HttpServletResponse response) {
+    public ResponseEntity<UnsignedMemberResponseVo> getUnsignedMember(HttpServletResponse response) {
 
         UnsignedMemberResponseDto unsignedMember = unsignedMemberService.createUnsignedMember();
 
-        Cookie uuidCookie = new Cookie("X-Unsigned-User-UUID", unsignedMember.getUserUuid());
-        uuidCookie.setHttpOnly(true);
-        uuidCookie.setPath("/");
-        uuidCookie.setMaxAge(60 * 60 * 24 * 30);
-        response.addCookie(uuidCookie);
+        log.info("uuid : {}", unsignedMember.getUserUuid());
 
-        return new BaseResponse<>(unsignedMember.toVo());
+        ResponseCookie cookie = ResponseCookie.from("X-Unsigned-User-UUID", unsignedMember.getUserUuid())
+                .path("/")
+                .httpOnly(true)
+                .maxAge(60 * 60 * 24 * 30)
+                .secure(false)
+                .sameSite("None")
+                .domain("localhost")
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(unsignedMember.toVo());
     }
 
     @PutMapping
