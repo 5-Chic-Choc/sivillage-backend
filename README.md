@@ -73,24 +73,24 @@
 
 ### 기술스택
 
-![image](./source/image/기술스택.PNG)
+![image](https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/기술스택.PNG)
 
 ### 페이지
 
 <table>
 <tr>
-<td><br><img src="./source/pagegif/main.gif" alt="main" width="300"/></td>
-<td><img src="./source/pagegif/event.gif" alt="event" width="300"/></td>
-<td><img src="./source/pagegif/best.gif" alt="best" width="300"/></td>
+<td><br><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/main.gif" alt="main" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/event.gif" alt="event" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/best.gif" alt="best" width="300"/></td>
 </tr>
 <tr>
-<td><img src="./source/pagegif/category.gif" alt="main" width="300"/></td>
-<td><img src="./source/pagegif/brand.gif" alt="event" width="300"/></td>
-<td><img src="./source/pagegif/signin_signout.gif" alt="best" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/category.gif" alt="main" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/brand.gif" alt="event" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/signin_signout.gif" alt="best" width="300"/></td>
 </tr>
 <tr>
-<td><img src="./source/pagegif/filter.gif" alt="main" width="300"/></td>
-<td><img src="./source/pagegif/hash.gif" alt="event" width="300"/></td>
-<td><img src="./source/pagegif/cart.gif" alt="best" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/filter.gif" alt="main" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/hash.gif" alt="event" width="300"/></td>
+<td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/cart.gif" alt="best" width="300"/></td>
 </tr>
 </table>
