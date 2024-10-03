@@ -59,21 +59,34 @@
 
 ## 프로젝트 산출물
 
-### 이벤트 스토밍
 
-<img width="1506" alt="image" src="https://github.com/user-attachments/assets/96d4e967-0528-44ee-a57d-4a13ec45c24d">
+### [산출물 모음(스프레드시트)](https://docs.google.com/spreadsheets/d/1GjIFt6D3XXl3eOuIIAtPAOKFNYtgWDNo3d1mvXYHyjc/edit?gid=1595460352#gid=1595460352)
+- WBS, 요구사항 정의서, API 정의서, 이벤트스토밍, ERD, 시스템 아키텍처, 예외 및 ENUM 정의
+- 아래 미리보기보다 더 좋은 품질로 확인하실 수 있습니다.
 
-### 아키텍처
 
-![image](https://github.com/user-attachments/assets/11060886-20f2-44a8-9a56-404a48f5d06e)
+<details>
+  <summary> <h4> 산출물 미리보기</h4> </summary>
 
-### ERD
+  #### 이벤트 스토밍
 
-[ERD cloud](https://www.erdcloud.com/d/4JTP48haeZthXnHgu)
+  <img alt="image" src="https://github.com/user-attachments/assets/96d4e967-0528-44ee-a57d-4a13ec45c24d" width="80%">
+  
+  #### 아키텍처
+  
+  ![image](https://github.com/user-attachments/assets/11060886-20f2-44a8-9a56-404a48f5d06e)
+  
+  #### ERD
+  ![iamge](https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/erd.png)
+  [ERD cloud](https://www.erdcloud.com/d/4JTP48haeZthXnHgu)
+  
+  #### 기술스택
+  
+  ![image](https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/기술스택.PNG)
+  
+  </details>
 
-### 기술스택
 
-![image](https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/기술스택.PNG)
 
 ### 페이지
 
