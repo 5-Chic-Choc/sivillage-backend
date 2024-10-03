@@ -4,7 +4,7 @@
 - 신세계 인터내셔날의 이커머스 쇼핑몰, [S.I.VILLAGE](https://m.sivillage.com/main/initMain.siv)를 분석하며 재설계하는 프로젝트 입니다.
 - 단순한 기능복제가 아닌, 대용량 데이터를 고려한 **체계적인 설계**와, 실무에서 요구되는 **다양한 기술 역량 강화**을 목표로 진행되었습니다.
 
-#### 🥈 8개 팀 중 우수상 수상 (2024.10.01)
+#### 🥈 우수상 수상 (2024.10.01, 8개 팀 중 2위)
 
 #### 🌐 바로가기 : https://sivillage.shop
 
@@ -88,6 +88,28 @@
     </tr>
 </table>
 
+## 🙌 협업
+- Notion : [회의록](https://phase-scent-2e1.notion.site/6861387efcc7455489a19a2e5c96d310?pvs=4), [회고록](https://phase-scent-2e1.notion.site/99171b05a2e046df980bf07f44d19bb3?pvs=4), [Wiki(지식허브)](https://phase-scent-2e1.notion.site/f925d82f96be454ebf20af78de0ce008?v=a1e26a65d1164555a0a34c6217908d56&pvs=4)
+- [Github Issues](https://github.com/5-Chic-Choc/sivillage-backend/issues?q=is%3Aissue+is%3Aclosed)
+- [Github PR](https://github.com/5-Chic-Choc/sivillage-backend/pulls?q=is%3Apr+is%3Aclosed) : 팀원 2/3 이상의 Approve 필수
+- 일정 관리 등 : 아래 산출물의 링크 확인
+
+- ## 🔎 프로젝트 산출물
+
+### [산출물 모음(스프레드 시트)](https://docs.google.com/spreadsheets/d/1GjIFt6D3XXl3eOuIIAtPAOKFNYtgWDNo3d1mvXYHyjc/edit?gid=1595460352#gid=1595460352)
+- WBS, 요구사항 정의서, API 정의서, 이벤트 스토밍, ERD, 시스템 아키텍처, 예외 및 ENUM 정의
+
+#### 이벤트 스토밍
+<img alt="image" src="https://github.com/user-attachments/assets/96d4e967-0528-44ee-a57d-4a13ec45c24d" width="70%">
+
+#### 아키텍처
+<img alt="image" src="https://github.com/user-attachments/assets/11060886-20f2-44a8-9a56-404a48f5d06e" width="70%">
+
+#### ERD
+<img alt="image" src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/erd.png" width="80%">
+
+[ERD cloud](https://www.erdcloud.com/d/4JTP48haeZthXnHgu)
+
 ## ⚙️ 기술 스택
 <img alt="image" src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/기술스택.PNG" width="60%">
 
@@ -108,22 +130,6 @@
 - **장바구니**: 비회원도 장바구니 사용 가능하며, 로그인시 그대로 옮겨집니다.
 - **UI**: SIVILLAGE의 부드러운 애니메이션과 세련된 UI를 그대로 옮겼습니다.
 
-## 🔎 프로젝트 산출물
-
-### [산출물 모음(스프레드 시트)](https://docs.google.com/spreadsheets/d/1GjIFt6D3XXl3eOuIIAtPAOKFNYtgWDNo3d1mvXYHyjc/edit?gid=1595460352#gid=1595460352)
-- WBS, 요구사항 정의서, API 정의서, 이벤트 스토밍, ERD, 시스템 아키텍처, 예외 및 ENUM 정의
-
-#### 이벤트 스토밍
-<img alt="image" src="https://github.com/user-attachments/assets/96d4e967-0528-44ee-a57d-4a13ec45c24d" width="70%">
-
-#### 아키텍처
-<img alt="image" src="https://github.com/user-attachments/assets/11060886-20f2-44a8-9a56-404a48f5d06e" width="70%">
-
-#### ERD
-<img alt="image" src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/image/erd.png" width="80%">
-
-[ERD cloud](https://www.erdcloud.com/d/4JTP48haeZthXnHgu)
-  
 ### 🖥️ 미리보기
 
 <table>
