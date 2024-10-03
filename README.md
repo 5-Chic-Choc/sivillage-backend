@@ -1,16 +1,16 @@
-# 🍪 Team 칙칙한 초코칩(Chic-Choc) 🥈
-#### 🙋‍♀️ 신세계 I&C [스파로스 아카데미(Spharos Academy)](https://swedu.spharosacademy.com/spharos_total.html) 5기, 첫번째 프로젝트
+# 🍪 Team 칙칙한 초코칩(Chic-Choc) 
 ## 📚 프로젝트 개요
-🌟 신세계 인터내셔날의 이커머스 쇼핑몰, [S.I.VILLAGE](https://m.sivillage.com/main/initMain.siv)를 분석하며 재설계하는 프로젝트 입니다.
+#### 🌟신세계 I&C [스파로스 아카데미(Spharos Academy)](https://swedu.spharosacademy.com/spharos_total.html) 5기, 첫번째 프로젝트
+- 신세계 인터내셔날의 이커머스 쇼핑몰, [S.I.VILLAGE](https://m.sivillage.com/main/initMain.siv)를 분석하며 재설계하는 프로젝트 입니다.
+- 단순한 기능복제가 아닌, 대용량 데이터를 고려한 **체계적인 설계**와, 실무에서 요구되는 **다양한 기술 역량 강화**을 목표로 진행되었습니다.
 
-단순한 기능복제가 아닌, 대용량 데이터를 고려한 **체계적인 설계**와, 실무에서 요구되는 **다양한 기술 적용**을 목표로 진행되었습니다.
-  
-🌐 바로가기 : https://sivillage.shop
+#### 🥈 8개 팀 중 우수상 수상 (2024.10.01)
 
-🗓️ 개발 기간 : 2024년 8월 6일 ~ 2024년 10월 1일
+#### 🌐 바로가기 : https://sivillage.shop
+
+#### 🗓️ 개발 기간 : 2024년 8월 6일 ~ 2024년 10월 1일
 
 ## 👥 팀원 소개
-
 <table>
     <tr>
         <td align="center"> <a href="https://github.com/GwendolyNM"> 최번영 </a></td>
