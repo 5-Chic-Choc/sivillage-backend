@@ -124,7 +124,7 @@
   - 5만여개의 제품데이터를 비롯, 이벤트, 브랜드, 카테고리 데이터를 효율적으로 수집하였습니다.<a href="https://github.com/5-Chic-Choc/sivillage-scraping">(Repo 참고)</a>
   - 수집한 데이터를 DB에 맞게 가공/정제 후 20개 테이블에 저장했습니다.
 - **성능 최적화**: 유효한 데이터 200만개의 환경 및 배포 환경에서의 성능 검증을 완료했습니다. 
-- **소셜 로그인**: 폼로그인 외에도 카카오/네이버 로그인 지원합니다.
+- **소셜 로그인**: foam 로그인 외에도 카카오/네이버 로그인을 지원합니다.
 - **상품 필터링**: 가격/색상/사이즈/브랜드별 필터링이 가능합니다.
 - **다양한 분류별 상품 조회**: 카테고리별/ 브랜드별 /베스트 100 상품 조회가 가능합니다.
 - **장바구니**: 비회원도 장바구니 사용 가능하며, 로그인시 그대로 옮겨집니다.
@@ -160,7 +160,7 @@
   <tr>
     <td align="center"> 상품 필터링(4종류) </td>
     <td align="center"> 해쉬태그로 상품 조회 </td>
-    <td align="center"> 장바구니(+비회원) </td>
+    <td align="center"> 장바구니(비회원) </td>
   </tr>
   <tr>
     <td><img src="https://github.com/5-Chic-Choc/.github/blob/main/profile/source/pagegif/filter.gif" alt="main" width="250"/></td>
