@@ -57,26 +57,26 @@
       </td>
       <td>
         <sub>
-          <p> CI/CD 및 인프라 구축(FE/BE) </p>
+          <p> CI/CD 및 인프라 구축 </p>
           <p> 리뷰 </p>
           <p> 장바구니(회원/비회원)  </p>
           <p> 주문 </p>
           <p> 배송지 </p>
         </sub>
       </td>
-      <td>
+      <td >
         <sub>
           <p> 상품 필터링 및 Pagenation 구현 </p>
-          <p> Best 100 상품(Spring Scheduler) </p>
+          <p> Best 100 상품(Scheduler) </p>
           <p> 최근 본 상품, 최근 검색어(Redis) </p>
           <p> 이벤트(필터링), 브랜드, 카테고리, </p>
           <p> 검색(제품/해시태그/브랜드) </p>
           <p> 성능 테스트 </p>
         </sub>
       </td>
-      <td>
+      <td >
         <sub>
-          <p> Auth(Security, oAuth2, JWT(Redis)) </p>
+          <p> Auth(Security, oAuth2, JWT) </p>
           <p> 카테고리, 이벤트 데이터 스크래핑</p>
           <p> 데이터 가공 및 저장</p>
           <p> 이메일 인증(SMTP, Redis), ID, PW 찾기 </p>
