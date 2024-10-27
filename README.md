@@ -13,11 +13,11 @@
 ## 👥 팀원 소개
 <table>
     <tr>
-        <td align="center" width="150px"> <a href="https://github.com/GwendolyNM"> 최번영 </a></td>
-        <td align="center" width="150px"> <a href="https://github.com/oror-sine"> 홍정현 </a></td>
-        <td align="center" width="150px"> <a href="https://github.com/flskhhdf"> 백승준 </td>
-        <td align="center" width="150px"> <a href="https://github.com/JaeHunLee-git"> 이재훈 </td>
-        <td align="center" width="150px"> <a href="https://github.com/SeongGwangJu"> 주성광 </td>
+        <td align="center"> <a href="https://github.com/GwendolyNM"> 최번영 </a></td>
+        <td align="center"> <a href="https://github.com/oror-sine"> 홍정현 </a></td>
+        <td align="center"> <a href="https://github.com/flskhhdf"> 백승준 </td>
+        <td align="center"> <a href="https://github.com/JaeHunLee-git"> 이재훈 </td>
+        <td align="center"> <a href="https://github.com/SeongGwangJu"> 주성광 </td>
     </tr>
     <tr>
       <td align="center">
@@ -66,12 +66,12 @@
       </td>
       <td>
         <sub>
-            <p>상품 필터링 및 Pagination 구현</p>
-            <p>Best 100 상품(Scheduler)</p>
-            <p>최근 본 상품, 최근 검색어(Redis)</p>
-            <p>이벤트(필터링), 브랜드, 카테고리</p>
-            <p>검색(제품/해시태그/브랜드)</p>
-            <p>성능 테스트</p>
+          <p> 상품 필터링 및 Pagenation 구현 </p>
+          <p> Best 100 상품(Scheduler) </p>
+          <p> 최근 본 상품, 최근 검색어(Redis) </p>
+          <p> 이벤트(필터링), 브랜드, 카테고리, </p>
+          <p> 검색(제품/해시태그/브랜드) </p>
+          <p> 성능 테스트 </p>
         </sub>
       </td>
       <td >
