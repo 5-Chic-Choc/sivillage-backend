@@ -13,11 +13,11 @@
 ## 👥 팀원 소개
 <table>
     <tr>
-        <td align="center"> <a href="https://github.com/GwendolyNM"> 최번영 </a></td>
-        <td align="center"> <a href="https://github.com/oror-sine"> 홍정현 </a></td>
-        <td align="center"> <a href="https://github.com/flskhhdf"> 백승준 </td>
-        <td align="center"> <a href="https://github.com/JaeHunLee-git"> 이재훈 </td>
-        <td align="center"> <a href="https://github.com/SeongGwangJu"> 주성광 </td>
+        <td align="center" width="150px"> <a href="https://github.com/GwendolyNM"> 최번영 </a></td>
+        <td align="center" width="150px"> <a href="https://github.com/oror-sine"> 홍정현 </a></td>
+        <td align="center" width="150px"> <a href="https://github.com/flskhhdf"> 백승준 </td>
+        <td align="center" width="150px"> <a href="https://github.com/JaeHunLee-git"> 이재훈 </td>
+        <td align="center" width="150px"> <a href="https://github.com/SeongGwangJu"> 주성광 </td>
     </tr>
     <tr>
       <td align="center">
