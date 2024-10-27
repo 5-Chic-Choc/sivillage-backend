@@ -64,7 +64,7 @@
           <p> 배송지 </p>
         </sub>
       </td>
-      <td >
+      <td>
         <sub>
           <p> 상품 필터링 및 Pagenation 구현 </p>
           <p> Best 100 상품(Scheduler) </p>
